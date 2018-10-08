@@ -1,0 +1,1998 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://adm-danismanlik.com/services/dms/DmsService" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://adm-danismanlik.com/services/dms/DmsService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://adm-danismanlik.com/services/dms/DmsService">
+      <s:element name="GetNodeCategoryLists">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNodeCategoryListsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNodeCategoryListsResult" type="tns:ArrayOfEntityPlainCategory" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfEntityPlainCategory">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityPlainCategory" nillable="true" type="tns:EntityPlainCategory" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityPlainCategory">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Attributes" type="tns:ArrayOfKeyValuePair" />
+          <s:element minOccurs="0" maxOccurs="1" name="CategoryName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfKeyValuePair">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="KeyValuePair" nillable="true" type="tns:KeyValuePair" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="KeyValuePair">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCategoryDefinition">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="categoryId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCategoryDefinitionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCategoryDefinitionResult" type="tns:EntityAttributeGroupDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="EntityAttributeGroupDefinition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="EntityAttributeDefinitions" type="tns:ArrayOfEntityAttributeDefinition" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntityAttributeDefinition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityAttributeDefinition" nillable="true" type="tns:EntityAttributeDefinition" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityAttributeDefinition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxValues" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MinValues" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReadOnly" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Required" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Searchable" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="RemoveFromFavorites">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RemoveFromFavoritesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="AddToFavorites">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddToFavoritesResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetFavoritesOfUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="populateExtraData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="populatePermissionsData" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFavoritesOfUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFavoritesOfUserResult" type="tns:ArrayOfEntityNode" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfEntityNode">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityNode" nillable="true" type="tns:EntityNode" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityNode">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Catalog" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreateDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreatedBy" nillable="true" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Features" type="tns:ArrayOfEntityNodeFeature" />
+          <s:element minOccurs="0" maxOccurs="1" name="Metadata" type="tns:EntityMetadata" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsContainer" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsReference" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsReservable" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContainerInfo" type="tns:EntityNodeContainerInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="Permissions" type="tns:EntityNodePermissions" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReferenceInfo" type="tns:EntityNodeReferenceInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReservationInfo" type="tns:EntityNodeReservationInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="VersionInfo" type="tns:EntityNodeVersionInfo" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsVersionable" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModifyDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Nickname" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ParentId" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Position" nillable="true" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Released" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="VolumeID" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntityNodeFeature">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityNodeFeature" nillable="true" type="tns:EntityNodeFeature" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityNodeFeature">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="BooleanValue" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateValue" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="IntegerValue" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LongValue" nillable="true" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StringValue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityMetadata">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AttributeGroups" type="tns:ArrayOfEntityAttributeGroup" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntityAttributeGroup">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityAttributeGroup" nillable="true" type="tns:EntityAttributeGroup" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityAttributeGroup">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Values" type="tns:ArrayOfEntityDataValue" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntityDataValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityDataValue" nillable="true" type="tns:EntityDataValue" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityDataValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Values" type="tns:ArrayOfAnyType" />
+          <s:element minOccurs="0" maxOccurs="1" name="ValidValues" type="tns:ArrayOfAnyType" />
+          <s:element minOccurs="0" maxOccurs="1" name="DependentFields" type="tns:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="PopulatedFromDb" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAnyType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="anyType" nillable="true" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityNodeContainerInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ChildCount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChildTypes" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityNodePermissions">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AddItemsPermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeletePermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="DeleteVersionsPermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EditAttributesPermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EditPermissionsPermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModifyPermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReservePermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SeeContentsPermission" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SeePermission" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityNodeReferenceInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="OriginalId" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="OriginalType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="VersionNum" nillable="true" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityNodeReservationInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Reserved" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReservedBy" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReservedDate" nillable="true" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityNodeVersionInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AdvancedVersionControl" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileDataSize" nillable="true" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileResSize" nillable="true" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Major" nillable="true" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="MimeType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="SupportsAdvancedVersionControl" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="VersionNum" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="Versions" type="tns:ArrayOfEntityVersion" />
+          <s:element minOccurs="1" maxOccurs="1" name="VersionsToKeep" nillable="true" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntityVersion">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityVersion" nillable="true" type="tns:EntityVersion" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="EntityVersion">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CreateDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileCreateDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileCreator" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileDataSize" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileModifyDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Filename" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FilePlatform" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileResSize" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Locked" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LockedBy" nillable="true" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="LockedDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Metadata" type="tns:EntityMetadata" />
+          <s:element minOccurs="0" maxOccurs="1" name="MimeType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModifyDate" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NodeID" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Owner" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="ProviderID" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProviderName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="VerMajor" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="VerMinor" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="Number" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetReferencesOfNodeById">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="populateExtraData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="populatePermissionsData" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetReferencesOfNodeByIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetReferencesOfNodeByIdResult" type="tns:ArrayOfEntityNode" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAuditRecordsOfNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="EntityNodeAuditRecord">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AuditDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="AuditNumber" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="AuditString" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NodeId" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="PerformerId" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="PerformerUsername" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEntityNodeAuditRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityNodeAuditRecord" nillable="true" type="tns:EntityNodeAuditRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetAuditRecordsOfNodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAuditRecordsOfNodeResult" type="tns:ArrayOfEntityNodeAuditRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddDocumentWithMetadata">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="emd" type="tns:EntityMetadata" />
+            <s:element minOccurs="0" maxOccurs="1" name="ea" type="tns:EntityAttachment" />
+            <s:element minOccurs="0" maxOccurs="1" name="comment" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="EntityAttachment">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CreatedDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FileSize" type="s:long" />
+          <s:element minOccurs="1" maxOccurs="1" name="ModifiedDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Contents" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddDocumentWithMetadataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddDocumentWithMetadataResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddMajorVersion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="emd" type="tns:EntityMetadata" />
+            <s:element minOccurs="0" maxOccurs="1" name="ea" type="tns:EntityAttachment" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddMajorVersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddMajorVersionResult" type="tns:EntityVersion" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMetadataLanguages">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMetadataLanguagesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMetadataLanguagesResult" type="tns:ArrayOfKeyValuePair" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RenameNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dmsNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="newName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RenameNodeResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="CopyNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dmsSourceNodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="dmsTargetNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="newName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CopyNodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CopyNodeResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dmsNodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteNodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DeleteNodeResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="folderName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="comment" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateFolderResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateFolders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="lstFolderNames" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="comment" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateFoldersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateFoldersResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="MoveNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dmsSourceNodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="dmsTargetNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="newName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="east" type="tns:EntityAttributeSourceType" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="EntityAttributeSourceType">
+        <s:restriction base="s:string">
+          <s:enumeration value="DESTINATION" />
+          <s:enumeration value="MERGE" />
+          <s:enumeration value="ORIGINAL" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="MoveNodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="MoveNodeResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChildNodes">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="dmsNodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="maxDepth" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="maxResults" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="populateExtraData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="populatePermissionsData" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetChildNodesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetChildNodesResult" type="tns:ArrayOfEntityNode" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetVersions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetVersionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetVersionsResult" type="tns:ArrayOfEntityVersion" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownloadDocumentToServerAndReturnRefGuid">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="versionNumber" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownloadDocumentToServerAndReturnRefGuidResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DownloadDocumentToServerAndReturnRefGuidResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownloadDocument">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="versionNumber" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownloadDocumentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DownloadDocumentResult" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateMultilingualMetadataOfNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="lstKeyValuePairs" type="tns:ArrayOfKeyValuePair" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateMultilingualMetadataOfNodeResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="AddDocumentOrVersion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ea" type="tns:EntityAttachment" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="comment" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddDocumentOrVersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddDocumentOrVersionResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityNodeListIncludingChildrenUsingTypeFilter">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="pageSize" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="typeFilter" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityNodeListIncludingChildrenUsingTypeFilterResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEntityNodeListIncludingChildrenUsingTypeFilterResult" type="tns:ArrayOfEntityNode" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetKeyValuePairListIncludingChildrenUsingTypeFilter">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="pageSize" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="typeFilter" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetKeyValuePairListIncludingChildrenUsingTypeFilterResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetKeyValuePairListIncludingChildrenUsingTypeFilterResult" type="tns:ArrayOfKeyValuePair" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFolderListIncludingChildren">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFolderListIncludingChildrenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFolderListIncludingChildrenResult" type="tns:ArrayOfKeyValuePair" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddVersion">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="ea" type="tns:EntityAttachment" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddVersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddVersionResult" type="tns:EntityVersion" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityNodeByName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="nodeName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="populateExtraData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="populatePermissionsData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityNodeByNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEntityNodeByNameResult" type="tns:EntityNode" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityNodeFromId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="populateExtraData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="populatePermissionsData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityNodeFromIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEntityNodeFromIdResult" type="tns:EntityNode" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateCategory">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cd" type="tns:CatDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CatDefinition">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CategoryName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CategoryDescription" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AutoCreateInDMS" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="AttrDefinitions" type="tns:ArrayOfAttrDefinition" />
+          <s:element minOccurs="1" maxOccurs="1" name="DmsId" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAttrDefinition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AttrDefinition" nillable="true" type="tns:AttrDefinition" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AttrDefinition">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="AttributeType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DisplayLength" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxLength" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxValues" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MinValues" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Required" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReadOnly" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Searchable" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ShowTime" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateCategoryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CreateCategoryResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsNodeAvailableWithSameNameUnderGivenFolderName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="lstPath" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="nodeName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsNodeAvailableWithSameNameUnderGivenFolderNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsNodeAvailableWithSameNameUnderGivenFolderNameResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsNodeAvailableWithSameName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentNodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="nodeName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IsNodeAvailableWithSameNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsNodeAvailableWithSameNameResult" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetInheritedCategoryIdsOfNode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfLong">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="long" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetInheritedCategoryIdsOfNodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetInheritedCategoryIdsOfNodeResult" type="tns:ArrayOfLong" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddOrUpdateNodeCategories">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="entityMetadata" type="tns:EntityMetadata" />
+            <s:element minOccurs="1" maxOccurs="1" name="mergeOldMetadata" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddOrUpdateNodeCategoriesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddOrUpdateNodeCategoriesResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityAttributeGroupOfCategory">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="categoryId" type="s:long" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityAttributeGroupOfCategoryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEntityAttributeGroupOfCategoryResult" type="tns:EntityAttributeGroup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityMetadata">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="categoryIds" type="tns:ArrayOfLong" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEntityMetadataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEntityMetadataResult" type="tns:EntityMetadata" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetValidValuesOfAttributeFromDb">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="categoryId" type="s:long" />
+            <s:element minOccurs="1" maxOccurs="1" name="nodeId" type="s:long" />
+            <s:element minOccurs="0" maxOccurs="1" name="fieldName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lstKvpDependentFieldsAndValues" type="tns:ArrayOfKeyValueObjectPair" />
+            <s:element minOccurs="0" maxOccurs="1" name="lstKvpDependentFieldsAndTypes" type="tns:ArrayOfKeyValueObjectPair" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfKeyValueObjectPair">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="KeyValueObjectPair" nillable="true" type="tns:KeyValueObjectPair" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="KeyValueObjectPair">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Key" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetValidValuesOfAttributeFromDbResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetValidValuesOfAttributeFromDbResult" type="tns:ArrayOfAnyType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAllCategories">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="clientuser" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="refToken" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfEntityAttributeGroupDefinition">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EntityAttributeGroupDefinition" nillable="true" type="tns:EntityAttributeGroupDefinition" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetAllCategoriesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAllCategoriesResult" type="tns:ArrayOfEntityAttributeGroupDefinition" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetNodeCategoryListsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNodeCategoryLists" />
+  </wsdl:message>
+  <wsdl:message name="GetNodeCategoryListsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNodeCategoryListsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCategoryDefinitionSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCategoryDefinition" />
+  </wsdl:message>
+  <wsdl:message name="GetCategoryDefinitionSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCategoryDefinitionResponse" />
+  </wsdl:message>
+  <wsdl:message name="RemoveFromFavoritesSoapIn">
+    <wsdl:part name="parameters" element="tns:RemoveFromFavorites" />
+  </wsdl:message>
+  <wsdl:message name="RemoveFromFavoritesSoapOut">
+    <wsdl:part name="parameters" element="tns:RemoveFromFavoritesResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddToFavoritesSoapIn">
+    <wsdl:part name="parameters" element="tns:AddToFavorites" />
+  </wsdl:message>
+  <wsdl:message name="AddToFavoritesSoapOut">
+    <wsdl:part name="parameters" element="tns:AddToFavoritesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesOfUserSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFavoritesOfUser" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesOfUserSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFavoritesOfUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetReferencesOfNodeByIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetReferencesOfNodeById" />
+  </wsdl:message>
+  <wsdl:message name="GetReferencesOfNodeByIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetReferencesOfNodeByIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditRecordsOfNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAuditRecordsOfNode" />
+  </wsdl:message>
+  <wsdl:message name="GetAuditRecordsOfNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAuditRecordsOfNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddDocumentWithMetadataSoapIn">
+    <wsdl:part name="parameters" element="tns:AddDocumentWithMetadata" />
+  </wsdl:message>
+  <wsdl:message name="AddDocumentWithMetadataSoapOut">
+    <wsdl:part name="parameters" element="tns:AddDocumentWithMetadataResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddMajorVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:AddMajorVersion" />
+  </wsdl:message>
+  <wsdl:message name="AddMajorVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:AddMajorVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataLanguagesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMetadataLanguages" />
+  </wsdl:message>
+  <wsdl:message name="GetMetadataLanguagesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMetadataLanguagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="RenameNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:RenameNode" />
+  </wsdl:message>
+  <wsdl:message name="RenameNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:RenameNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="CopyNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:CopyNode" />
+  </wsdl:message>
+  <wsdl:message name="CopyNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:CopyNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteNode" />
+  </wsdl:message>
+  <wsdl:message name="DeleteNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateFolder" />
+  </wsdl:message>
+  <wsdl:message name="CreateFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateFoldersSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateFolders" />
+  </wsdl:message>
+  <wsdl:message name="CreateFoldersSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateFoldersResponse" />
+  </wsdl:message>
+  <wsdl:message name="MoveNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:MoveNode" />
+  </wsdl:message>
+  <wsdl:message name="MoveNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:MoveNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetChildNodesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetChildNodes" />
+  </wsdl:message>
+  <wsdl:message name="GetChildNodesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetChildNodesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetVersionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetVersions" />
+  </wsdl:message>
+  <wsdl:message name="GetVersionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetVersionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DownloadDocumentToServerAndReturnRefGuidSoapIn">
+    <wsdl:part name="parameters" element="tns:DownloadDocumentToServerAndReturnRefGuid" />
+  </wsdl:message>
+  <wsdl:message name="DownloadDocumentToServerAndReturnRefGuidSoapOut">
+    <wsdl:part name="parameters" element="tns:DownloadDocumentToServerAndReturnRefGuidResponse" />
+  </wsdl:message>
+  <wsdl:message name="DownloadDocumentSoapIn">
+    <wsdl:part name="parameters" element="tns:DownloadDocument" />
+  </wsdl:message>
+  <wsdl:message name="DownloadDocumentSoapOut">
+    <wsdl:part name="parameters" element="tns:DownloadDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateMultilingualMetadataOfNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateMultilingualMetadataOfNode" />
+  </wsdl:message>
+  <wsdl:message name="UpdateMultilingualMetadataOfNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateMultilingualMetadataOfNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddDocumentOrVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:AddDocumentOrVersion" />
+  </wsdl:message>
+  <wsdl:message name="AddDocumentOrVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:AddDocumentOrVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityNodeListIncludingChildrenUsingTypeFilterSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEntityNodeListIncludingChildrenUsingTypeFilter" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityNodeListIncludingChildrenUsingTypeFilterSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEntityNodeListIncludingChildrenUsingTypeFilterResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetKeyValuePairListIncludingChildrenUsingTypeFilterSoapIn">
+    <wsdl:part name="parameters" element="tns:GetKeyValuePairListIncludingChildrenUsingTypeFilter" />
+  </wsdl:message>
+  <wsdl:message name="GetKeyValuePairListIncludingChildrenUsingTypeFilterSoapOut">
+    <wsdl:part name="parameters" element="tns:GetKeyValuePairListIncludingChildrenUsingTypeFilterResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFolderListIncludingChildrenSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFolderListIncludingChildren" />
+  </wsdl:message>
+  <wsdl:message name="GetFolderListIncludingChildrenSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFolderListIncludingChildrenResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:AddVersion" />
+  </wsdl:message>
+  <wsdl:message name="AddVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:AddVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityNodeByNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEntityNodeByName" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityNodeByNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEntityNodeByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityNodeFromIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEntityNodeFromId" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityNodeFromIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEntityNodeFromIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateCategorySoapIn">
+    <wsdl:part name="parameters" element="tns:CreateCategory" />
+  </wsdl:message>
+  <wsdl:message name="CreateCategorySoapOut">
+    <wsdl:part name="parameters" element="tns:CreateCategoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsNodeAvailableWithSameNameUnderGivenFolderNameSoapIn">
+    <wsdl:part name="parameters" element="tns:IsNodeAvailableWithSameNameUnderGivenFolderName" />
+  </wsdl:message>
+  <wsdl:message name="IsNodeAvailableWithSameNameUnderGivenFolderNameSoapOut">
+    <wsdl:part name="parameters" element="tns:IsNodeAvailableWithSameNameUnderGivenFolderNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IsNodeAvailableWithSameNameSoapIn">
+    <wsdl:part name="parameters" element="tns:IsNodeAvailableWithSameName" />
+  </wsdl:message>
+  <wsdl:message name="IsNodeAvailableWithSameNameSoapOut">
+    <wsdl:part name="parameters" element="tns:IsNodeAvailableWithSameNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetInheritedCategoryIdsOfNodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetInheritedCategoryIdsOfNode" />
+  </wsdl:message>
+  <wsdl:message name="GetInheritedCategoryIdsOfNodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetInheritedCategoryIdsOfNodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddOrUpdateNodeCategoriesSoapIn">
+    <wsdl:part name="parameters" element="tns:AddOrUpdateNodeCategories" />
+  </wsdl:message>
+  <wsdl:message name="AddOrUpdateNodeCategoriesSoapOut">
+    <wsdl:part name="parameters" element="tns:AddOrUpdateNodeCategoriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityAttributeGroupOfCategorySoapIn">
+    <wsdl:part name="parameters" element="tns:GetEntityAttributeGroupOfCategory" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityAttributeGroupOfCategorySoapOut">
+    <wsdl:part name="parameters" element="tns:GetEntityAttributeGroupOfCategoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityMetadataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEntityMetadata" />
+  </wsdl:message>
+  <wsdl:message name="GetEntityMetadataSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEntityMetadataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetValidValuesOfAttributeFromDbSoapIn">
+    <wsdl:part name="parameters" element="tns:GetValidValuesOfAttributeFromDb" />
+  </wsdl:message>
+  <wsdl:message name="GetValidValuesOfAttributeFromDbSoapOut">
+    <wsdl:part name="parameters" element="tns:GetValidValuesOfAttributeFromDbResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAllCategoriesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAllCategories" />
+  </wsdl:message>
+  <wsdl:message name="GetAllCategoriesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAllCategoriesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="DmsOpsSoap">
+    <wsdl:operation name="GetNodeCategoryLists">
+      <wsdl:input message="tns:GetNodeCategoryListsSoapIn" />
+      <wsdl:output message="tns:GetNodeCategoryListsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCategoryDefinition">
+      <wsdl:input message="tns:GetCategoryDefinitionSoapIn" />
+      <wsdl:output message="tns:GetCategoryDefinitionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFromFavorites">
+      <wsdl:input message="tns:RemoveFromFavoritesSoapIn" />
+      <wsdl:output message="tns:RemoveFromFavoritesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddToFavorites">
+      <wsdl:input message="tns:AddToFavoritesSoapIn" />
+      <wsdl:output message="tns:AddToFavoritesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFavoritesOfUser">
+      <wsdl:input message="tns:GetFavoritesOfUserSoapIn" />
+      <wsdl:output message="tns:GetFavoritesOfUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetReferencesOfNodeById">
+      <wsdl:input message="tns:GetReferencesOfNodeByIdSoapIn" />
+      <wsdl:output message="tns:GetReferencesOfNodeByIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditRecordsOfNode">
+      <wsdl:input message="tns:GetAuditRecordsOfNodeSoapIn" />
+      <wsdl:output message="tns:GetAuditRecordsOfNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddDocumentWithMetadata">
+      <wsdl:input message="tns:AddDocumentWithMetadataSoapIn" />
+      <wsdl:output message="tns:AddDocumentWithMetadataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddMajorVersion">
+      <wsdl:input message="tns:AddMajorVersionSoapIn" />
+      <wsdl:output message="tns:AddMajorVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataLanguages">
+      <wsdl:input message="tns:GetMetadataLanguagesSoapIn" />
+      <wsdl:output message="tns:GetMetadataLanguagesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RenameNode">
+      <wsdl:input message="tns:RenameNodeSoapIn" />
+      <wsdl:output message="tns:RenameNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CopyNode">
+      <wsdl:input message="tns:CopyNodeSoapIn" />
+      <wsdl:output message="tns:CopyNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteNode">
+      <wsdl:input message="tns:DeleteNodeSoapIn" />
+      <wsdl:output message="tns:DeleteNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateFolder">
+      <wsdl:input message="tns:CreateFolderSoapIn" />
+      <wsdl:output message="tns:CreateFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateFolders">
+      <wsdl:input message="tns:CreateFoldersSoapIn" />
+      <wsdl:output message="tns:CreateFoldersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="MoveNode">
+      <wsdl:input message="tns:MoveNodeSoapIn" />
+      <wsdl:output message="tns:MoveNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetChildNodes">
+      <wsdl:input message="tns:GetChildNodesSoapIn" />
+      <wsdl:output message="tns:GetChildNodesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetVersions">
+      <wsdl:input message="tns:GetVersionsSoapIn" />
+      <wsdl:output message="tns:GetVersionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadDocumentToServerAndReturnRefGuid">
+      <wsdl:input message="tns:DownloadDocumentToServerAndReturnRefGuidSoapIn" />
+      <wsdl:output message="tns:DownloadDocumentToServerAndReturnRefGuidSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadDocument">
+      <wsdl:input message="tns:DownloadDocumentSoapIn" />
+      <wsdl:output message="tns:DownloadDocumentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMultilingualMetadataOfNode">
+      <wsdl:input message="tns:UpdateMultilingualMetadataOfNodeSoapIn" />
+      <wsdl:output message="tns:UpdateMultilingualMetadataOfNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddDocumentOrVersion">
+      <wsdl:input message="tns:AddDocumentOrVersionSoapIn" />
+      <wsdl:output message="tns:AddDocumentOrVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeListIncludingChildrenUsingTypeFilter">
+      <wsdl:input message="tns:GetEntityNodeListIncludingChildrenUsingTypeFilterSoapIn" />
+      <wsdl:output message="tns:GetEntityNodeListIncludingChildrenUsingTypeFilterSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetKeyValuePairListIncludingChildrenUsingTypeFilter">
+      <wsdl:input message="tns:GetKeyValuePairListIncludingChildrenUsingTypeFilterSoapIn" />
+      <wsdl:output message="tns:GetKeyValuePairListIncludingChildrenUsingTypeFilterSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFolderListIncludingChildren">
+      <wsdl:input message="tns:GetFolderListIncludingChildrenSoapIn" />
+      <wsdl:output message="tns:GetFolderListIncludingChildrenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddVersion">
+      <wsdl:input message="tns:AddVersionSoapIn" />
+      <wsdl:output message="tns:AddVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeByName">
+      <wsdl:input message="tns:GetEntityNodeByNameSoapIn" />
+      <wsdl:output message="tns:GetEntityNodeByNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeFromId">
+      <wsdl:input message="tns:GetEntityNodeFromIdSoapIn" />
+      <wsdl:output message="tns:GetEntityNodeFromIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateCategory">
+      <wsdl:input message="tns:CreateCategorySoapIn" />
+      <wsdl:output message="tns:CreateCategorySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsNodeAvailableWithSameNameUnderGivenFolderName">
+      <wsdl:input message="tns:IsNodeAvailableWithSameNameUnderGivenFolderNameSoapIn" />
+      <wsdl:output message="tns:IsNodeAvailableWithSameNameUnderGivenFolderNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IsNodeAvailableWithSameName">
+      <wsdl:input message="tns:IsNodeAvailableWithSameNameSoapIn" />
+      <wsdl:output message="tns:IsNodeAvailableWithSameNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInheritedCategoryIdsOfNode">
+      <wsdl:input message="tns:GetInheritedCategoryIdsOfNodeSoapIn" />
+      <wsdl:output message="tns:GetInheritedCategoryIdsOfNodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddOrUpdateNodeCategories">
+      <wsdl:input message="tns:AddOrUpdateNodeCategoriesSoapIn" />
+      <wsdl:output message="tns:AddOrUpdateNodeCategoriesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityAttributeGroupOfCategory">
+      <wsdl:input message="tns:GetEntityAttributeGroupOfCategorySoapIn" />
+      <wsdl:output message="tns:GetEntityAttributeGroupOfCategorySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityMetadata">
+      <wsdl:input message="tns:GetEntityMetadataSoapIn" />
+      <wsdl:output message="tns:GetEntityMetadataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetValidValuesOfAttributeFromDb">
+      <wsdl:input message="tns:GetValidValuesOfAttributeFromDbSoapIn" />
+      <wsdl:output message="tns:GetValidValuesOfAttributeFromDbSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllCategories">
+      <wsdl:input message="tns:GetAllCategoriesSoapIn" />
+      <wsdl:output message="tns:GetAllCategoriesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="DmsOpsSoap" type="tns:DmsOpsSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetNodeCategoryLists">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetNodeCategoryLists" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCategoryDefinition">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetCategoryDefinition" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFromFavorites">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/RemoveFromFavorites" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddToFavorites">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddToFavorites" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFavoritesOfUser">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetFavoritesOfUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetReferencesOfNodeById">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetReferencesOfNodeById" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditRecordsOfNode">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetAuditRecordsOfNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDocumentWithMetadata">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddDocumentWithMetadata" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMajorVersion">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddMajorVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataLanguages">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetMetadataLanguages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RenameNode">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/RenameNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CopyNode">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CopyNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteNode">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/DeleteNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateFolder">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CreateFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateFolders">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CreateFolders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MoveNode">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/MoveNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildNodes">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetChildNodes" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVersions">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetVersions" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadDocumentToServerAndReturnRefGuid">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/DownloadDocumentToServerAndReturnRefGuid" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadDocument">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/DownloadDocument" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMultilingualMetadataOfNode">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/UpdateMultilingualMetadataOfNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDocumentOrVersion">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddDocumentOrVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeListIncludingChildrenUsingTypeFilter">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityNodeListIncludingChildrenUsingTypeFilter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetKeyValuePairListIncludingChildrenUsingTypeFilter">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetKeyValuePairListIncludingChildrenUsingTypeFilter" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFolderListIncludingChildren">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetFolderListIncludingChildren" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddVersion">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeByName">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityNodeByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeFromId">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityNodeFromId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCategory">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CreateCategory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsNodeAvailableWithSameNameUnderGivenFolderName">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/IsNodeAvailableWithSameNameUnderGivenFolderName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsNodeAvailableWithSameName">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/IsNodeAvailableWithSameName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInheritedCategoryIdsOfNode">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetInheritedCategoryIdsOfNode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddOrUpdateNodeCategories">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddOrUpdateNodeCategories" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityAttributeGroupOfCategory">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityAttributeGroupOfCategory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityMetadata">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityMetadata" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetValidValuesOfAttributeFromDb">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetValidValuesOfAttributeFromDb" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllCategories">
+      <soap:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetAllCategories" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DmsOpsSoap12" type="tns:DmsOpsSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetNodeCategoryLists">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetNodeCategoryLists" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCategoryDefinition">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetCategoryDefinition" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveFromFavorites">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/RemoveFromFavorites" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddToFavorites">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddToFavorites" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFavoritesOfUser">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetFavoritesOfUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetReferencesOfNodeById">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetReferencesOfNodeById" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuditRecordsOfNode">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetAuditRecordsOfNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDocumentWithMetadata">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddDocumentWithMetadata" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddMajorVersion">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddMajorVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMetadataLanguages">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetMetadataLanguages" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RenameNode">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/RenameNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CopyNode">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CopyNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteNode">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/DeleteNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateFolder">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CreateFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateFolders">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CreateFolders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MoveNode">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/MoveNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildNodes">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetChildNodes" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetVersions">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetVersions" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadDocumentToServerAndReturnRefGuid">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/DownloadDocumentToServerAndReturnRefGuid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadDocument">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/DownloadDocument" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateMultilingualMetadataOfNode">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/UpdateMultilingualMetadataOfNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddDocumentOrVersion">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddDocumentOrVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeListIncludingChildrenUsingTypeFilter">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityNodeListIncludingChildrenUsingTypeFilter" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetKeyValuePairListIncludingChildrenUsingTypeFilter">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetKeyValuePairListIncludingChildrenUsingTypeFilter" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFolderListIncludingChildren">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetFolderListIncludingChildren" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddVersion">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeByName">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityNodeByName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityNodeFromId">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityNodeFromId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCategory">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/CreateCategory" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsNodeAvailableWithSameNameUnderGivenFolderName">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/IsNodeAvailableWithSameNameUnderGivenFolderName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsNodeAvailableWithSameName">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/IsNodeAvailableWithSameName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInheritedCategoryIdsOfNode">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetInheritedCategoryIdsOfNode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddOrUpdateNodeCategories">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/AddOrUpdateNodeCategories" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityAttributeGroupOfCategory">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityAttributeGroupOfCategory" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEntityMetadata">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetEntityMetadata" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetValidValuesOfAttributeFromDb">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetValidValuesOfAttributeFromDb" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllCategories">
+      <soap12:operation soapAction="http://adm-danismanlik.com/services/dms/DmsService/GetAllCategories" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="DmsOps">
+    <wsdl:port name="DmsOpsSoap" binding="tns:DmsOpsSoap">
+      <soap:address location="http://192.168.50.121/DmsWebServices/DmsOps.asmx" />
+    </wsdl:port>
+    <wsdl:port name="DmsOpsSoap12" binding="tns:DmsOpsSoap12">
+      <soap12:address location="http://192.168.50.121/DmsWebServices/DmsOps.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

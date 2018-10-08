@@ -100,9 +100,19 @@
   -->
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -156,18 +166,87 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="CaseRibbons.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CaseRibbons.Designer.cs">
+      <DependentUpon>CaseRibbons.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Entity\BaseEntity.cs" />
+    <Compile Include="Entity\IBaseEntity.cs" />
+    <Compile Include="Forms\IndependentSectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IndependentSectionForm.Designer.cs">
+      <DependentUpon>IndependentSectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LitigationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LitigationForm.Designer.cs">
+      <DependentUpon>LitigationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StaffForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StaffForm.Designer.cs">
+      <DependentUpon>StaffForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\PlotForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PlotForm.Designer.cs">
+      <DependentUpon>PlotForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProjectsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProjectsForm.Designer.cs">
+      <DependentUpon>ProjectsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\OTServicesHelper.cs" />
+    <Compile Include="Helpers\VariableHelper.cs" />
+    <Compile Include="Model\IndependentSection.cs" />
+    <Compile Include="Model\Litigation.cs" />
+    <Compile Include="Model\Staff.cs" />
+    <Compile Include="Model\Plot.cs" />
+    <Compile Include="Model\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Web References\DmsAuthenticationService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <Compile Include="Web References\DmsDocumentManagementService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CaseRibbons.resx">
+      <DependentUpon>CaseRibbons.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IndependentSectionForm.resx">
+      <DependentUpon>IndependentSectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProjectsForm.resx">
+      <DependentUpon>ProjectsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="EK-MultipleTransporter_TemporaryKey.pfx" />
+    <None Include="Nlog.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -175,6 +254,7 @@
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
@@ -186,10 +266,108 @@
       <DependentUpon>ThisAddIn.Designer.xml</DependentUpon>
     </Compile>
     <AppDesigner Include="Properties\" />
+    <None Include="Web References\DmsAuthenticationService\AuthOps.wsdl" />
+    <None Include="Web References\DmsAuthenticationService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\DmsOps.wsdl" />
+    <None Include="Web References\DmsDocumentManagementService\EntityAttributeGroup.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\EntityAttributeGroupDefinition.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\EntityMetadata.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\EntityNode.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\EntityNodeAuditRecord.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\EntityPlainCategory.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\EntityVersion.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\KeyValuePair.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\DmsDocumentManagementService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://192.168.50.121/DmsWebServices/AuthOps.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\DmsAuthenticationService\</RelPath>
+      <UpdateFromURL>http://192.168.50.121/DmsWebServices/AuthOps.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>EK_MultipleTransporter_DmsAuthenticationService_AuthOps</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://192.168.50.121/DmsWebServices/DmsOps.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\DmsDocumentManagementService\</RelPath>
+      <UpdateFromURL>http://192.168.50.121/DmsWebServices/DmsOps.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>EK_MultipleTransporter_DmsDocumentManagementService_DmsOps</CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web References\DmsAuthenticationService\AuthOps.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web References\DmsDocumentManagementService\DmsOps.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Resources.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\apartment-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arsa.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\images.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\law.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\personel.png" />
+  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>EK-MultipleTransporter_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>CDB81AE9F458FFF4A8754A56D814FBC9D22BF485</ManifestCertificateThumbprint>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -201,7 +379,7 @@
       <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
         <ProjectProperties HostName="Excel" HostPackage="{29A7B9D7-A7F1-4328-8EF0-6B2D1A56B2C1}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="Excel" Language="cs" TemplatesPath="" DebugInfoExeName="#Software\Microsoft\Office\16.0\Excel\InstallRoot\Path#excel.exe" DebugInfoCommandLine="/x" AddItemTemplatesGuid="{51063C3A-E220-4D12-8922-BDA915ACD783}" />
         <Host Name="Excel" GeneratedCodeNamespace="EK_MultipleTransporter" IconIndex="0">
-          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="ThisAddIn" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
+          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="AddIn" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
         </Host>
       </FlavorProperties>
     </VisualStudio>
