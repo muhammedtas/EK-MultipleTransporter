@@ -172,6 +172,7 @@
     <Compile Include="CaseRibbons.Designer.cs">
       <DependentUpon>CaseRibbons.cs</DependentUpon>
     </Compile>
+    <Compile Include="Entity\BaseChildEntity.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\IBaseEntity.cs" />
     <Compile Include="Forms\IndependentSectionForm.cs">
@@ -205,12 +206,14 @@
       <DependentUpon>ProjectsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\OTServicesHelper.cs" />
+    <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\VariableHelper.cs" />
-    <Compile Include="Model\IndependentSection.cs" />
-    <Compile Include="Model\Litigation.cs" />
-    <Compile Include="Model\Staff.cs" />
-    <Compile Include="Model\Plot.cs" />
-    <Compile Include="Model\Project.cs" />
+    <Compile Include="Model\ChildModel\ProjectChilds.cs" />
+    <Compile Include="Model\RootModel\IndependentSection.cs" />
+    <Compile Include="Model\RootModel\Litigation.cs" />
+    <Compile Include="Model\RootModel\Staff.cs" />
+    <Compile Include="Model\RootModel\Plot.cs" />
+    <Compile Include="Model\RootModel\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

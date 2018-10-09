@@ -2,9 +2,11 @@
 using EK_MultipleTransporter.DmsDocumentManagementService;
 using EK_MultipleTransporter.Helpers;
 using EK_MultipleTransporter.Model;
+using EK_MultipleTransporter.Model.ChildModel;
 using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
+using System.Configuration;
 using System.ServiceModel;
 using System.Threading;
 using System.Web.Services.Protocols;
@@ -17,10 +19,15 @@ namespace EK_MultipleTransporter.Forms
     public partial class ProjectsForm : Form
     {
         public static Logger Logger = LogManager.GetCurrentClassLogger();
+        public static long projectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
+        public static long projectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
+        public static long generalCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
+        public OTServicesHelper serviceHelper = new OTServicesHelper();
+
+
 
         public ProjectsForm()
         {
-            InitializeComponent();
             InitializeComponent();
 
             var dmo = VariableHelper.Dmo;
@@ -37,7 +44,7 @@ namespace EK_MultipleTransporter.Forms
                         {
                             try
                             {
-                                VariableHelper.Token = ops.AuthenticateUser("", "", "Admin", "Dty4208ab1!");
+                                VariableHelper.Token = ops.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
                             }
                             catch (Exception ex)
                             {
@@ -73,7 +80,7 @@ namespace EK_MultipleTransporter.Forms
             {
                 try
                 {
-                    VariableHelper.Token = ops.AuthenticateUser("", "", "Admin", "Dty4208ab1!");
+                    VariableHelper.Token = ops.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
                 }
                 catch (FaultException ex)
                 {
@@ -96,17 +103,28 @@ namespace EK_MultipleTransporter.Forms
 
         private void ProjectsForm_Load(object sender, EventArgs e)
         {
-            DmsAuthenticationService.AuthOps ao = new AuthOps();
-            string adminToken = ao.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
-            //string userToken = ao.ImpersonateUser("admin", "token", adminToken);
-            DmsOps dops = new DmsOps();
-            EntityNode[] nodes = dops.GetChildNodes("admin", adminToken, 59055, 0, 1000, false, false);
+
+            //DmsOps dops = new DmsOps();
+
+            EntityNode[] nodes = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, projectsNodeId, 0, 1000, false, false);
+
             foreach (EntityNode node in nodes)
             {
                 cmbProjects.Items.Add(new Project()
                 {
                     Id = node.Id,
                     Name = node.Name                    
+                });
+            }
+
+            var childNodes = serviceHelper.GetChildNodesById(VariableHelper.Token, projectsChildElementsNodeId);
+
+            foreach (var childNode in childNodes)
+            {
+                cmbChildRoot.Items.Add(new ProjectChilds()
+                {
+                    Id = childNode.Id,
+                    Name = childNode.Name
                 });
             }
         }
@@ -118,30 +136,48 @@ namespace EK_MultipleTransporter.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (cmbProjects.SelectedIndex < 0)
+            if (cmbProjects.SelectedIndex < 0 || txtFolderRoot.Text==String.Empty)
             {
-                MessageBox.Show("Lütfen proje seçiniz.");
+                MessageBox.Show("Lütfen proje ve Hedef dizini seçiniz.");
                 return;
             }
-
-            DmsAuthenticationService.AuthOps ao = new AuthOps();
-            string adminToken = ao.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
-
-            Excel.Worksheet ws = Globals.ThisAddIn.Application.ActiveSheet;
-            ws.Cells[1, 1].Value = "Proje Adı:";
-            ws.Cells[2, 1].Value = "Proje ID:";
-            ws.Cells[1, 2].Value = ((Project)cmbProjects.SelectedItem).Name;
-            ws.Cells[2, 2].Value = ((Project)cmbProjects.SelectedItem).Id;
-
-            ws.Cells[4, 1].Value = "Seçim";
-            ws.Cells[4, 2].Value = "ID";
-            ws.Cells[4, 3].Value = "Bağımsız Bölüm";
-            this.Close();
+            var docs = StreamHelper.ReadAllDocumentsAsByte(txtFolderRoot.Text, serviceHelper, VariableHelper.Token, projectsChildElementsNodeId);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void txtFolderRoot_Click(object sender, EventArgs e)
+        {
+            if (cmbProjects.SelectedIndex == -1)
+            {
+                MessageBox.Show("Önce Proje Türünü Seçiniz.");
+            }
+            else
+            {
+
+                FolderBrowserDialog folderDlg = new FolderBrowserDialog();
+                folderDlg.ShowNewFolderButton = true;
+                // Show the FolderBrowserDialog.  
+                DialogResult result = folderDlg.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    txtFolderRoot.Text = folderDlg.SelectedPath;
+                    Environment.SpecialFolder root = folderDlg.RootFolder;
+                }
+
+                //ofdRootFolder.Title = Resources.ChooseFolder;
+                //ofdRootFolder.Filter = Resources.AllowedTypes;
+                //ofdRootFolder.FileName = "";
+                //ofdRootFolder.Multiselect = false;
+                //ofdRootFolder.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+                //if (ofdRootFolder.ShowDialog() != DialogResult.OK) return;
+                //var folderRoot = ofdRootFolder.FileName;
+
+            }
         }
     }
 }

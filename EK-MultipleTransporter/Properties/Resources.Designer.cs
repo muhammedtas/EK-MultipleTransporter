@@ -61,6 +61,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All files|*.*| Office Files|*.doc;*.docx;*.ppt| XLS files (*.xls)|*.xls| XLSX files (*.xlsx)|*.xlsx| Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;.
+        /// </summary>
+        public static string AllowedTypes {
+            get {
+                return ResourceManager.GetString("AllowedTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap apartment_icon {
@@ -77,6 +86,15 @@ namespace EK_MultipleTransporter.Properties {
             get {
                 object obj = ResourceManager.GetObject("arsa", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Klasörünüzü Seçiniz....
+        /// </summary>
+        public static string ChooseFolder {
+            get {
+                return ResourceManager.GetString("ChooseFolder", resourceCulture);
             }
         }
         

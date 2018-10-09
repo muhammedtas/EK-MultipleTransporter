@@ -50,7 +50,7 @@
             // 
             this.tabMain.ControlId.ControlIdType = Microsoft.Office.Tools.Ribbon.RibbonControlIdType.Office;
             this.tabMain.Groups.Add(this.grMain);
-            this.tabMain.Label = "Emlak Konut V2";
+            this.tabMain.Label = "Emlak Konut";
             this.tabMain.Name = "tabMain";
             // 
             // grMain

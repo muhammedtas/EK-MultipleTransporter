@@ -20,6 +20,22 @@ namespace EK_MultipleTransporter.Helpers
             _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
 
+        public EntityNode[] GetChildNodesById (string token, long id)
+        {
+           return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false);
+
+        }
+        public EntityAttributeGroup GetEntityAttributeGroupOfCategory(string token, long id)
+        {
+            return VariableHelper.Dmo.GetEntityAttributeGroupOfCategory("Admin", token, id);
+        }
+
+        public EntityNode GetNodeByName (string token, long parentNodeId, string nodeName)
+        {
+            var node = VariableHelper.Dmo.GetEntityNodeByName("admin", VariableHelper.Token, parentNodeId, nodeName, false, false, false);
+            return node;
+
+        }
         public bool AddDocumentOrVersionPrivate(string fileAddress, string alternativeFileAddress, long newFolder)
         {
             try
@@ -132,6 +148,6 @@ namespace EK_MultipleTransporter.Helpers
             }
         }
 
-
+   
     }
 }

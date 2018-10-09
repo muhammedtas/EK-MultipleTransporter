@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace EK_MultipleTransporter.Entity
 {
-    public class BaseEntity : IBaseEntity
+    public abstract class BaseEntity : IBaseEntity
     {
 
         public long Id { get; set; }
@@ -22,6 +22,8 @@ namespace EK_MultipleTransporter.Entity
         public static Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+        public OTServicesHelper ServiceHelper { get; } = new OTServicesHelper();
 
         public DmsOps Dmo { get; } = VariableHelper.Dmo;
 
