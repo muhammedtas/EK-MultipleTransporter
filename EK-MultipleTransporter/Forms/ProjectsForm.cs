@@ -205,7 +205,7 @@ namespace EK_MultipleTransporter.Forms
                 docType.Values = new object[] { cmbDocumentType.Text };
 
                 var year = eag.Values.First(x => x.Description == "Yıl");
-                year.Values = new object[] { txtYear.Text };
+                year.Values = new object[] { dtpYear.Text };
 
                 var term = eag.Values.First(x => x.Description == "Çeyrek");
                 term.Values = new object[] { cmbTerm.Text };

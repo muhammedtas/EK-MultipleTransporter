@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.txtFolderRoot = new System.Windows.Forms.TextBox();
@@ -36,10 +35,10 @@
             this.lblChild = new System.Windows.Forms.Label();
             this.lblFolderRoot = new System.Windows.Forms.Label();
             this.ofdRootFolder = new System.Windows.Forms.OpenFileDialog();
-            this.txtYear = new System.Windows.Forms.TextBox();
             this.lblCategoryYear = new System.Windows.Forms.Label();
             this.lblTerm = new System.Windows.Forms.Label();
             this.fbdRootFolder = new System.Windows.Forms.FolderBrowserDialog();
+            this.dtpYear = new System.Windows.Forms.DateTimePicker();
             this.cmbChildRoot = new System.Windows.Forms.ComboBox();
             this.cmbDocumentType = new System.Windows.Forms.ComboBox();
             this.cmbTerm = new System.Windows.Forms.ComboBox();
@@ -104,13 +103,6 @@
             // 
             this.ofdRootFolder.FileName = "openFileDialog1";
             // 
-            // txtYear
-            // 
-            this.txtYear.Location = new System.Drawing.Point(176, 190);
-            this.txtYear.Name = "txtYear";
-            this.txtYear.Size = new System.Drawing.Size(379, 20);
-            this.txtYear.TabIndex = 12;
-            // 
             // lblCategoryYear
             // 
             this.lblCategoryYear.AutoSize = true;
@@ -131,36 +123,45 @@
             // 
             // cmbChildRoot
             // 
-            cmbChildRoot.FormattingEnabled = true;
-            cmbChildRoot.Location = new System.Drawing.Point(176, 97);
-            cmbChildRoot.Name = "cmbChildRoot";
-            cmbChildRoot.Size = new System.Drawing.Size(379, 21);
-            cmbChildRoot.TabIndex = 5;
+            this.cmbChildRoot.FormattingEnabled = true;
+            this.cmbChildRoot.Location = new System.Drawing.Point(176, 97);
+            this.cmbChildRoot.Name = "cmbChildRoot";
+            this.cmbChildRoot.Size = new System.Drawing.Size(379, 21);
+            this.cmbChildRoot.TabIndex = 5;
             // 
             // cmbDocumentType
             // 
-            cmbDocumentType.DataSource = new string[] {
+            this.cmbDocumentType.Items.AddRange(new object[] {
             "Yapı Ruhsatı",
             "Tapu",
             "Katalog",
-            "Sözleşme"};
-            cmbDocumentType.Location = new System.Drawing.Point(176, 151);
-            cmbDocumentType.Name = "cmbDocumentType";
-            cmbDocumentType.Size = new System.Drawing.Size(379, 21);
-            cmbDocumentType.TabIndex = 15;
+            "Sözleşme"});
+            this.cmbDocumentType.Location = new System.Drawing.Point(176, 151);
+            this.cmbDocumentType.Name = "cmbDocumentType";
+            this.cmbDocumentType.Size = new System.Drawing.Size(379, 21);
+            this.cmbDocumentType.TabIndex = 15;
             // 
             // cmbTerm
             // 
-            cmbTerm.FormattingEnabled = true;
-            cmbTerm.Items.AddRange(new object[] {
+            this.cmbTerm.FormattingEnabled = true;
+            this.cmbTerm.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4"});
-            cmbTerm.Location = new System.Drawing.Point(176, 228);
-            cmbTerm.Name = "cmbTerm";
-            cmbTerm.Size = new System.Drawing.Size(379, 21);
-            cmbTerm.TabIndex = 11;
+            this.cmbTerm.Location = new System.Drawing.Point(176, 228);
+            this.cmbTerm.Name = "cmbTerm";
+            this.cmbTerm.Size = new System.Drawing.Size(379, 21);
+            this.cmbTerm.TabIndex = 11;
+            // 
+            // dtpYear
+            // 
+            this.dtpYear.Location = new System.Drawing.Point(176, 190);
+            this.dtpYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpYear.CustomFormat = "yyyy";
+            this.dtpYear.Name = "dtpYear";
+            this.dtpYear.Size = new System.Drawing.Size(379, 20);
+            this.dtpYear.TabIndex = 0;
             // 
             // ProjectsForm
             // 
@@ -169,14 +170,14 @@
             this.ClientSize = new System.Drawing.Size(596, 371);
             this.Controls.Add(this.lblTerm);
             this.Controls.Add(this.lblCategoryYear);
-            this.Controls.Add(this.txtYear);
-            this.Controls.Add(cmbTerm);
+            this.Controls.Add(this.cmbTerm);
+            this.Controls.Add(this.dtpYear);
             this.Controls.Add(this.lblFolderRoot);
             this.Controls.Add(this.lblChild);
             this.Controls.Add(this.lblCategoryDocumentType);
             this.Controls.Add(this.txtFolderRoot);
-            this.Controls.Add(cmbChildRoot);
-            this.Controls.Add(cmbDocumentType);
+            this.Controls.Add(this.cmbChildRoot);
+            this.Controls.Add(this.cmbDocumentType);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "ProjectsForm";
@@ -191,6 +192,7 @@
         private System.Windows.Forms.ComboBox cmbChildRoot;
         private System.Windows.Forms.ComboBox cmbDocumentType;
         private System.Windows.Forms.ComboBox cmbTerm;
+        private System.Windows.Forms.DateTimePicker dtpYear;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.TextBox txtFolderRoot;
@@ -198,7 +200,6 @@
         private System.Windows.Forms.Label lblChild;
         private System.Windows.Forms.Label lblFolderRoot;
         private System.Windows.Forms.OpenFileDialog ofdRootFolder;
-        private System.Windows.Forms.TextBox txtYear;
         private System.Windows.Forms.Label lblCategoryYear;
         private System.Windows.Forms.Label lblTerm;
         private System.Windows.Forms.FolderBrowserDialog fbdRootFolder;
