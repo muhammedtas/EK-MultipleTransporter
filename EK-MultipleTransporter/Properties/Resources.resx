@@ -142,4 +142,7 @@
   <data name="ChooseFolder" xml:space="preserve">
     <value>Klasörünüzü Seçiniz...</value>
   </data>
+  <data name="ChooseProjectType" xml:space="preserve">
+    <value>Önce Proje Türünü Seçiniz.</value>
+  </data>
 </root>

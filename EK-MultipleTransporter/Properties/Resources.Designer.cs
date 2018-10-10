@@ -99,6 +99,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Önce Proje Türünü Seçiniz..
+        /// </summary>
+        public static string ChooseProjectType {
+            get {
+                return ResourceManager.GetString("ChooseProjectType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap images {

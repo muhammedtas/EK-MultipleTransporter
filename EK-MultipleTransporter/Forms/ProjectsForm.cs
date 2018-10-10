@@ -34,7 +34,6 @@ namespace EK_MultipleTransporter.Forms
             var ops = VariableHelper.Ops;
             CheckForIllegalCrossThreadCalls = false;
 
-
             if (string.IsNullOrEmpty(VariableHelper.Token))
             {
                 try
@@ -113,11 +112,11 @@ namespace EK_MultipleTransporter.Forms
                 cmbProjects.Items.Add(new Project()
                 {
                     Id = node.Id,
-                    Name = node.Name                    
+                    Name = node.Name
                 });
             }
 
-            var childNodes = serviceHelper.GetChildNodesById(VariableHelper.Token, projectsChildElementsNodeId);
+            var childNodes = serviceHelper.GetChildNodesById(projectsChildElementsNodeId);
 
             foreach (var childNode in childNodes)
             {
@@ -125,6 +124,48 @@ namespace EK_MultipleTransporter.Forms
                 {
                     Id = childNode.Id,
                     Name = childNode.Name
+                });
+
+                if (serviceHelper.HasChildNode(childNode.Id))
+                {
+                    var innerChilds = serviceHelper.GetChildNodesById(childNode.Id);
+
+                    foreach (var innerChild in innerChilds)
+                    {
+                        cmbChildRoot.Items.Add(new ProjectChilds()
+                        {
+                            Id = innerChild.Id,
+                            Name = childNode.Name + "\\" + innerChild.Name
+                        });
+
+                        if (serviceHelper.HasChildNode(innerChild.Id))
+                        {
+                            var innersOfInnerChild = serviceHelper.GetChildNodesById(innerChild.Id);
+                            foreach (var innerOfInnerChild in innersOfInnerChild)
+                            {
+                                cmbChildRoot.Items.Add(new ProjectChilds()
+                                {
+                                    Id = innerOfInnerChild.Id,
+                                    Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
+                                });
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+
+            var childNodesWithChildren = serviceHelper.GetFolderListIncludingChildren(projectsChildElementsNodeId);
+
+            foreach (var childNode in childNodesWithChildren)
+            {
+                cmbChildRoot.Items.Add(new ProjectChilds()
+                {
+                    Id = Convert.ToInt64(childNode.Key),
+                    Name = childNode.Value
                 });
             }
         }
@@ -136,12 +177,15 @@ namespace EK_MultipleTransporter.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            if (cmbProjects.SelectedIndex < 0 || txtFolderRoot.Text==String.Empty)
+
+            var childRootNodeId = Convert.ToInt64(cmbChildRoot.SelectedValue); 
+
+            if (cmbProjects.SelectedIndex < 0 || txtFolderRoot.Text == String.Empty)
             {
                 MessageBox.Show("Lütfen proje ve Hedef dizini seçiniz.");
                 return;
             }
-            var docs = StreamHelper.ReadAllDocumentsAsByte(txtFolderRoot.Text, serviceHelper, VariableHelper.Token, projectsChildElementsNodeId);
+            var docs = StreamHelper.ReadAllDocumentsAsByte(txtFolderRoot.Text, serviceHelper, projectsChildElementsNodeId);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -167,15 +211,6 @@ namespace EK_MultipleTransporter.Forms
                     txtFolderRoot.Text = folderDlg.SelectedPath;
                     Environment.SpecialFolder root = folderDlg.RootFolder;
                 }
-
-                //ofdRootFolder.Title = Resources.ChooseFolder;
-                //ofdRootFolder.Filter = Resources.AllowedTypes;
-                //ofdRootFolder.FileName = "";
-                //ofdRootFolder.Multiselect = false;
-                //ofdRootFolder.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
-                //if (ofdRootFolder.ShowDialog() != DialogResult.OK) return;
-                //var folderRoot = ofdRootFolder.FileName;
 
             }
         }

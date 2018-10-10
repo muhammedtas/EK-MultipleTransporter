@@ -1,11 +1,8 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EK_MultipleTransporter.Helpers
 {
@@ -20,21 +17,37 @@ namespace EK_MultipleTransporter.Helpers
             _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
 
-        public EntityNode[] GetChildNodesById (string token, long id)
+        public EntityNode[] GetChildNodesById (long id)
         {
            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false);
 
         }
-        public EntityAttributeGroup GetEntityAttributeGroupOfCategory(string token, long id)
+
+        public KeyValuePair[] GetFolderListIncludingChildren (long id)
         {
-            return VariableHelper.Dmo.GetEntityAttributeGroupOfCategory("Admin", token, id);
+            return VariableHelper.Dmo.GetFolderListIncludingChildren("admin", VariableHelper.Token, id);
+        }
+        public EntityAttributeGroup GetEntityAttributeGroupOfCategory(long id)
+        {
+            var entityAttributeGroup = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory("Admin", VariableHelper.Token, id);
+            return entityAttributeGroup;
         }
 
-        public EntityNode GetNodeByName (string token, long parentNodeId, string nodeName)
+        public EntityNode GetNodeByName (long parentNodeId, string nodeName)
         {
             var node = VariableHelper.Dmo.GetEntityNodeByName("admin", VariableHelper.Token, parentNodeId, nodeName, false, false, false);
             return node;
 
+        }
+
+        public bool HasChildNode (long id)
+        {
+            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false) == null ? false : true;
+        }
+
+        public long FindChildNodeIdByName (long parentNodeId, string childNodeName)
+        {
+            return VariableHelper.Dmo.GetEntityNodeByName("admin", VariableHelper.Token, parentNodeId, childNodeName, false, false, false).Id;
         }
         public bool AddDocumentOrVersionPrivate(string fileAddress, string alternativeFileAddress, long newFolder)
         {
