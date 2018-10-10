@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EK_MultipleTransporter.DmsDocumentManagementService;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,25 +10,38 @@ namespace EK_MultipleTransporter.Helpers
 {
     public class StreamHelper
     {
-        public static Dictionary<long?,byte[]> ReadAllDocumentsAsByte(string rootFolderPath, OTServicesHelper serviceHelper, long parentNodeId)
+        public static Dictionary<Tuple<long,string>, byte[]> MakePreparedDocumentListToPush(string rootFolderPath, List<EntityNode> nodeList)
         {
+            if (nodeList == null) return null;
+
             var docList = new List<byte[]>();
-            var dict = new Dictionary<long?, byte[]>();
+            var dict = new Dictionary<Tuple<long, string>, byte[]>();
 
             var fileArray = Directory.GetFiles(rootFolderPath);
 
-            foreach (var item in fileArray)
+            foreach (var targetNode in nodeList)
             {
-                var nodeName = item.Split('\\').LastOrDefault().Split('.').FirstOrDefault();
-                var nodeResult = DbEntityHelper.GetNodeByName(parentNodeId, nodeName);
+                if (targetNode == null) continue;
 
-                if (nodeResult == null) continue;
+                foreach (var file in fileArray)
+                {
+                    var newDocName = file.Split('\\').LastOrDefault().Split('.').FirstOrDefault();
 
-                var newFile = File.ReadAllBytes(item);
+                    if (targetNode.Name.Contains(newDocName))
+                    {
+                        //var mainNodeResult = serviceHelper.GetEntityNodeFromId(parentNodeId);
 
-                dict.Add(nodeResult?.Id, newFile);
+                        // var nodeResult = DbEntityHelper.GetNodeByName(parentNodeId, nodeName);
+                        
+                        var newFile = File.ReadAllBytes(file);
 
+                        dict.Add(new Tuple<long,string>(targetNode.Id, newDocName),  newFile);
+                    }
+                    
+                }
+                
             }
+
             return dict;
         }
 

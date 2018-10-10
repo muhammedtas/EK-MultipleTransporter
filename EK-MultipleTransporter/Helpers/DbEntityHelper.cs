@@ -1,6 +1,7 @@
 ﻿using EK_MultipleTransporter.Data;
 using EK_MultipleTransporter.DmsDocumentManagementService;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace EK_MultipleTransporter.Helpers
@@ -30,6 +31,43 @@ namespace EK_MultipleTransporter.Helpers
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
                         Console.WriteLine("Item Node Id is that :: " + itemNodeId);
                         result = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false);
+                    }
+                    reader.Close();
+                    connection.Close();
+
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    throw;
+                }
+            }
+
+        }
+
+        public static List<EntityNode> GetNodesByName(string name)
+        {
+            List<EntityNode> result = new List<EntityNode>();
+            string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where [Name] LIKE @name";
+            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore]";
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@name", "%" + name + "%");
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        //Console.WriteLine(reader[0]);
+                        var itemNodeId = Convert.ToInt64(reader["DataID"]);
+                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
+                        var newNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false);
+                        result.Add(newNode);
                     }
                     reader.Close();
                     connection.Close();

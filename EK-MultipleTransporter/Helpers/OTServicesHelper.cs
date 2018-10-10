@@ -40,6 +40,11 @@ namespace EK_MultipleTransporter.Helpers
 
         }
 
+        public EntityNode GetEntityNodeFromId (long id)
+        {
+            return VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, id, false, false, false);
+        }
+
         public bool HasChildNode (long id)
         {
             return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false) == null ? false : true;
@@ -49,43 +54,25 @@ namespace EK_MultipleTransporter.Helpers
         {
             return VariableHelper.Dmo.GetEntityNodeByName("admin", VariableHelper.Token, parentNodeId, childNodeName, false, false, false).Id;
         }
-        public bool AddDocumentOrVersionPrivate(string fileAddress, string alternativeFileAddress, long newFolder)
+        public bool AddDocumentOrVersion(string docName, byte[] fileByteArray, long targetFolder)
         {
             try
             {
                 EntityAttachment eaj;
-                if (File.Exists(fileAddress))
+                if (fileByteArray != null && targetFolder > 0)
                 {
-                    var fileByteArray = File.ReadAllBytes(fileAddress);
+                    //var fileByteArray = File.ReadAllBytes(fileAddress);
                     eaj = new EntityAttachment
                     {
                         Contents = fileByteArray,
                         CreatedDate = DateTime.Now,
-                        FileName = fileAddress.Split('\\').LastOrDefault(),
+                        FileName = docName,
                         ModifiedDate = DateTime.Now,
                         FileSize = fileByteArray.Length
                     };
 
 
-                    var idj = VariableHelper.Dmo.AddDocumentOrVersion("Admin", VariableHelper.Token, eaj, newFolder, "", true);
-                    fileByteArray = null;
-                    eaj = null;
-                    return idj > 0;
-                }
-                if (File.Exists(alternativeFileAddress))
-                {
-
-                    var fileByteArray = File.ReadAllBytes(alternativeFileAddress);
-                    eaj = new EntityAttachment
-                    {
-                        Contents = fileByteArray,
-                        CreatedDate = DateTime.Now,
-                        FileName = alternativeFileAddress.Split('\\').LastOrDefault(),
-                        ModifiedDate = DateTime.Now,
-                        FileSize = fileByteArray.Length
-                    };
-
-                    var idj = VariableHelper.Dmo.AddDocumentOrVersion("Admin", VariableHelper.Token, eaj, newFolder, "", true);
+                    var idj = VariableHelper.Dmo.AddDocumentOrVersion("Admin", VariableHelper.Token, eaj, targetFolder, "", true);
                     fileByteArray = null;
                     eaj = null;
                     return idj > 0;
@@ -93,46 +80,31 @@ namespace EK_MultipleTransporter.Helpers
             }
             catch (Exception ex)
             {
-                Logger.Warn(ex, "An unexpected error has been occured while transferring this line     :" + alternativeFileAddress + "     :");
+                Logger.Warn(ex, "File named " + docName + "   could not be found.");
             }
             return false;
 
         }
 
-        public bool AddDocumentWithMetaData(string fileAddress, string alternativeFileAddress, long folderId, EntityMetadata emd, string line, int loadCounter, string ekUnit)
+        public bool AddDocumentWithMetaData(long targetFolder,  string docName, byte[] fileByteArray,EntityMetadata emd)
         {
             EntityAttachment eaj = null;
             try
             {
-                byte[] fileByteArray;
-
-                if (File.Exists(fileAddress))
+                if (fileByteArray != null && targetFolder > 0)
                 {
-                    fileByteArray = File.ReadAllBytes(fileAddress);
                     eaj = new EntityAttachment
                     {
                         Contents = fileByteArray,
                         CreatedDate = DateTime.Now,
-                        FileName = fileAddress.Split('\\').LastOrDefault(),
+                        FileName = docName,
                         ModifiedDate = DateTime.Now,
                         FileSize = fileByteArray.Length
                     };
 
                 }
 
-                if (File.Exists(alternativeFileAddress))
-                {
-                    fileByteArray = File.ReadAllBytes(fileAddress);
-                    eaj = new EntityAttachment
-                    {
-                        Contents = fileByteArray,
-                        CreatedDate = DateTime.Now,
-                        FileName = fileAddress.Split('\\').LastOrDefault(),
-                        ModifiedDate = DateTime.Now,
-                        FileSize = fileByteArray.Length
-                    };
-                }
-                var ida = VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, folderId, emd, eaj, "");
+                var ida = VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
 
                 fileByteArray = null;
                 eaj = null;
@@ -141,7 +113,7 @@ namespace EK_MultipleTransporter.Helpers
             }
             catch (Exception ex)
             {
-                Logger.Trace(ex, "File is not exist in this address  :" + alternativeFileAddress);
+                Logger.Trace(ex, "File named" + docName + "is not exist in this address");
                 return false;
             }
 

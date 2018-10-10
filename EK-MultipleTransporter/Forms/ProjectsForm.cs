@@ -7,6 +7,7 @@ using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
 using System.Configuration;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Web.Services.Protocols;
@@ -105,16 +106,16 @@ namespace EK_MultipleTransporter.Forms
 
             //DmsOps dops = new DmsOps();
 
-            EntityNode[] nodes = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, projectsNodeId, 0, 1000, false, false);
+            //EntityNode[] nodes = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, projectsNodeId, 0, 1000, false, false);
 
-            foreach (EntityNode node in nodes)
-            {
-                cmbProjects.Items.Add(new Project()
-                {
-                    Id = node.Id,
-                    Name = node.Name
-                });
-            }
+            //foreach (EntityNode node in nodes)
+            //{
+            //    cmbProjects.Items.Add(new Project()
+            //    {
+            //        Id = node.Id,
+            //        Name = node.Name
+            //    });
+            //}
 
             var childNodes = serviceHelper.GetChildNodesById(projectsChildElementsNodeId);
 
@@ -178,14 +179,52 @@ namespace EK_MultipleTransporter.Forms
         private void btnOk_Click(object sender, EventArgs e)
         {
 
-            var childRootNodeId = Convert.ToInt64(cmbChildRoot.SelectedValue); 
+            var mainChildRootNodeId = Convert.ToInt64((cmbChildRoot.SelectedItem as ProjectChilds).Id); // Şimdi Bu nodeId ye karşılık gelen 
 
-            if (cmbProjects.SelectedIndex < 0 || txtFolderRoot.Text == String.Empty)
+            // if (mainChildRootNodeId != projectsChildElementsNodeId) return;
+           
+            var mainChildRootElement = serviceHelper.GetEntityNodeFromId(mainChildRootNodeId);
+
+            var loadingPlaceForEachDocumentsList = DbEntityHelper.GetNodesByName((cmbChildRoot.SelectedItem as ProjectChilds).Name);
+
+            var mainNodeResult = serviceHelper.GetEntityNodeFromId(projectsNodeId); // ProjectsNodeId asıl dökümanların atılacağı yer.
+
+
+            if (txtFolderRoot.Text == String.Empty || cmbChildRoot.SelectedIndex == -1)
             {
-                MessageBox.Show("Lütfen proje ve Hedef dizini seçiniz.");
+                MessageBox.Show("Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz.");
                 return;
             }
-            var docs = StreamHelper.ReadAllDocumentsAsByte(txtFolderRoot.Text, serviceHelper, projectsChildElementsNodeId);
+            var docsToUpload = StreamHelper.MakePreparedDocumentListToPush(txtFolderRoot.Text, loadingPlaceForEachDocumentsList);
+
+            try
+            {
+                var eag = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+
+                var docType = eag.Values.First(x => x.Description == "Doküman Türü");
+                docType.Values = new object[] { cmbDocumentType.Text };
+
+                var year = eag.Values.First(x => x.Description == "Yıl");
+                year.Values = new object[] { txtYear.Text };
+
+                var term = eag.Values.First(x => x.Description == "Çeyrek");
+                term.Values = new object[] { cmbTerm.Text };
+
+                var emdNew = new EntityMetadata();
+
+                emdNew.AttributeGroups = new[] { eag };
+
+                foreach (var item in docsToUpload)
+                {
+                    serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ot categories update  error :  " + ex);
+                throw;
+            }
+
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -195,24 +234,17 @@ namespace EK_MultipleTransporter.Forms
 
         private void txtFolderRoot_Click(object sender, EventArgs e)
         {
-            if (cmbProjects.SelectedIndex == -1)
+           
+            FolderBrowserDialog folderDlg = new FolderBrowserDialog();
+            folderDlg.ShowNewFolderButton = true;
+            // Show the FolderBrowserDialog.  
+            DialogResult result = folderDlg.ShowDialog();
+            if (result == DialogResult.OK)
             {
-                MessageBox.Show("Önce Proje Türünü Seçiniz.");
+                txtFolderRoot.Text = folderDlg.SelectedPath;
+                Environment.SpecialFolder root = folderDlg.RootFolder;
             }
-            else
-            {
 
-                FolderBrowserDialog folderDlg = new FolderBrowserDialog();
-                folderDlg.ShowNewFolderButton = true;
-                // Show the FolderBrowserDialog.  
-                DialogResult result = folderDlg.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    txtFolderRoot.Text = folderDlg.SelectedPath;
-                    Environment.SpecialFolder root = folderDlg.RootFolder;
-                }
-
-            }
         }
     }
 }
