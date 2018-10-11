@@ -1,8 +1,10 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace EK_MultipleTransporter.Helpers
 {
@@ -37,7 +39,6 @@ namespace EK_MultipleTransporter.Helpers
         {
             var node = VariableHelper.Dmo.GetEntityNodeByName("admin", VariableHelper.Token, parentNodeId, nodeName, false, false, false);
             return node;
-
         }
 
         public EntityNode GetEntityNodeFromId (long id)
@@ -133,6 +134,15 @@ namespace EK_MultipleTransporter.Helpers
             }
         }
 
-   
+        public void PlaceNodesIntoComboboxWithChilds (ComboBox cmbItem, EntityNode[] childNodes, object objectType)
+        {
+
+        }
+
+        public EntityNode[] GetEntityNodeListIncludingChildrenUsingTypeFilter(long parentNodeId, string typeFilter)
+        {
+            return VariableHelper.Dmo.GetEntityNodeListIncludingChildrenUsingTypeFilter("admin", VariableHelper.Token, parentNodeId, 1000, typeFilter, false);
+        }
+
     }
 }

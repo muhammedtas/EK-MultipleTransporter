@@ -22,17 +22,14 @@ namespace EK_MultipleTransporter.Helpers
             foreach (var targetNode in nodeList)
             {
                 if (targetNode == null) continue;
+                var parentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, targetNode.ParentId, false, false, false);
 
                 foreach (var file in fileArray)
                 {
                     var newDocName = file.Split('\\').LastOrDefault().Split('.').FirstOrDefault();
-
-                    if (targetNode.Name.Contains(newDocName))
-                    {
-                        //var mainNodeResult = serviceHelper.GetEntityNodeFromId(parentNodeId);
-
-                        // var nodeResult = DbEntityHelper.GetNodeByName(parentNodeId, nodeName);
-                        
+                    
+                    if (parentNode.Name.Contains(newDocName))
+                    {                        
                         var newFile = File.ReadAllBytes(file);
 
                         dict.Add(new Tuple<long,string>(targetNode.Id, newDocName),  newFile);
