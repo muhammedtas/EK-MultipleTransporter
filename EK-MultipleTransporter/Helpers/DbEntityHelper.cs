@@ -9,13 +9,12 @@ namespace EK_MultipleTransporter.Helpers
 {
     public class DbEntityHelper
     {
-        private static OTCSDbContext dbContext;
-        private static string OtcsDbConnStr = ConfigurationManager.ConnectionStrings["OTCSCnnStr"].ConnectionString;
+        private static readonly string OtcsDbConnStr = ConfigurationManager.ConnectionStrings["OTCSCnnStr"].ConnectionString;
         public static EntityNode GetNodeByName(long parentNodeId, string name)
         {
             EntityNode result = null;
             string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore]";
+
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
                 SqlCommand command = new SqlCommand(query, connection);
@@ -28,8 +27,6 @@ namespace EK_MultipleTransporter.Helpers
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-
-                        //Console.WriteLine(reader[0]);
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
                         Console.WriteLine("Item Node Id is that :: " + itemNodeId);
                         result = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false);
@@ -52,7 +49,6 @@ namespace EK_MultipleTransporter.Helpers
         {
             List<EntityNode> result = new List<EntityNode>();
             string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where [ParentID] = @parentNodeId AND [Name] LIKE @name";
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore]";
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
                 SqlCommand command = new SqlCommand(query, connection);
@@ -65,7 +61,6 @@ namespace EK_MultipleTransporter.Helpers
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-                        //Console.WriteLine(reader[0]);
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
                         Console.WriteLine("Item Node Id is that :: " + itemNodeId);
                         result.Add(VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false));
@@ -88,7 +83,6 @@ namespace EK_MultipleTransporter.Helpers
         {
             List<EntityNode> result = new List<EntityNode>();
             string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where [Name] LIKE @name";
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore]";
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
                 SqlCommand command = new SqlCommand(query, connection);
@@ -123,8 +117,7 @@ namespace EK_MultipleTransporter.Helpers
 
         private static string GetConnectionString()
         {
-            //return OtcsDbConnStr;
-            return "Data Source=192.168.50.120; Initial Catalog=OTCS; Persist Security Info=True;User ID=sa; Password=TstAdminOT*; MultipleActiveResultSets=true; Connection Timeout=300";
+            return OtcsDbConnStr;
         }
 
     }

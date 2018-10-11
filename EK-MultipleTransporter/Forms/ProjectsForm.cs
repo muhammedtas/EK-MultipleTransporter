@@ -253,7 +253,6 @@ namespace EK_MultipleTransporter.Forms
 
             FolderBrowserDialog folderDlg = new FolderBrowserDialog();
             folderDlg.ShowNewFolderButton = true;
-            // Show the FolderBrowserDialog.  
             DialogResult result = folderDlg.ShowDialog();
             if (result == DialogResult.OK)
             {

@@ -60,14 +60,14 @@
             this.grMain.Items.Add(this.rbtnDistrictLst);
             this.grMain.Items.Add(this.rbtnLitigationList);
             this.grMain.Items.Add(this.rbtnPersonelList);
-            this.grMain.Label = "Main Group";
+            this.grMain.Label = "OpenText Yükleyicileri";
             this.grMain.Name = "grMain";
             // 
             // rbtnProjectList
             // 
             this.rbtnProjectList.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
             this.rbtnProjectList.Image = ((System.Drawing.Image)(resources.GetObject("rbtnProjectList.Image")));
-            this.rbtnProjectList.Label = "Projeleri Getir";
+            this.rbtnProjectList.Label = "Projeleri Aktar";
             this.rbtnProjectList.Name = "rbtnProjectList";
             this.rbtnProjectList.ShowImage = true;
             this.rbtnProjectList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnProjectList_Click);
@@ -76,7 +76,7 @@
             // 
             this.rbtnPlotList.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
             this.rbtnPlotList.Image = ((System.Drawing.Image)(resources.GetObject("rbtnPlotList.Image")));
-            this.rbtnPlotList.Label = "Arsaları Getir";
+            this.rbtnPlotList.Label = "Arsaları Aktar";
             this.rbtnPlotList.Name = "rbtnPlotList";
             this.rbtnPlotList.ShowImage = true;
             this.rbtnPlotList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnPlotList_Click);
@@ -85,7 +85,7 @@
             // 
             this.rbtnDistrictLst.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
             this.rbtnDistrictLst.Image = ((System.Drawing.Image)(resources.GetObject("rbtnDistrictLst.Image")));
-            this.rbtnDistrictLst.Label = "Bağımsız Bölümleri Getir";
+            this.rbtnDistrictLst.Label = "Bağımsız Bölümleri Aktar";
             this.rbtnDistrictLst.Name = "rbtnDistrictLst";
             this.rbtnDistrictLst.ShowImage = true;
             this.rbtnDistrictLst.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnDistrictLst_Click);
@@ -94,7 +94,7 @@
             // 
             this.rbtnLitigationList.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
             this.rbtnLitigationList.Image = ((System.Drawing.Image)(resources.GetObject("rbtnLitigationList.Image")));
-            this.rbtnLitigationList.Label = "Davaları Getir";
+            this.rbtnLitigationList.Label = "Davaları Aktar";
             this.rbtnLitigationList.Name = "rbtnLitigationList";
             this.rbtnLitigationList.ShowImage = true;
             this.rbtnLitigationList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnLitigationList_Click);
@@ -103,7 +103,7 @@
             // 
             this.rbtnPersonelList.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
             this.rbtnPersonelList.Image = ((System.Drawing.Image)(resources.GetObject("rbtnPersonelList.Image")));
-            this.rbtnPersonelList.Label = "Personelleri Getir";
+            this.rbtnPersonelList.Label = "Personelleri Aktar";
             this.rbtnPersonelList.Name = "rbtnPersonelList";
             this.rbtnPersonelList.ShowImage = true;
             this.rbtnPersonelList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnPersonelList_Click);

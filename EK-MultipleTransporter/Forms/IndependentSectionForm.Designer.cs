@@ -36,6 +36,7 @@
             // 
             // cmbDistrictsList
             // 
+            this.cmbDistrictsList.BackColor = System.Drawing.SystemColors.Menu;
             this.cmbDistrictsList.FormattingEnabled = true;
             this.cmbDistrictsList.Location = new System.Drawing.Point(221, 47);
             this.cmbDistrictsList.Name = "cmbDistrictsList";
@@ -66,10 +67,10 @@
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 3;
-            this.btnOk.Text = "Tamam";
+            this.btnOk.Text = "Yükle";
             this.btnOk.UseVisualStyleBackColor = true;
             // 
-            // DistrictsForm
+            // IndependentSectionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -78,7 +79,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.lblDistricts);
             this.Controls.Add(this.cmbDistrictsList);
-            this.Name = "DistrictsForm";
+            this.Name = "IndependentSectionForm";
             this.Text = "DistrictsForm";
             this.Load += new System.EventHandler(this.DistrictsForm_Load);
             this.ResumeLayout(false);

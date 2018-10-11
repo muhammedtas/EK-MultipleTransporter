@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.txtFolderRoot = new System.Windows.Forms.TextBox();
@@ -46,30 +47,31 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(322, 290);
+            this.btnCancel.Location = new System.Drawing.Point(323, 311);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 2;
+            this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "İptal";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(480, 290);
+            this.btnOk.Location = new System.Drawing.Point(481, 311);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
-            this.btnOk.TabIndex = 3;
-            this.btnOk.Text = "Tamam";
+            this.btnOk.TabIndex = 6;
+            this.btnOk.Text = "Yükle";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // txtFolderRoot
             // 
-            this.txtFolderRoot.Location = new System.Drawing.Point(176, 46);
+            this.txtFolderRoot.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtFolderRoot.Location = new System.Drawing.Point(177, 46);
             this.txtFolderRoot.Name = "txtFolderRoot";
             this.txtFolderRoot.Size = new System.Drawing.Size(379, 20);
-            this.txtFolderRoot.TabIndex = 6;
+            this.txtFolderRoot.TabIndex = 1;
             this.txtFolderRoot.Click += new System.EventHandler(this.txtFolderRoot_Click);
             // 
             // lblCategoryDocumentType
@@ -78,7 +80,7 @@
             this.lblCategoryDocumentType.Location = new System.Drawing.Point(63, 159);
             this.lblCategoryDocumentType.Name = "lblCategoryDocumentType";
             this.lblCategoryDocumentType.Size = new System.Drawing.Size(78, 13);
-            this.lblCategoryDocumentType.TabIndex = 8;
+            this.lblCategoryDocumentType.TabIndex = 10;
             this.lblCategoryDocumentType.Text = "Doküman Türü";
             // 
             // lblChild
@@ -96,7 +98,7 @@
             this.lblFolderRoot.Location = new System.Drawing.Point(63, 46);
             this.lblFolderRoot.Name = "lblFolderRoot";
             this.lblFolderRoot.Size = new System.Drawing.Size(70, 13);
-            this.lblFolderRoot.TabIndex = 10;
+            this.lblFolderRoot.TabIndex = 8;
             this.lblFolderRoot.Text = "Klasör Seçimi";
             // 
             // ofdRootFolder
@@ -106,62 +108,67 @@
             // lblCategoryYear
             // 
             this.lblCategoryYear.AutoSize = true;
-            this.lblCategoryYear.Location = new System.Drawing.Point(63, 197);
+            this.lblCategoryYear.Location = new System.Drawing.Point(63, 208);
             this.lblCategoryYear.Name = "lblCategoryYear";
             this.lblCategoryYear.Size = new System.Drawing.Size(18, 13);
-            this.lblCategoryYear.TabIndex = 13;
+            this.lblCategoryYear.TabIndex = 5;
             this.lblCategoryYear.Text = "Yıl";
             // 
             // lblTerm
             // 
             this.lblTerm.AutoSize = true;
-            this.lblTerm.Location = new System.Drawing.Point(63, 236);
+            this.lblTerm.Location = new System.Drawing.Point(63, 259);
             this.lblTerm.Name = "lblTerm";
             this.lblTerm.Size = new System.Drawing.Size(40, 13);
-            this.lblTerm.TabIndex = 14;
+            this.lblTerm.TabIndex = 12;
             this.lblTerm.Text = "Çeyrek";
+            // 
+            // dtpYear
+            // 
+            this.dtpYear.CalendarMonthBackground = System.Drawing.SystemColors.Menu;
+            this.dtpYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpYear.CustomFormat = "yyyy";
+            this.dtpYear.ShowUpDown = true;
+            this.dtpYear.Location = new System.Drawing.Point(177, 201);
+            this.dtpYear.Name = "dtpYear";
+            this.dtpYear.Size = new System.Drawing.Size(379, 20);
+            this.dtpYear.TabIndex = 4;
             // 
             // cmbChildRoot
             // 
+            this.cmbChildRoot.BackColor = System.Drawing.SystemColors.Menu;
             this.cmbChildRoot.FormattingEnabled = true;
-            this.cmbChildRoot.Location = new System.Drawing.Point(176, 97);
+            this.cmbChildRoot.Location = new System.Drawing.Point(177, 97);
             this.cmbChildRoot.Name = "cmbChildRoot";
             this.cmbChildRoot.Size = new System.Drawing.Size(379, 21);
-            this.cmbChildRoot.TabIndex = 5;
+            this.cmbChildRoot.TabIndex = 2;
             // 
             // cmbDocumentType
             // 
+            this.cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
             this.cmbDocumentType.Items.AddRange(new object[] {
             "Yapı Ruhsatı",
             "Tapu",
             "Katalog",
             "Sözleşme"});
-            this.cmbDocumentType.Location = new System.Drawing.Point(176, 151);
+            this.cmbDocumentType.Location = new System.Drawing.Point(177, 151);
             this.cmbDocumentType.Name = "cmbDocumentType";
             this.cmbDocumentType.Size = new System.Drawing.Size(379, 21);
-            this.cmbDocumentType.TabIndex = 15;
+            this.cmbDocumentType.TabIndex = 3;
             // 
             // cmbTerm
             // 
+            this.cmbTerm.BackColor = System.Drawing.SystemColors.Menu;
             this.cmbTerm.FormattingEnabled = true;
             this.cmbTerm.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4"});
-            this.cmbTerm.Location = new System.Drawing.Point(176, 228);
+            this.cmbTerm.Location = new System.Drawing.Point(177, 251);
             this.cmbTerm.Name = "cmbTerm";
             this.cmbTerm.Size = new System.Drawing.Size(379, 21);
             this.cmbTerm.TabIndex = 11;
-            // 
-            // dtpYear
-            // 
-            this.dtpYear.Location = new System.Drawing.Point(176, 190);
-            this.dtpYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpYear.CustomFormat = "yyyy";
-            this.dtpYear.Name = "dtpYear";
-            this.dtpYear.Size = new System.Drawing.Size(379, 20);
-            this.dtpYear.TabIndex = 0;
             // 
             // ProjectsForm
             // 
@@ -181,7 +188,7 @@
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "ProjectsForm";
-            this.Text = "ProjectsForm";
+            this.Text = "Proje Dosyalarınızı Yükleyin";
             this.Load += new System.EventHandler(this.ProjectsForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

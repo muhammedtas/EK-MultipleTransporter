@@ -62,7 +62,6 @@ namespace EK_MultipleTransporter.Helpers
                 EntityAttachment eaj;
                 if (fileByteArray != null && targetFolder > 0)
                 {
-                    //var fileByteArray = File.ReadAllBytes(fileAddress);
                     eaj = new EntityAttachment
                     {
                         Contents = fileByteArray,
@@ -132,11 +131,6 @@ namespace EK_MultipleTransporter.Helpers
                 Logger.Trace(ex, "An Error has occured when trying to find if File exist in Opentext. Details Are    :" + ex.Message + "Inner exception  :" + ex.InnerException?.Message);
                 return false;
             }
-        }
-
-        public void PlaceNodesIntoComboboxWithChilds (ComboBox cmbItem, EntityNode[] childNodes, object objectType)
-        {
-
         }
 
         public EntityNode[] GetEntityNodeListIncludingChildrenUsingTypeFilter(long parentNodeId, string typeFilter)

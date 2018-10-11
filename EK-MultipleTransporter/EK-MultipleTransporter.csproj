@@ -219,7 +219,11 @@
     <Compile Include="Helpers\OTServicesHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\VariableHelper.cs" />
+    <Compile Include="Model\ChildModel\IndependentSectionChilds.cs" />
+    <Compile Include="Model\ChildModel\LitigationChilds.cs" />
+    <Compile Include="Model\ChildModel\PlotChilds.cs" />
     <Compile Include="Model\ChildModel\ProjectChilds.cs" />
+    <Compile Include="Model\ChildModel\StaffChilds.cs" />
     <Compile Include="Model\RootModel\IndependentSection.cs" />
     <Compile Include="Model\RootModel\Litigation.cs" />
     <Compile Include="Model\RootModel\Staff.cs" />
