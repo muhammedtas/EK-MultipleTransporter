@@ -30,26 +30,27 @@ namespace EK_MultipleTransporter.Helpers
                     if (dict.Count == fileArray.Count()) return dict;
                     
                     var newDocName = file.Split('\\').LastOrDefault().Split('.').FirstOrDefault();
-                    
+                    var newDocNameWithTail = file.Split('\\').LastOrDefault();
+
                     if (parentNode.Name.Contains(newDocName))
                     {                        
                         var newFile = File.ReadAllBytes(file);
 
-                        dict.Add(new Tuple<long,string>(targetNode.Id, newDocName),  newFile);
+                        dict.Add(new Tuple<long,string>(targetNode.Id, newDocNameWithTail),  newFile);
                     }
                     else if (parentOfFirstParentNode.Name.Contains(newDocName))
                     {
                         // 2. Kırınım için
                         var newFile = File.ReadAllBytes(file);
 
-                        dict.Add(new Tuple<long, string>(targetNode.Id, newDocName), newFile);
+                        dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
                     }
                     else if (parentOfSecondParentNode.Name.Contains(newDocName))
                     {
                         // 3.Kırınım için
                         var newFile = File.ReadAllBytes(file);
 
-                        dict.Add(new Tuple<long, string>(targetNode.Id, newDocName), newFile);
+                        dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
                     }
                     else
                     {

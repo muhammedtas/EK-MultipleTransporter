@@ -186,6 +186,21 @@ namespace EK_MultipleTransporter.Forms
                     }
                     else if (countDeepness == 3)
                     {
+                        var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
+                        var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
+
+                        var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
+
+                        var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+
+                        var generalThirdStepTargetNodeName = targetRootAddres.Split('\\')[2];
+
+                        var trgtChldnd = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
+
+                        // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
+
+                        if (trgtChldnd != null)
+                            targetNodesList.Add(trgtChldnd);
                         // Child kırınımı 3 ise
                     }
                     else
