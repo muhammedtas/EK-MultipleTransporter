@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EK_MultipleTransporter.Helpers
@@ -104,12 +105,46 @@ namespace EK_MultipleTransporter.Helpers
 
                 }
 
-                var ida = VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
+
+                var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
 
                 fileByteArray = null;
                 eaj = null;
 
                 return ida > 0;
+            }
+            catch (Exception ex)
+            {
+                Logger.Trace(ex, "File named" + docName + "is not exist in this address");
+                return false;
+            }
+
+        }
+        public async Task<bool> AddDocumentWithMetaDataAsync(long targetFolder, string docName, byte[] fileByteArray, EntityMetadata emd)
+        {
+            EntityAttachment eaj = null;
+            try
+            {
+                if (fileByteArray != null && targetFolder > 0)
+                {
+                    eaj = new EntityAttachment
+                    {
+                        Contents = fileByteArray,
+                        CreatedDate = DateTime.Now,
+                        FileName = docName,
+                        ModifiedDate = DateTime.Now,
+                        FileSize = fileByteArray.Length
+                    };
+
+                }
+
+                await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync("Admin", VariableHelper.Token, targetFolder, emd, eaj, ""));
+                // var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
+
+                fileByteArray = null;
+                eaj = null;
+                return true;
+                
             }
             catch (Exception ex)
             {

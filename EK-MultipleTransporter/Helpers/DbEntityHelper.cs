@@ -48,7 +48,7 @@ namespace EK_MultipleTransporter.Helpers
         public static List<EntityNode> GetNodesByNameInExactParent(long parentNodeId, string name)
         {
             List<EntityNode> result = new List<EntityNode>();
-            string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where [ParentID] = @parentNodeId AND [Name] LIKE @name";
+            string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
             using (SqlConnection connection = new SqlConnection(GetConnectionString()))
             {
                 SqlCommand command = new SqlCommand(query, connection);

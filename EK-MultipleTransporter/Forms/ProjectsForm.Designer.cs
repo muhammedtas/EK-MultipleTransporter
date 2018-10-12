@@ -103,7 +103,7 @@
             // 
             // ofdRootFolder
             // 
-            this.ofdRootFolder.FileName = "openFileDialog1";
+            this.ofdRootFolder.FileName = "ofdRootFolder";
             // 
             // lblCategoryYear
             // 
