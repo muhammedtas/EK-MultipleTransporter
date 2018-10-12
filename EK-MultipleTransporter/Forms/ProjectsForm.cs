@@ -281,7 +281,7 @@ namespace EK_MultipleTransporter.Forms
             }
         }
 
-        public async void LoadFormsDefault ()
+        public void LoadFormsDefault ()
         {
             
             var childNodes = serviceHelper.GetChildNodesById(projectsChildElementsNodeId);

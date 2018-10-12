@@ -1,11 +1,7 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
 using NLog;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace EK_MultipleTransporter.Helpers
 {
