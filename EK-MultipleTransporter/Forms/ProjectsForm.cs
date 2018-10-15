@@ -277,7 +277,7 @@ namespace EK_MultipleTransporter.Forms
 
             foreach (var item in docsToUpload)
             {
-                await serviceHelper.AddDocumentWithMetaDataAsync(item.Key.Item1, item.Key.Item2, item.Value, emdNew);
+                await Task.Run(()=>serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
             }
         }
 

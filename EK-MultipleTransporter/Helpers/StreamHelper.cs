@@ -10,56 +10,73 @@ namespace EK_MultipleTransporter.Helpers
     {
         public static Dictionary<Tuple<long,string>, byte[]> MakePreparedDocumentListToPush(string rootFolderPath, List<EntityNode> nodeList)
         {
-            if (nodeList == null) return null;
 
-            var docList = new List<byte[]>();
-            var dict = new Dictionary<Tuple<long, string>, byte[]>();
-
-            var fileArray = Directory.GetFiles(rootFolderPath);
-
-            foreach (var targetNode in nodeList)
+            try
             {
-                if (targetNode == null) continue;
-                var parentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, targetNode.ParentId, false, false, false);
-                var parentOfFirstParentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, parentNode.ParentId, false, false, false);
-                var parentOfSecondParentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, parentOfFirstParentNode.ParentId, false, false, false);
-                foreach (var file in fileArray)
+                if (nodeList == null) return null;
+
+                var docList = new List<byte[]>();
+                var dict = new Dictionary<Tuple<long, string>, byte[]>();
+
+                var fileArray = Directory.GetFiles(rootFolderPath);
+
+                foreach (var targetNode in nodeList)
                 {
-                    if (dict.Count == fileArray.Count()) return dict;
-                    
-                    var newDocName = file.Split('\\').LastOrDefault().Split('.').FirstOrDefault();
-                    var newDocNameWithTail = file.Split('\\').LastOrDefault();
-
-                    if (parentNode.Name.Contains(newDocName))
-                    {                        
-                        var newFile = File.ReadAllBytes(file);
-
-                        dict.Add(new Tuple<long,string>(targetNode.Id, newDocNameWithTail),  newFile);
-                    }
-                    else if (parentOfFirstParentNode.Name.Contains(newDocName))
+                    if (targetNode == null) continue;
+                    var parentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, targetNode.ParentId, false, false, false);
+                    var parentOfFirstParentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, parentNode.ParentId, false, false, false);
+                    var parentOfSecondParentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, parentOfFirstParentNode.ParentId, false, false, false);
+                    foreach (var file in fileArray)
                     {
-                        // 2. Kırınım için
-                        var newFile = File.ReadAllBytes(file);
+                        if (dict.Count == fileArray.Count()) return dict;
 
-                        dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
-                    }
-                    else if (parentOfSecondParentNode.Name.Contains(newDocName))
-                    {
-                        // 3.Kırınım için
-                        var newFile = File.ReadAllBytes(file);
+                        var newDocName = file.Split('\\').LastOrDefault().Split('.').FirstOrDefault().Split('-').FirstOrDefault();
+                        var newDocNameWithTail = file.Split('\\').LastOrDefault();
 
-                        dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
+                        if (parentNode.Name.Contains(newDocName))
+                        {
+                            var newFile = File.ReadAllBytes(file);
+
+                            dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
+                        }
+                        else if (parentOfFirstParentNode != null)
+                        {
+                            if (parentOfFirstParentNode.Name.Contains(newDocName))
+                            {
+                                // 2. Kırınım için
+                                var newFile = File.ReadAllBytes(file);
+
+                                dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
+                            }
+                           
+                        }
+                        else if (parentOfSecondParentNode != null)
+                        {
+                            if (parentOfSecondParentNode.Name.Contains(newDocName))
+                            {
+                                var newFile = File.ReadAllBytes(file);
+
+                                dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
+                            }
+                            // 3.Kırınım için
+                           
+                        }
+                        else
+                        {
+                            Console.Write("fuck your nodes. Write all them into your services.");
+                        }
+
                     }
-                    else
-                    {
-                        Console.Write("fuck your nodes. Write all them into your services.");
-                    }
-                    
+
                 }
-                
-            }
 
-            return dict;
+                return dict;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
     }
