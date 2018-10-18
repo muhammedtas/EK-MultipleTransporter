@@ -185,6 +185,12 @@
     <Compile Include="Entity\BaseChildEntity.cs" />
     <Compile Include="Entity\BaseEntity.cs" />
     <Compile Include="Entity\IBaseEntity.cs" />
+    <Compile Include="Forms\DistributorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DistributorForm.Designer.cs">
+      <DependentUpon>DistributorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\IndependentSectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +255,9 @@
     </Compile>
     <EmbeddedResource Include="CaseRibbons.resx">
       <DependentUpon>CaseRibbons.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DistributorForm.resx">
+      <DependentUpon>DistributorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\IndependentSectionForm.resx">
       <DependentUpon>IndependentSectionForm.cs</DependentUpon>
@@ -376,7 +385,9 @@
   <ItemGroup>
     <None Include="Resources\personel.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\distributor.jpg" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

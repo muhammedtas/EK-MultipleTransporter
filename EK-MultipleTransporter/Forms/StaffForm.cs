@@ -110,6 +110,13 @@ namespace EK_MultipleTransporter.Forms
 
         public void LoadStaffFormDefault()
         {
+            var categoryItems = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+            if (categoryItems != null)
+            {
+                var itemArray = categoryItems.Values[0].ValidValues;
+                cmbStaffDocumentType.Items.AddRange(itemArray);
+            }
+
             var childNodes = serviceHelper.GetChildNodesById(staffsChildElementsNodeId);
 
             foreach (var childNode in childNodes)
@@ -151,6 +158,7 @@ namespace EK_MultipleTransporter.Forms
 
                 }
             }
+
         }
 
 

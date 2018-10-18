@@ -44,5 +44,11 @@ namespace EK_MultipleTransporter
             StaffForm frm = new StaffForm();
             frm.ShowDialog();
         }
+
+        private void btnDistributor_Click(object sender, RibbonControlEventArgs e)
+        {
+            DistributorForm frm = new DistributorForm();
+            frm.ShowDialog();
+        }
     }
 }

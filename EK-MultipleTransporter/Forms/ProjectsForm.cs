@@ -283,7 +283,13 @@ namespace EK_MultipleTransporter.Forms
 
         public void LoadFormsDefault ()
         {
-            
+            var categoryItems = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+            if (categoryItems != null)
+            {
+                var itemArray = categoryItems.Values[0].ValidValues;
+                cmbDocumentType.Items.AddRange(itemArray);
+            }
+
             var childNodes = serviceHelper.GetChildNodesById(projectsChildElementsNodeId);
 
             foreach (var childNode in childNodes)

@@ -146,11 +146,11 @@
             // cmbDocumentType
             // 
             this.cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbDocumentType.Items.AddRange(new object[] {
-            "Yapı Ruhsatı",
-            "Tapu",
-            "Katalog",
-            "Sözleşme"});
+            //this.cmbDocumentType.Items.AddRange(new object[] {
+            //"Yapı Ruhsatı",
+            //"Tapu",
+            //"Katalog",
+            //"Sözleşme"});
             this.cmbDocumentType.Location = new System.Drawing.Point(177, 151);
             this.cmbDocumentType.Name = "cmbDocumentType";
             this.cmbDocumentType.Size = new System.Drawing.Size(379, 21);

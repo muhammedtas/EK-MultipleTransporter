@@ -130,39 +130,39 @@
             // 
             // cmbStaffTerm
             // 
-            cmbStaffTerm.BackColor = System.Drawing.SystemColors.Menu;
-            cmbStaffTerm.FormattingEnabled = true;
-            cmbStaffTerm.Items.AddRange(new object[] {
+            this.cmbStaffTerm.BackColor = System.Drawing.SystemColors.Menu;
+            this.cmbStaffTerm.FormattingEnabled = true;
+            this.cmbStaffTerm.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4"});
-            cmbStaffTerm.Location = new System.Drawing.Point(174, 251);
-            cmbStaffTerm.Name = "cmbStaffTerm";
-            cmbStaffTerm.Size = new System.Drawing.Size(379, 21);
-            cmbStaffTerm.TabIndex = 23;
+            this.cmbStaffTerm.Location = new System.Drawing.Point(174, 251);
+            this.cmbStaffTerm.Name = "cmbStaffTerm";
+            this.cmbStaffTerm.Size = new System.Drawing.Size(379, 21);
+            this.cmbStaffTerm.TabIndex = 23;
             // 
             // cmbStaffChildRoot
             // 
-            cmbStaffChildRoot.BackColor = System.Drawing.SystemColors.Menu;
-            cmbStaffChildRoot.FormattingEnabled = true;
-            cmbStaffChildRoot.Location = new System.Drawing.Point(174, 97);
-            cmbStaffChildRoot.Name = "cmbStaffChildRoot";
-            cmbStaffChildRoot.Size = new System.Drawing.Size(379, 21);
-            cmbStaffChildRoot.TabIndex = 14;
+            this.cmbStaffChildRoot.BackColor = System.Drawing.SystemColors.Menu;
+            this.cmbStaffChildRoot.FormattingEnabled = true;
+            this.cmbStaffChildRoot.Location = new System.Drawing.Point(174, 97);
+            this.cmbStaffChildRoot.Name = "cmbStaffChildRoot";
+            this.cmbStaffChildRoot.Size = new System.Drawing.Size(379, 21);
+            this.cmbStaffChildRoot.TabIndex = 14;
             // 
             // cmbStaffDocumentType
             // 
-            cmbStaffDocumentType.BackColor = System.Drawing.SystemColors.Menu;
-            cmbStaffDocumentType.Items.AddRange(new object[] {
-            "Yapı Ruhsatı",
-            "Tapu",
-            "Katalog",
-            "Sözleşme"});
-            cmbStaffDocumentType.Location = new System.Drawing.Point(174, 151);
-            cmbStaffDocumentType.Name = "cmbStaffDocumentType";
-            cmbStaffDocumentType.Size = new System.Drawing.Size(379, 21);
-            cmbStaffDocumentType.TabIndex = 15;
+            this.cmbStaffDocumentType.BackColor = System.Drawing.SystemColors.Menu;
+            //this.cmbStaffDocumentType.Items.AddRange(new object[] {
+            //"Yapı Ruhsatı",
+            //"Tapu",
+            //"Katalog",
+            //"Sözleşme"});
+            this.cmbStaffDocumentType.Location = new System.Drawing.Point(174, 151);
+            this.cmbStaffDocumentType.Name = "cmbStaffDocumentType";
+            this.cmbStaffDocumentType.Size = new System.Drawing.Size(379, 21);
+            this.cmbStaffDocumentType.TabIndex = 15;
             // 
             // StaffForm
             // 
@@ -171,14 +171,14 @@
             this.ClientSize = new System.Drawing.Size(596, 377);
             this.Controls.Add(this.lblTerm);
             this.Controls.Add(this.lblCategoryYear);
-            this.Controls.Add(cmbStaffTerm);
+            this.Controls.Add(this.cmbStaffTerm);
             this.Controls.Add(this.dtpStaffYear);
             this.Controls.Add(this.lblFolderRoot);
             this.Controls.Add(this.lblChild);
             this.Controls.Add(this.lblCategoryDocumentType);
             this.Controls.Add(this.txtStaffFolderRoot);
-            this.Controls.Add(cmbStaffChildRoot);
-            this.Controls.Add(cmbStaffDocumentType);
+            this.Controls.Add(this.cmbStaffChildRoot);
+            this.Controls.Add(this.cmbStaffDocumentType);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "StaffForm";
