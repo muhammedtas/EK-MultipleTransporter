@@ -114,6 +114,41 @@ namespace EK_MultipleTransporter.Helpers
 
         }
 
+        public static EntityNode GetAncestorNodeByName(long parentNodeId, string name)
+        {
+            EntityNode result = null;
+            string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND UPPER([Name]) LIKE @name";
+
+            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@name", "%" + name + "%");
+                command.Parameters.AddWithValue("@parentNodeId", parentNodeId);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var itemNodeId = Convert.ToInt64(reader["DataID"]);
+                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
+                        result = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false);
+                    }
+                    reader.Close();
+                    connection.Close();
+
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    throw;
+                }
+            }
+
+        }
+
         private static string GetConnectionString()
         {
             return OtcsDbConnStr;

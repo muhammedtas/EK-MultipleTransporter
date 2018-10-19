@@ -1,4 +1,6 @@
-﻿namespace EK_MultipleTransporter.Forms
+﻿using System.Windows.Forms;
+
+namespace EK_MultipleTransporter.Forms
 {
     partial class DistributorForm
     {
@@ -37,45 +39,15 @@
             this.txtDistDocumentRoot = new System.Windows.Forms.TextBox();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.lblWorkPlace = new System.Windows.Forms.Label();
             this.lblDocType = new System.Windows.Forms.Label();
-            this.cmbDistriborTerm = new System.Windows.Forms.ComboBox();
-            this.cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
-            this.cmbDistOTFolder = new System.Windows.Forms.ComboBox();
-            this.cmbWorkSpaceType = new System.Windows.Forms.ComboBox();
-            this.cmbDocumentType = new System.Windows.Forms.ComboBox();
+            this.ofdDocument = new System.Windows.Forms.OpenFileDialog();
+            this.cLstBxWorkSpaceType = new System.Windows.Forms.ListView();
+            this.hdWorkSpaceType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            cmbDistriborTerm = new System.Windows.Forms.ComboBox();
+            cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
+            cmbDistOTFolder = new System.Windows.Forms.ComboBox();
+            cmbDocumentType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
-            // 
-            // cmbDistriborTerm
-            // 
-            cmbDistriborTerm.BackColor = System.Drawing.SystemColors.Menu;
-            cmbDistriborTerm.FormattingEnabled = true;
-            cmbDistriborTerm.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4"});
-            cmbDistriborTerm.Location = new System.Drawing.Point(162, 288);
-            cmbDistriborTerm.Name = "cmbDistriborTerm";
-            cmbDistriborTerm.Size = new System.Drawing.Size(379, 21);
-            cmbDistriborTerm.TabIndex = 35;
-            // 
-            // cmbDistWorkPlaceType
-            // 
-            cmbDistWorkPlaceType.BackColor = System.Drawing.SystemColors.Menu;
-            cmbDistWorkPlaceType.FormattingEnabled = true;
-            cmbDistWorkPlaceType.Location = new System.Drawing.Point(162, 41);
-            cmbDistWorkPlaceType.Name = "cmbDistWorkPlaceType";
-            cmbDistWorkPlaceType.Size = new System.Drawing.Size(379, 21);
-            cmbDistWorkPlaceType.TabIndex = 26;
-            // 
-            // cmbDistOTFolder
-            // 
-            cmbDistOTFolder.BackColor = System.Drawing.SystemColors.Menu;
-            cmbDistOTFolder.Location = new System.Drawing.Point(162, 95);
-            cmbDistOTFolder.Name = "cmbDistOTFolder";
-            cmbDistOTFolder.Size = new System.Drawing.Size(379, 21);
-            cmbDistOTFolder.TabIndex = 27;
             // 
             // lblTerm
             // 
@@ -140,42 +112,27 @@
             this.txtDistDocumentRoot.Name = "txtDistDocumentRoot";
             this.txtDistDocumentRoot.Size = new System.Drawing.Size(379, 20);
             this.txtDistDocumentRoot.TabIndex = 25;
+            this.txtDistDocumentRoot.Click += new System.EventHandler(this.txtDistDocumentRoot_Click);
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(466, 387);
+            this.btnOk.Location = new System.Drawing.Point(466, 670);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 30;
             this.btnOk.Text = "Yükle";
             this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(308, 387);
+            this.btnCancel.Location = new System.Drawing.Point(308, 670);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 31;
             this.btnCancel.Text = "İptal";
             this.btnCancel.UseVisualStyleBackColor = true;
-            // 
-            // lblWorkPlace
-            // 
-            this.lblWorkPlace.AutoSize = true;
-            this.lblWorkPlace.Location = new System.Drawing.Point(48, 348);
-            this.lblWorkPlace.Name = "lblWorkPlace";
-            this.lblWorkPlace.Size = new System.Drawing.Size(61, 13);
-            this.lblWorkPlace.TabIndex = 38;
-            this.lblWorkPlace.Text = "İş alanı türü";
-            // 
-            // cmbWorkSpaceType
-            // 
-            cmbWorkSpaceType.BackColor = System.Drawing.SystemColors.Menu;
-            cmbWorkSpaceType.FormattingEnabled = true;
-            cmbWorkSpaceType.Location = new System.Drawing.Point(162, 340);
-            cmbWorkSpaceType.Name = "cmbWorkSpaceType";
-            cmbWorkSpaceType.Size = new System.Drawing.Size(379, 21);
-            cmbWorkSpaceType.TabIndex = 37;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // lblDocType
             // 
@@ -185,6 +142,65 @@
             this.lblDocType.Size = new System.Drawing.Size(78, 13);
             this.lblDocType.TabIndex = 40;
             this.lblDocType.Text = "Doküman Türü";
+            // 
+            // ofdDocument
+            // 
+            this.ofdDocument.FileName = "ofdDocument";
+            // 
+            // cLstBxWorkSpaceType
+            // 
+            this.cLstBxWorkSpaceType.BackColor = System.Drawing.SystemColors.Menu;
+            this.cLstBxWorkSpaceType.CheckBoxes = true;
+            this.cLstBxWorkSpaceType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.hdWorkSpaceType});
+            this.cLstBxWorkSpaceType.Location = new System.Drawing.Point(51, 348);
+            this.cLstBxWorkSpaceType.Name = "cLstBxWorkSpaceType";
+            this.cLstBxWorkSpaceType.Size = new System.Drawing.Size(490, 305);
+            this.cLstBxWorkSpaceType.TabIndex = 43;
+            this.cLstBxWorkSpaceType.UseCompatibleStateImageBehavior = false;
+            this.cLstBxWorkSpaceType.View = System.Windows.Forms.View.Details;
+            this.cLstBxWorkSpaceType.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            this.cLstBxWorkSpaceType.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            this.cLstBxWorkSpaceType.MultiSelect = true;
+            // 
+            // hdWorkSpaceType
+            // 
+            this.hdWorkSpaceType.Name = "hdWorkSpaceType";
+            this.hdWorkSpaceType.Text = "İş Alanı Türü";
+            this.hdWorkSpaceType.Width = 375;
+            // 
+            // cmbDistriborTerm
+            // 
+            cmbDistriborTerm.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDistriborTerm.FormattingEnabled = true;
+            cmbDistriborTerm.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4"});
+            cmbDistriborTerm.Location = new System.Drawing.Point(162, 288);
+            cmbDistriborTerm.Name = "cmbDistriborTerm";
+            cmbDistriborTerm.Size = new System.Drawing.Size(379, 21);
+            cmbDistriborTerm.TabIndex = 35;
+            // 
+            // cmbDistWorkPlaceType
+            // 
+            cmbDistWorkPlaceType.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDistWorkPlaceType.FormattingEnabled = true;
+            cmbDistWorkPlaceType.Location = new System.Drawing.Point(162, 41);
+            cmbDistWorkPlaceType.Name = "cmbDistWorkPlaceType";
+            cmbDistWorkPlaceType.Size = new System.Drawing.Size(379, 21);
+            cmbDistWorkPlaceType.TabIndex = 26;
+            cmbDistWorkPlaceType.SelectedIndexChanged += new System.EventHandler(this.cmbDistWorkPlaceType_SelectedIndexChanged);
+            // 
+            // cmbDistOTFolder
+            // 
+            cmbDistOTFolder.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDistOTFolder.Location = new System.Drawing.Point(162, 95);
+            cmbDistOTFolder.Name = "cmbDistOTFolder";
+            cmbDistOTFolder.Size = new System.Drawing.Size(379, 21);
+            cmbDistOTFolder.TabIndex = 27;
+            cmbDistOTFolder.SelectedIndexChanged += new System.EventHandler(this.cmbDistOTFolder_SelectedIndexChanged);
             // 
             // cmbDocumentType
             // 
@@ -198,11 +214,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(614, 462);
+            this.ClientSize = new System.Drawing.Size(599, 725);
+            this.Controls.Add(this.cLstBxWorkSpaceType);
             this.Controls.Add(this.lblDocType);
             this.Controls.Add(cmbDocumentType);
-            this.Controls.Add(this.lblWorkPlace);
-            this.Controls.Add(cmbWorkSpaceType);
             this.Controls.Add(this.lblTerm);
             this.Controls.Add(this.lblCategoryYear);
             this.Controls.Add(cmbDistriborTerm);
@@ -224,12 +239,10 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox cmbDistriborTerm;
-        private System.Windows.Forms.ComboBox cmbDistWorkPlaceType;
-        private System.Windows.Forms.ComboBox cmbDistOTFolder;
-        private System.Windows.Forms.ComboBox cmbWorkSpaceType;
-        private System.Windows.Forms.ComboBox cmbDocumentType;
+        System.Windows.Forms.ComboBox cmbDistriborTerm;
+        System.Windows.Forms.ComboBox cmbDistWorkPlaceType;
+        System.Windows.Forms.ComboBox cmbDistOTFolder;
+        System.Windows.Forms.ComboBox cmbDocumentType;
         private System.Windows.Forms.Label lblTerm;
         private System.Windows.Forms.Label lblCategoryYear;
         private System.Windows.Forms.DateTimePicker dtpDistributorYear;
@@ -239,7 +252,9 @@
         private System.Windows.Forms.TextBox txtDistDocumentRoot;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label lblWorkPlace;
         private System.Windows.Forms.Label lblDocType;
+        private OpenFileDialog ofdDocument;
+        public ListView cLstBxWorkSpaceType;
+        private ColumnHeader hdWorkSpaceType;
     }
 }

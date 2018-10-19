@@ -260,20 +260,22 @@ namespace EK_MultipleTransporter.Forms
 
         public async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
         {
-            var eag = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+            //var eag = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
 
-            var docType = eag.Values.First(x => x.Description == "Doküman Türü");
-            docType.Values = new object[] { cmbDocumentType.Text };
+            //var docType = eag.Values.First(x => x.Description == "Doküman Türü");
+            //docType.Values = new object[] { cmbDocumentType.Text };
 
-            var year = eag.Values.First(x => x.Description == "Yıl");
-            year.Values = new object[] { dtpYear.Text };
+            //var year = eag.Values.First(x => x.Description == "Yıl");
+            //year.Values = new object[] { dtpYear.Text };
 
-            var term = eag.Values.First(x => x.Description == "Çeyrek");
-            term.Values = new object[] { cmbTerm.Text };
+            //var term = eag.Values.First(x => x.Description == "Çeyrek");
+            //term.Values = new object[] { cmbTerm.Text };
 
-            var emdNew = new EntityMetadata();
+            //var emdNew = new EntityMetadata();
 
-            emdNew.AttributeGroups = new[] { eag };
+            //emdNew.AttributeGroups = new[] { eag };
+
+            var emdNew = serviceHelper.CategoryMaker(cmbDocumentType.Text, dtpYear.Text, cmbTerm.Text, generalCategoryNodeId); 
 
             foreach (var item in docsToUpload)
             {

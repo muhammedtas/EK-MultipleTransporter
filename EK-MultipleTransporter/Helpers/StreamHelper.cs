@@ -79,5 +79,20 @@ namespace EK_MultipleTransporter.Helpers
             
         }
 
+        public static Dictionary<Tuple<long, string>, byte[]> PrepareDocumentToSendMultipleTarger(List<long> nodeIdList, string rootFolderPath)
+        {
+            var dict = new Dictionary<Tuple<long, string>, byte[]>();
+
+            var docName = rootFolderPath.Split('\\').LastOrDefault();
+
+            var documentStream = File.ReadAllBytes(rootFolderPath);
+
+            foreach (var item in nodeIdList)
+            {
+                dict.Add(new Tuple<long, string>(item, docName), documentStream);
+            }
+            return dict;
+        }
+
     }
 }

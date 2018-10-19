@@ -1,6 +1,7 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
 using NLog;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EK_MultipleTransporter.Helpers
@@ -168,6 +169,27 @@ namespace EK_MultipleTransporter.Helpers
         public EntityNode[] GetEntityNodeListIncludingChildrenUsingTypeFilter(long parentNodeId, string typeFilter)
         {
             return VariableHelper.Dmo.GetEntityNodeListIncludingChildrenUsingTypeFilter("admin", VariableHelper.Token, parentNodeId, 1000, typeFilter, false);
+        }
+
+        public EntityMetadata CategoryMaker (string docType, string year, string term, long nodeId )
+        {
+            var eag = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory("Admin", VariableHelper.Token, nodeId);
+
+            var documentType = eag.Values.First(x => x.Description == "Doküman Türü");
+            documentType.Values = new object[] { docType };
+
+            var docYear = eag.Values.First(x => x.Description == "Yıl");
+            docYear.Values = new object[] { year };
+
+            var docTerm = eag.Values.First(x => x.Description == "Çeyrek");
+            docTerm.Values = new object[] { term };
+
+            var emdNew = new EntityMetadata();
+
+            emdNew.AttributeGroups = new[] { eag };
+
+            return emdNew;
+
         }
 
     }

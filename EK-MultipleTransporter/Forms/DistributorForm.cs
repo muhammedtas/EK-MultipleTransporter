@@ -1,4 +1,6 @@
-﻿using EK_MultipleTransporter.Helpers;
+﻿using EK_MultipleTransporter.DmsDocumentManagementService;
+using EK_MultipleTransporter.Helpers;
+using EK_MultipleTransporter.Model.ChildModel;
 using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
@@ -24,6 +26,8 @@ namespace EK_MultipleTransporter.Forms
         public static long projectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
         public static long projectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
         public static long generalCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
+        public static long workSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]); 
+        public static long contentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
         public OTServicesHelper serviceHelper = new OTServicesHelper();
         public DistributorForm()
         {
@@ -103,9 +107,22 @@ namespace EK_MultipleTransporter.Forms
         {
             await Task.Run(() => LoadFormsDefault());
         }
+        private void cmbDistWorkPlaceType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //await Task.Run(() => LoadSelectedWorkSpacesChilds());
+            //await Task.Run(() => LoadSelectedWorkSpacesTargetChildsToListBox());
+            Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
+        }
+
+        private void cmbDistOTFolder_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
 
         public void LoadFormsDefault()
         {
+            // Categories loaded.
             var categoryItems = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
             if (categoryItems != null)
             {
@@ -113,47 +130,171 @@ namespace EK_MultipleTransporter.Forms
                 cmbDocumentType.Items.AddRange(itemArray);
             }
 
-            var childNodes = serviceHelper.GetChildNodesById(projectsChildElementsNodeId);
+            // Work Spaces Loaded.
+            var workSpacesTypes = serviceHelper.GetChildNodesById(workSpacesNodeId);
 
-            //foreach (var childNode in childNodes)
-            //{
-            //    cmbChildRoot.Items.Add(new ProjectChilds()
-            //    {
-            //        Id = childNode.Id,
-            //        Name = childNode.Name
-            //    });
+            if (workSpacesTypes != null)
+            {
+                foreach (var workSpace in workSpacesTypes)
+                {
+                    cmbDistWorkPlaceType.Items.Add(new DistributorChilds()
+                    {
+                        Id = workSpace.Id,
+                        Name = workSpace.Name
+                    });
 
-            //    if (serviceHelper.HasChildNode(childNode.Id))
-            //    {
-            //        var innerChilds = serviceHelper.GetChildNodesById(childNode.Id);
+                }
+            }
 
-            //        foreach (var innerChild in innerChilds)
-            //        {
-            //            cmbChildRoot.Items.Add(new ProjectChilds()
-            //            {
-            //                Id = innerChild.Id,
-            //                Name = childNode.Name + "\\" + innerChild.Name
-            //            });
+        }
+        public async void LoadSelectedWorkSpacesChilds()
+        {
+            // Üstteki çalışma alanı değiştikçe burası asyn bir şekilde document template ten gelmesini istiyoruz.
+            // Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
+            // Adı ile aratarak target nodumuzu bulacağız.
 
-            //            if (serviceHelper.HasChildNode(innerChild.Id))
-            //            {
-            //                var innersOfInnerChild = serviceHelper.GetChildNodesById(innerChild.Id);
-            //                foreach (var innerOfInnerChild in innersOfInnerChild)
-            //                {
-            //                    cmbChildRoot.Items.Add(new ProjectChilds()
-            //                    {
-            //                        Id = innerOfInnerChild.Id,
-            //                        Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
-            //                    });
+            cmbDistOTFolder.Items.Clear();
 
-            //                }
+            Task worker = Task.Run(() => {
 
-            //            }
+                var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(contentServerDocumentTemplatesNodeId, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
 
-            //        }
+                var childFoldersNodes = serviceHelper.GetChildNodesById(docTemplateNode.Id);
 
-            //    }
-            //}
+
+                foreach (var childNode in childFoldersNodes)
+                {
+                    cmbDistOTFolder.Items.Add(new DistributorChilds()
+                    {
+                        Id = childNode.Id,
+                        Name = childNode.Name
+                    });
+
+                    if (serviceHelper.HasChildNode(childNode.Id))
+                    {
+                        var innerChilds = serviceHelper.GetChildNodesById(childNode.Id);
+
+                        foreach (var innerChild in innerChilds)
+                        {
+                            cmbDistOTFolder.Items.Add(new DistributorChilds()
+                            {
+                                Id = innerChild.Id,
+                                Name = childNode.Name + "\\" + innerChild.Name
+                            });
+
+                            if (serviceHelper.HasChildNode(innerChild.Id))
+                            {
+                                var innersOfInnerChild = serviceHelper.GetChildNodesById(innerChild.Id);
+                                foreach (var innerOfInnerChild in innersOfInnerChild)
+                                {
+                                    cmbDistOTFolder.Items.Add(new ProjectChilds()
+                                    {
+                                        Id = innerOfInnerChild.Id,
+                                        Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
+                                    });
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+                }
+
+
+            } );
+
+            await worker;
+
+            //Task.WaitAny(worker);
+
+        }
+
+        public async void LoadSelectedWorkSpacesTargetChildsToListBox()
+        {  // cmbDistWorkPlaceType
+
+            cLstBxWorkSpaceType.Items.Clear();
+
+            Task worker = Task.Run(() => {
+                var workSpaceTargetNodes = serviceHelper.GetChildNodesById((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id);
+
+                foreach (var targetNode in workSpaceTargetNodes)
+                {
+                    var listItem = new ListViewItem();
+
+                    listItem.Text = targetNode.Name;
+                    listItem.Tag = new DistributorChilds() { Id = targetNode.Id, Name = targetNode.Name };
+
+                    cLstBxWorkSpaceType.Items.Add(listItem);
+                }
+            });
+
+            await worker;
+
+            //Task.WaitAny(worker);
+        }
+
+        private void txtDistDocumentRoot_Click(object sender, EventArgs e)
+        {
+            ofdDocument.Title = Resources.ChooseDocument;
+            ofdDocument.Filter = Resources.AllowedTypes;
+            ofdDocument.Multiselect = false;
+            ofdDocument.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            if (ofdDocument.ShowDialog() != DialogResult.OK) return;
+            // txtDistDocumentRoot.Text = ofdDocument.FileName.Split('\\').Last();
+            txtDistDocumentRoot.Text = ofdDocument.FileName;
+
+        }
+
+        private async void btnOk_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() => DoDistributorWorks());
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        public async void DoDistributorWorks()
+        {
+            // 
+            // await Task.Run(() => { });
+
+            var selectedNodeIdList = new List<long>();
+            var selectedItemList = cLstBxWorkSpaceType.SelectedItems;
+            // SelectedItemList içerisinde EmlakKonut İş Alanı Türünü seçtiğimiz en alt taki checkedListBox taki node ların id sini tutar.
+            // Şimdi biz bu node ların içerisinde dönerek 2. Combobox olan "Klasör Seçimi" Node larını bulacağız, Ki bunlar TARGET Node ID lerimiz olacak.
+
+            var selectedNodList = new List<DistributorChilds>();
+
+            foreach (var item in selectedItemList)
+            {
+                //DataRowView castedItem = item as DataRowView;
+                //var id = Convert.ToInt64(castedItem["Id"]);
+                // var name = castedItem["Name"].ToString();
+                selectedNodList.Add((DistributorChilds)item);
+
+                selectedNodeIdList.Add(((DistributorChilds)item).Id);
+            }
+
+            var preparedList = StreamHelper.PrepareDocumentToSendMultipleTarger(selectedNodeIdList, txtDistDocumentRoot.Text);
+
+            if (preparedList.Count < 1) return;
+            // nodeId, dosya adı, ve hedef nodeId ile yarattığımız dictionary i opentext e yüklenebilir hale getireceğiz.
+
+            await UploadDocuments(preparedList);
+        }
+
+        private async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
+        {
+            var emdNew = serviceHelper.CategoryMaker(cmbDocumentType.Text, dtpDistributorYear.Text, cmbDistriborTerm.Text, generalCategoryNodeId);
+
+            foreach (var item in docsToUpload)
+            {
+                await Task.Run(() => serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
+            }
         }
     }
 }

@@ -90,6 +90,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dökümanınızı Seçiniz....
+        /// </summary>
+        public static string ChooseDocument {
+            get {
+                return ResourceManager.GetString("ChooseDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Klasörünüzü Seçiniz....
         /// </summary>
         public static string ChooseFolder {
