@@ -1,4 +1,5 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
+using EK_MultipleTransporter.Model.ChildModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -79,7 +80,7 @@ namespace EK_MultipleTransporter.Helpers
             
         }
 
-        public static Dictionary<Tuple<long, string>, byte[]> PrepareDocumentToSendMultipleTarger(List<long> nodeIdList, string rootFolderPath)
+        public static Dictionary<Tuple<long, string>, byte[]> PrepareDocumentToSendMultipleTarger(List<EntityNode> nodeIdList, string rootFolderPath)
         {
             var dict = new Dictionary<Tuple<long, string>, byte[]>();
 
@@ -89,7 +90,7 @@ namespace EK_MultipleTransporter.Helpers
 
             foreach (var item in nodeIdList)
             {
-                dict.Add(new Tuple<long, string>(item, docName), documentStream);
+                dict.Add(new Tuple<long, string>(item.Id, docName), documentStream);
             }
             return dict;
         }

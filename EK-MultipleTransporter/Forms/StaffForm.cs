@@ -187,11 +187,12 @@ namespace EK_MultipleTransporter.Forms
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
                 var allChildNodesOfMainStaff = serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(staffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds).Name);
+                var targetRootAddres = (cmbStaffChildRoot.SelectedItem as StaffChilds).Name;
+                var countDeepness = targetRootAddres.Split('\\').Count();
 
                 foreach (var childNodeOfMainStaff in allChildNodesOfMainStaff)
                 {
-                    var targetRootAddres = (cmbStaffChildRoot.SelectedItem as StaffChilds).Name;
-                    var countDeepness = targetRootAddres.Split('\\').Count();
+                   
 
                     if (countDeepness == 1)
                     {

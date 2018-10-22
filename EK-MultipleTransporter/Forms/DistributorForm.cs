@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.ServiceModel;
@@ -111,7 +112,7 @@ namespace EK_MultipleTransporter.Forms
         {
             //await Task.Run(() => LoadSelectedWorkSpacesChilds());
             //await Task.Run(() => LoadSelectedWorkSpacesTargetChildsToListBox());
-            Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
+          Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
         }
 
         private void cmbDistOTFolder_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,9 +206,9 @@ namespace EK_MultipleTransporter.Forms
 
             } );
 
-            await worker;
+            await worker.ConfigureAwait(false);
 
-            //Task.WaitAny(worker);
+            // Task.WaitAny(worker);
 
         }
 
@@ -230,9 +231,9 @@ namespace EK_MultipleTransporter.Forms
                 }
             });
 
-            await worker;
+            await worker.ConfigureAwait(false);
 
-            //Task.WaitAny(worker);
+            // Task.WaitAny(worker);
         }
 
         private void txtDistDocumentRoot_Click(object sender, EventArgs e)
@@ -259,27 +260,75 @@ namespace EK_MultipleTransporter.Forms
         }
         public async void DoDistributorWorks()
         {
-            // 
-            // await Task.Run(() => { });
+            Debugger.NotifyOfCrossThreadDependency();
 
-            var selectedNodeIdList = new List<long>();
-            var selectedItemList = cLstBxWorkSpaceType.SelectedItems;
+            var selectedItemList = cLstBxWorkSpaceType.CheckedItems;
+
             // SelectedItemList içerisinde EmlakKonut İş Alanı Türünü seçtiğimiz en alt taki checkedListBox taki node ların id sini tutar.
             // Şimdi biz bu node ların içerisinde dönerek 2. Combobox olan "Klasör Seçimi" Node larını bulacağız, Ki bunlar TARGET Node ID lerimiz olacak.
-
-            var selectedNodList = new List<DistributorChilds>();
+            var targetNodesList = new List<EntityNode>();
+            var selectedNodeList = new List<DistributorChilds>();
+            var selectedNodeIdList = new List<long>();
+            var targetOTAddress = cmbDistOTFolder.Text;
+            var countDeepness = cmbDistOTFolder.Text.Split('\\').Count();
 
             foreach (var item in selectedItemList)
             {
-                //DataRowView castedItem = item as DataRowView;
-                //var id = Convert.ToInt64(castedItem["Id"]);
-                // var name = castedItem["Name"].ToString();
-                selectedNodList.Add((DistributorChilds)item);
+                
+                var listViewItem = ((ListViewItem)item);
+                var objectItem = ((listViewItem.Tag) as DistributorChilds);
+                selectedNodeList.Add(objectItem);
 
-                selectedNodeIdList.Add(((DistributorChilds)item).Id);
+                var itemNodeId = (((listViewItem.Tag) as DistributorChilds)).Id;
+                var itemNodeName = (((listViewItem.Tag) as DistributorChilds)).Name;
+
+                selectedNodeIdList.Add(itemNodeId);
+
+                
+
+                if (countDeepness == 1)
+                {
+                    // var targetNode = serviceHelper.GetNodeByName(itemNodeId, itemNodeName);
+                    var oneOfTargetNode = DbEntityHelper.GetNodeByName(itemNodeId, itemNodeName);
+                    targetNodesList.Add(oneOfTargetNode);
+                }
+                else if (countDeepness == 2)
+                {
+                    var generalFirstStepTargetNodeName = targetOTAddress.Split('\\')[0];
+                    var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
+
+                    var generalSecondStepTargetNodeName = targetOTAddress.Split('\\')[1];
+
+                    var trgtChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+
+                    if (trgtChldnd != null)
+                        targetNodesList.Add(trgtChldnd);
+                }
+                else if (countDeepness == 3)
+                {
+                    var generalFirstStepTargetNodeName = targetOTAddress.Split('\\')[0];
+                    var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
+
+                    var generalSecondStepTargetNodeName = targetOTAddress.Split('\\')[1];
+
+                    var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+
+                    var generalThirdStepTargetNodeName = targetOTAddress.Split('\\')[2];
+
+                    var trgtChldnd = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
+
+                    if (trgtChldnd != null)
+                        targetNodesList.Add(trgtChldnd);
+                }
+                else
+                {
+                    Console.WriteLine("Fuck your nodes!!");
+
+                }
+                
             }
 
-            var preparedList = StreamHelper.PrepareDocumentToSendMultipleTarger(selectedNodeIdList, txtDistDocumentRoot.Text);
+            var preparedList = StreamHelper.PrepareDocumentToSendMultipleTarger(targetNodesList, txtDistDocumentRoot.Text);
 
             if (preparedList.Count < 1) return;
             // nodeId, dosya adı, ve hedef nodeId ile yarattığımız dictionary i opentext e yüklenebilir hale getireceğiz.
