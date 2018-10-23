@@ -10,7 +10,7 @@ namespace EK_MultipleTransporter.Helpers
     {
 
         public static Logger Logger = LogManager.GetCurrentClassLogger();
-        private static string _desktopPath;
+        private static string _desktopPath;        
 
         public OTServicesHelper()
         {
@@ -22,7 +22,6 @@ namespace EK_MultipleTransporter.Helpers
            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false);
 
         }
-
 
         public KeyValuePair[] GetFolderListIncludingChildren (long id)
         {
@@ -103,24 +102,28 @@ namespace EK_MultipleTransporter.Helpers
 
                 }
 
-
                 var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
 
                 fileByteArray = null;
                 eaj = null;
+
+                if (ida == 0) StreamHelper.MoveUnUploadedDocumentsToBackUpFolder(docName);
+                
 
                 return ida > 0;
             }
             catch (Exception ex)
             {
                 Logger.Trace(ex, "File named" + docName + "is not exist in this address");
+                StreamHelper.MoveUnUploadedDocumentsToBackUpFolder(docName);
                 return false;
             }
-
         }
+
         public async Task<bool> AddDocumentWithMetaDataAsync(long targetFolder, string docName, byte[] fileByteArray, EntityMetadata emd)
         {
             EntityAttachment eaj = null;
+
             try
             {
                 if (fileByteArray != null && targetFolder > 0)
@@ -138,7 +141,6 @@ namespace EK_MultipleTransporter.Helpers
 
                 await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync("Admin", VariableHelper.Token, targetFolder, emd, eaj, ""));
                 // var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
-
                 fileByteArray = null;
                 eaj = null;
                 return true;

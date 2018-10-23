@@ -136,6 +136,7 @@ namespace EK_MultipleTransporter.Forms
                 txtFolderRoot.Text = folderDlg.SelectedPath;
                 Environment.SpecialFolder root = folderDlg.RootFolder;
             }
+            StreamHelper.RootPathOfUsersFolder = folderDlg.SelectedPath;
 
         }
 

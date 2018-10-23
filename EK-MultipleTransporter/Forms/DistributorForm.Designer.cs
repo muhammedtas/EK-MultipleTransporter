@@ -43,6 +43,7 @@ namespace EK_MultipleTransporter.Forms
             this.ofdDocument = new System.Windows.Forms.OpenFileDialog();
             this.cLstBxWorkSpaceType = new System.Windows.Forms.ListView();
             this.hdWorkSpaceType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.txtFilter = new System.Windows.Forms.TextBox();
             cmbDistriborTerm = new System.Windows.Forms.ComboBox();
             cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
             cmbDistOTFolder = new System.Windows.Forms.ComboBox();
@@ -116,7 +117,7 @@ namespace EK_MultipleTransporter.Forms
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(466, 670);
+            this.btnOk.Location = new System.Drawing.Point(466, 714);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 30;
@@ -126,7 +127,7 @@ namespace EK_MultipleTransporter.Forms
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(308, 670);
+            this.btnCancel.Location = new System.Drawing.Point(308, 714);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 31;
@@ -153,21 +154,29 @@ namespace EK_MultipleTransporter.Forms
             this.cLstBxWorkSpaceType.CheckBoxes = true;
             this.cLstBxWorkSpaceType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.hdWorkSpaceType});
-            this.cLstBxWorkSpaceType.Location = new System.Drawing.Point(51, 348);
+            this.cLstBxWorkSpaceType.Location = new System.Drawing.Point(51, 369);
             this.cLstBxWorkSpaceType.Name = "cLstBxWorkSpaceType";
-            this.cLstBxWorkSpaceType.Size = new System.Drawing.Size(490, 305);
+            this.cLstBxWorkSpaceType.Size = new System.Drawing.Size(490, 302);
             this.cLstBxWorkSpaceType.TabIndex = 43;
             this.cLstBxWorkSpaceType.UseCompatibleStateImageBehavior = false;
             this.cLstBxWorkSpaceType.View = System.Windows.Forms.View.Details;
-            this.cLstBxWorkSpaceType.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            this.cLstBxWorkSpaceType.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
-            this.cLstBxWorkSpaceType.MultiSelect = true;
             // 
             // hdWorkSpaceType
             // 
             this.hdWorkSpaceType.Name = "hdWorkSpaceType";
             this.hdWorkSpaceType.Text = "İş Alanı Türü";
-            this.hdWorkSpaceType.Width = 375;
+            this.hdWorkSpaceType.Width = 486;
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtFilter.Location = new System.Drawing.Point(51, 343);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(490, 20);
+            this.txtFilter.TabIndex = 44;
+            this.txtFilter.Text = "İş alanlarını filtreleyin...";
+            this.txtFilter.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtFilter_MouseClick);
+            this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
             // cmbDistriborTerm
             // 
@@ -214,7 +223,8 @@ namespace EK_MultipleTransporter.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(599, 725);
+            this.ClientSize = new System.Drawing.Size(599, 749);
+            this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.cLstBxWorkSpaceType);
             this.Controls.Add(this.lblDocType);
             this.Controls.Add(cmbDocumentType);
@@ -231,7 +241,7 @@ namespace EK_MultipleTransporter.Forms
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "DistributorForm";
-            this.Text = "DistributorForm";
+            this.Text = "Dökümanınızı Dağıtın";
             this.Load += new System.EventHandler(this.DistributorForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -256,5 +266,6 @@ namespace EK_MultipleTransporter.Forms
         private OpenFileDialog ofdDocument;
         public ListView cLstBxWorkSpaceType;
         private ColumnHeader hdWorkSpaceType;
+        private TextBox txtFilter;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
 using EK_MultipleTransporter.Model.ChildModel;
+using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +11,19 @@ namespace EK_MultipleTransporter.Helpers
 {
     public class StreamHelper
     {
+        public static string _backUpFolderRoot = ConfigurationManager.AppSettings["BackUpFolderRoot"];
+        public static string _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        public static Logger Logger;
+        public static string RootPathOfUsersFolder { get; set; }
+        public static string RootPathOfSelectedFile { get; set; }
+        // public static string TargetBackUpRoot { get; set; }
+
+        public StreamHelper()
+        {
+            if (!Directory.Exists(_desktopPath + @"\" + _backUpFolderRoot)) Directory.CreateDirectory(_desktopPath + @"\" + _backUpFolderRoot);
+
+        }
+
         public static Dictionary<Tuple<long,string>, byte[]> MakePreparedDocumentListToPush(string rootFolderPath, List<EntityNode> nodeList)
         {
 
@@ -93,6 +108,16 @@ namespace EK_MultipleTransporter.Helpers
                 dict.Add(new Tuple<long, string>(item.Id, docName), documentStream);
             }
             return dict;
+        }
+
+        public static bool MoveUnUploadedDocumentsToBackUpFolder(string docName)
+        {
+
+            //var docName = FileRoot.Split('\\').LastOrDefault();
+            File.Move(RootPathOfUsersFolder + docName , _desktopPath + @"\" + _backUpFolderRoot);
+
+            Logger.Info("Document named" + docName + "Could not be uploaded to Opentext");
+            return true;
         }
 
     }

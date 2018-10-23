@@ -30,9 +30,12 @@ namespace EK_MultipleTransporter.Forms
         public static long workSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]); 
         public static long contentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
         public OTServicesHelper serviceHelper = new OTServicesHelper();
+        List<ListViewItem> workPlaceMasterList;
+
         public DistributorForm()
         {
             InitializeComponent();
+            workPlaceMasterList = new List<ListViewItem>();
 
             var dmo = VariableHelper.Dmo;
             var ops = VariableHelper.Ops;
@@ -110,6 +113,7 @@ namespace EK_MultipleTransporter.Forms
         }
         private void cmbDistWorkPlaceType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cLstBxWorkSpaceType.Items.Clear();
             //await Task.Run(() => LoadSelectedWorkSpacesChilds());
             //await Task.Run(() => LoadSelectedWorkSpacesTargetChildsToListBox());
           Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
@@ -223,11 +227,11 @@ namespace EK_MultipleTransporter.Forms
                 foreach (var targetNode in workSpaceTargetNodes)
                 {
                     var listItem = new ListViewItem();
-
                     listItem.Text = targetNode.Name;
                     listItem.Tag = new DistributorChilds() { Id = targetNode.Id, Name = targetNode.Name };
-
+                    workPlaceMasterList.Add(listItem);
                     cLstBxWorkSpaceType.Items.Add(listItem);
+                    //cLstBxWorkSpaceType.Items.AddRange(workPlaceMasterList);
                 }
             });
 
@@ -246,6 +250,7 @@ namespace EK_MultipleTransporter.Forms
             if (ofdDocument.ShowDialog() != DialogResult.OK) return;
             // txtDistDocumentRoot.Text = ofdDocument.FileName.Split('\\').Last();
             txtDistDocumentRoot.Text = ofdDocument.FileName;
+            StreamHelper.RootPathOfUsersFolder = ofdDocument.FileName;
 
         }
 
@@ -339,11 +344,34 @@ namespace EK_MultipleTransporter.Forms
         private async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
         {
             var emdNew = serviceHelper.CategoryMaker(cmbDocumentType.Text, dtpDistributorYear.Text, cmbDistriborTerm.Text, generalCategoryNodeId);
-
             foreach (var item in docsToUpload)
             {
                 await Task.Run(() => serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
             }
+        }
+
+        private async void FilterItems()
+        {
+            //var task = Task.Run(() => {
+                cLstBxWorkSpaceType.Items.Clear();
+                // This filters and adds your filtered items to listView1
+                foreach (ListViewItem item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
+                {
+                    cLstBxWorkSpaceType.Items.Add(item);
+                }
+           // });
+
+           // await task;
+        }
+
+        private void txtFilter_TextChanged(object sender, EventArgs e)
+        {
+            FilterItems();
+        }
+
+        private void txtFilter_MouseClick(object sender, MouseEventArgs e)
+        {
+            txtFilter.Text = "";
         }
     }
 }

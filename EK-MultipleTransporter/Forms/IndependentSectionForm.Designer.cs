@@ -79,7 +79,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.lblDistricts);
             this.Controls.Add(this.cmbDistrictsList);
-            this.Name = "IndependentSectionForm";
+            this.Name = "Bağımsız Bölüm Dökümanlarınızı Yükleyin";
             this.Text = "DistrictsForm";
             this.Load += new System.EventHandler(this.DistrictsForm_Load);
             this.ResumeLayout(false);
