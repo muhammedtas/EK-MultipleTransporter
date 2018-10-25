@@ -20,6 +20,9 @@ using System.Windows.Forms;
 
 namespace EK_MultipleTransporter.Forms
 {
+
+    public delegate void Trigger();
+
     public partial class DistributorForm : Form
     {
 
@@ -27,15 +30,20 @@ namespace EK_MultipleTransporter.Forms
         public static long projectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
         public static long projectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
         public static long generalCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
-        public static long workSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]); 
+        public static long workSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]);
         public static long contentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
         public OTServicesHelper serviceHelper = new OTServicesHelper();
         List<ListViewItem> workPlaceMasterList;
+        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+        private readonly CancellationToken _cancellationToken;
+        private Trigger _worker;
 
         public DistributorForm()
         {
             InitializeComponent();
             workPlaceMasterList = new List<ListViewItem>();
+            _worker = Worker;
+            _cancellationToken = _cts.Token;
 
             var dmo = VariableHelper.Dmo;
             var ops = VariableHelper.Ops;
@@ -111,12 +119,42 @@ namespace EK_MultipleTransporter.Forms
         {
             await Task.Run(() => LoadFormsDefault());
         }
-        private void cmbDistWorkPlaceType_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cmbDistWorkPlaceType_SelectedIndexChanged(object sender, EventArgs e)
         {
             cLstBxWorkSpaceType.Items.Clear();
             //await Task.Run(() => LoadSelectedWorkSpacesChilds());
             //await Task.Run(() => LoadSelectedWorkSpacesTargetChildsToListBox());
-          Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
+
+            await Task.Factory.StartNew(_worker.Invoke, _cancellationToken, TaskCreationOptions.LongRunning,
+                    TaskScheduler.Current)
+                .ConfigureAwait(false);
+
+            
+
+            //List<Task> tasks = new List<Task>();
+            //tasks.Add(Task.Run(() => { LoadSelectedWorkSpacesChilds(); }));
+            //tasks.Add(Task.Run(() => { LoadSelectedWorkSpacesTargetChildsToListBox(); }));
+            //Task.WaitAll(tasks.ToArray());
+
+            //var task1 = Task.Run(() => LoadSelectedWorkSpacesChilds());
+            //var task2 = Task.Run(() => LoadSelectedWorkSpacesTargetChildsToListBox());
+            //Task task1 = LoadSelectedWorkSpacesChilds();
+            //Task task2 = LoadSelectedWorkSpacesTargetChildsToListBox();
+
+            // Task.WhenAll(task1, task2);
+
+        }
+
+        public async void Worker()
+        {
+            var task = Task.Factory.StartNew(() =>
+            {
+                Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
+
+            }).ConfigureAwait(false);
+
+            await task;
+
         }
 
         private void cmbDistOTFolder_SelectedIndexChanged(object sender, EventArgs e)
@@ -158,9 +196,9 @@ namespace EK_MultipleTransporter.Forms
             // Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
             // Adı ile aratarak target nodumuzu bulacağız.
 
-            cmbDistOTFolder.Items.Clear();
+            var task = Task.Run(() => {
 
-            Task worker = Task.Run(() => {
+                cmbDistOTFolder.Items.Clear();
 
                 var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(contentServerDocumentTemplatesNodeId, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
 
@@ -208,20 +246,21 @@ namespace EK_MultipleTransporter.Forms
                 }
 
 
-            } );
+            }).ConfigureAwait(false);
 
-            await worker.ConfigureAwait(false);
 
-            // Task.WaitAny(worker);
+           await task;
+      
 
         }
 
         public async void LoadSelectedWorkSpacesTargetChildsToListBox()
         {  // cmbDistWorkPlaceType
 
-            cLstBxWorkSpaceType.Items.Clear();
+            var task = Task.Run(() =>
+            {
+                cLstBxWorkSpaceType.Items.Clear();
 
-            Task worker = Task.Run(() => {
                 var workSpaceTargetNodes = serviceHelper.GetChildNodesById((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id);
 
                 foreach (var targetNode in workSpaceTargetNodes)
@@ -233,11 +272,10 @@ namespace EK_MultipleTransporter.Forms
                     cLstBxWorkSpaceType.Items.Add(listItem);
                     //cLstBxWorkSpaceType.Items.AddRange(workPlaceMasterList);
                 }
-            });
+            }).ConfigureAwait(false);
 
-            await worker.ConfigureAwait(false);
-
-            // Task.WaitAny(worker);
+            await task;
+        
         }
 
         private void txtDistDocumentRoot_Click(object sender, EventArgs e)
@@ -279,7 +317,7 @@ namespace EK_MultipleTransporter.Forms
 
             foreach (var item in selectedItemList)
             {
-                
+
                 var listViewItem = ((ListViewItem)item);
                 var objectItem = ((listViewItem.Tag) as DistributorChilds);
                 selectedNodeList.Add(objectItem);
@@ -289,7 +327,7 @@ namespace EK_MultipleTransporter.Forms
 
                 selectedNodeIdList.Add(itemNodeId);
 
-                
+
 
                 if (countDeepness == 1)
                 {
@@ -330,7 +368,7 @@ namespace EK_MultipleTransporter.Forms
                     Console.WriteLine("Fuck your nodes!!");
 
                 }
-                
+
             }
 
             var preparedList = StreamHelper.PrepareDocumentToSendMultipleTarger(targetNodesList, txtDistDocumentRoot.Text);
@@ -350,28 +388,30 @@ namespace EK_MultipleTransporter.Forms
             }
         }
 
-        private async void FilterItems()
+        private void FilterItems()
         {
-            //var task = Task.Run(() => {
-                cLstBxWorkSpaceType.Items.Clear();
-                // This filters and adds your filtered items to listView1
-                foreach (ListViewItem item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
-                {
-                    cLstBxWorkSpaceType.Items.Add(item);
-                }
-           // });
 
-           // await task;
+            cLstBxWorkSpaceType.Items.Clear();
+
+            //var task = Task.Run(() => {
+            // This filters and adds your filtered items to listView1
+            foreach (ListViewItem item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
+            {
+                cLstBxWorkSpaceType.Items.Add(item);
+            }
+            // });
+
+            // await task;
         }
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
-            FilterItems();
+            if (txtFilter.Text != String.Empty) FilterItems();
         }
 
         private void txtFilter_MouseClick(object sender, MouseEventArgs e)
         {
-            txtFilter.Text = "";
+            txtFilter.Text = String.Empty;
         }
     }
 }

@@ -293,5 +293,10 @@ namespace EK_MultipleTransporter.Forms
             StreamHelper.RootPathOfUsersFolder = folderDlg.SelectedPath;
 
         }
+
+        private void lblCategoryYear_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

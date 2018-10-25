@@ -38,13 +38,16 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.fbdStaffsFolder = new System.Windows.Forms.FolderBrowserDialog();
-            this.cmbStaffTerm = new System.Windows.Forms.ComboBox();
-            this.cmbStaffChildRoot = new System.Windows.Forms.ComboBox();
-            this.cmbStaffDocumentType = new System.Windows.Forms.ComboBox();
+            cmbStaffTerm = new System.Windows.Forms.ComboBox();
+            cmbStaffChildRoot = new System.Windows.Forms.ComboBox();
+            cmbStaffDocumentType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lblTerm
             // 
+            this.lblTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTerm.AutoSize = true;
             this.lblTerm.Location = new System.Drawing.Point(60, 259);
             this.lblTerm.Name = "lblTerm";
@@ -54,15 +57,22 @@
             // 
             // lblCategoryYear
             // 
+            this.lblCategoryYear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCategoryYear.AutoSize = true;
             this.lblCategoryYear.Location = new System.Drawing.Point(60, 208);
             this.lblCategoryYear.Name = "lblCategoryYear";
             this.lblCategoryYear.Size = new System.Drawing.Size(18, 13);
             this.lblCategoryYear.TabIndex = 17;
             this.lblCategoryYear.Text = "Yıl";
+            this.lblCategoryYear.Click += new System.EventHandler(this.lblCategoryYear_Click);
             // 
             // dtpStaffYear
             // 
+            this.dtpStaffYear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dtpStaffYear.CalendarMonthBackground = System.Drawing.SystemColors.Menu;
             this.dtpStaffYear.CustomFormat = "yyyy";
             this.dtpStaffYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
@@ -74,6 +84,9 @@
             // 
             // lblFolderRoot
             // 
+            this.lblFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFolderRoot.AutoSize = true;
             this.lblFolderRoot.Location = new System.Drawing.Point(60, 46);
             this.lblFolderRoot.Name = "lblFolderRoot";
@@ -83,6 +96,9 @@
             // 
             // lblChild
             // 
+            this.lblChild.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblChild.AutoSize = true;
             this.lblChild.Location = new System.Drawing.Point(60, 105);
             this.lblChild.Name = "lblChild";
@@ -92,6 +108,9 @@
             // 
             // lblCategoryDocumentType
             // 
+            this.lblCategoryDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCategoryDocumentType.AutoSize = true;
             this.lblCategoryDocumentType.Location = new System.Drawing.Point(60, 159);
             this.lblCategoryDocumentType.Name = "lblCategoryDocumentType";
@@ -101,6 +120,9 @@
             // 
             // txtStaffFolderRoot
             // 
+            this.txtStaffFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtStaffFolderRoot.BackColor = System.Drawing.SystemColors.Menu;
             this.txtStaffFolderRoot.Location = new System.Drawing.Point(174, 46);
             this.txtStaffFolderRoot.Name = "txtStaffFolderRoot";
@@ -110,6 +132,7 @@
             // 
             // btnOk
             // 
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Location = new System.Drawing.Point(478, 311);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
@@ -120,6 +143,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.Location = new System.Drawing.Point(320, 311);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -130,55 +154,61 @@
             // 
             // cmbStaffTerm
             // 
-            this.cmbStaffTerm.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbStaffTerm.FormattingEnabled = true;
-            this.cmbStaffTerm.Items.AddRange(new object[] {
+            cmbStaffTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            cmbStaffTerm.BackColor = System.Drawing.SystemColors.Menu;
+            cmbStaffTerm.FormattingEnabled = true;
+            cmbStaffTerm.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4"});
-            this.cmbStaffTerm.Location = new System.Drawing.Point(174, 251);
-            this.cmbStaffTerm.Name = "cmbStaffTerm";
-            this.cmbStaffTerm.Size = new System.Drawing.Size(379, 21);
-            this.cmbStaffTerm.TabIndex = 23;
+            cmbStaffTerm.Location = new System.Drawing.Point(174, 251);
+            cmbStaffTerm.Name = "cmbStaffTerm";
+            cmbStaffTerm.Size = new System.Drawing.Size(379, 21);
+            cmbStaffTerm.TabIndex = 23;
             // 
             // cmbStaffChildRoot
             // 
-            this.cmbStaffChildRoot.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbStaffChildRoot.FormattingEnabled = true;
-            this.cmbStaffChildRoot.Location = new System.Drawing.Point(174, 97);
-            this.cmbStaffChildRoot.Name = "cmbStaffChildRoot";
-            this.cmbStaffChildRoot.Size = new System.Drawing.Size(379, 21);
-            this.cmbStaffChildRoot.TabIndex = 14;
+            cmbStaffChildRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            cmbStaffChildRoot.BackColor = System.Drawing.SystemColors.Menu;
+            cmbStaffChildRoot.FormattingEnabled = true;
+            cmbStaffChildRoot.Location = new System.Drawing.Point(174, 97);
+            cmbStaffChildRoot.Name = "cmbStaffChildRoot";
+            cmbStaffChildRoot.Size = new System.Drawing.Size(379, 21);
+            cmbStaffChildRoot.TabIndex = 14;
             // 
             // cmbStaffDocumentType
             // 
-            this.cmbStaffDocumentType.BackColor = System.Drawing.SystemColors.Menu;
-            //this.cmbStaffDocumentType.Items.AddRange(new object[] {
-            //"Yapı Ruhsatı",
-            //"Tapu",
-            //"Katalog",
-            //"Sözleşme"});
-            this.cmbStaffDocumentType.Location = new System.Drawing.Point(174, 151);
-            this.cmbStaffDocumentType.Name = "cmbStaffDocumentType";
-            this.cmbStaffDocumentType.Size = new System.Drawing.Size(379, 21);
-            this.cmbStaffDocumentType.TabIndex = 15;
+            cmbStaffDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            cmbStaffDocumentType.BackColor = System.Drawing.SystemColors.Menu;
+            cmbStaffDocumentType.Location = new System.Drawing.Point(174, 151);
+            cmbStaffDocumentType.Name = "cmbStaffDocumentType";
+            cmbStaffDocumentType.Size = new System.Drawing.Size(379, 21);
+            cmbStaffDocumentType.TabIndex = 15;
             // 
             // StaffForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.BackColor = System.Drawing.Color.SeaGreen;
             this.ClientSize = new System.Drawing.Size(596, 377);
             this.Controls.Add(this.lblTerm);
             this.Controls.Add(this.lblCategoryYear);
-            this.Controls.Add(this.cmbStaffTerm);
+            this.Controls.Add(cmbStaffTerm);
             this.Controls.Add(this.dtpStaffYear);
             this.Controls.Add(this.lblFolderRoot);
             this.Controls.Add(this.lblChild);
             this.Controls.Add(this.lblCategoryDocumentType);
             this.Controls.Add(this.txtStaffFolderRoot);
-            this.Controls.Add(this.cmbStaffChildRoot);
-            this.Controls.Add(this.cmbStaffDocumentType);
+            this.Controls.Add(cmbStaffChildRoot);
+            this.Controls.Add(cmbStaffDocumentType);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "StaffForm";

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOk = new System.Windows.Forms.Button();
             this.txtFolderRoot = new System.Windows.Forms.TextBox();
@@ -40,13 +39,14 @@
             this.lblTerm = new System.Windows.Forms.Label();
             this.fbdRootFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.dtpYear = new System.Windows.Forms.DateTimePicker();
-            this.cmbChildRoot = new System.Windows.Forms.ComboBox();
-            this.cmbDocumentType = new System.Windows.Forms.ComboBox();
-            this.cmbTerm = new System.Windows.Forms.ComboBox();
+            cmbChildRoot = new System.Windows.Forms.ComboBox();
+            cmbDocumentType = new System.Windows.Forms.ComboBox();
+            cmbTerm = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.Location = new System.Drawing.Point(323, 311);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
@@ -57,6 +57,7 @@
             // 
             // btnOk
             // 
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOk.Location = new System.Drawing.Point(481, 311);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
@@ -67,6 +68,9 @@
             // 
             // txtFolderRoot
             // 
+            this.txtFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFolderRoot.BackColor = System.Drawing.SystemColors.Menu;
             this.txtFolderRoot.Location = new System.Drawing.Point(177, 46);
             this.txtFolderRoot.Name = "txtFolderRoot";
@@ -76,6 +80,9 @@
             // 
             // lblCategoryDocumentType
             // 
+            this.lblCategoryDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCategoryDocumentType.AutoSize = true;
             this.lblCategoryDocumentType.Location = new System.Drawing.Point(63, 159);
             this.lblCategoryDocumentType.Name = "lblCategoryDocumentType";
@@ -85,6 +92,9 @@
             // 
             // lblChild
             // 
+            this.lblChild.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblChild.AutoSize = true;
             this.lblChild.Location = new System.Drawing.Point(63, 105);
             this.lblChild.Name = "lblChild";
@@ -94,6 +104,9 @@
             // 
             // lblFolderRoot
             // 
+            this.lblFolderRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblFolderRoot.AutoSize = true;
             this.lblFolderRoot.Location = new System.Drawing.Point(63, 46);
             this.lblFolderRoot.Name = "lblFolderRoot";
@@ -107,6 +120,9 @@
             // 
             // lblCategoryYear
             // 
+            this.lblCategoryYear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCategoryYear.AutoSize = true;
             this.lblCategoryYear.Location = new System.Drawing.Point(63, 208);
             this.lblCategoryYear.Name = "lblCategoryYear";
@@ -116,6 +132,9 @@
             // 
             // lblTerm
             // 
+            this.lblTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTerm.AutoSize = true;
             this.lblTerm.Location = new System.Drawing.Point(63, 259);
             this.lblTerm.Name = "lblTerm";
@@ -125,66 +144,74 @@
             // 
             // dtpYear
             // 
+            this.dtpYear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dtpYear.CalendarMonthBackground = System.Drawing.SystemColors.Menu;
-            this.dtpYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpYear.CustomFormat = "yyyy";
-            this.dtpYear.ShowUpDown = true;
+            this.dtpYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpYear.Location = new System.Drawing.Point(177, 201);
             this.dtpYear.Name = "dtpYear";
+            this.dtpYear.ShowUpDown = true;
             this.dtpYear.Size = new System.Drawing.Size(379, 20);
             this.dtpYear.TabIndex = 4;
             // 
             // cmbChildRoot
             // 
-            this.cmbChildRoot.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbChildRoot.FormattingEnabled = true;
-            this.cmbChildRoot.Location = new System.Drawing.Point(177, 97);
-            this.cmbChildRoot.Name = "cmbChildRoot";
-            this.cmbChildRoot.Size = new System.Drawing.Size(379, 21);
-            this.cmbChildRoot.TabIndex = 2;
+            cmbChildRoot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            cmbChildRoot.BackColor = System.Drawing.SystemColors.Menu;
+            cmbChildRoot.FormattingEnabled = true;
+            cmbChildRoot.Location = new System.Drawing.Point(177, 97);
+            cmbChildRoot.Name = "cmbChildRoot";
+            cmbChildRoot.Size = new System.Drawing.Size(379, 21);
+            cmbChildRoot.TabIndex = 2;
             // 
             // cmbDocumentType
             // 
-            this.cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
-            //this.cmbDocumentType.Items.AddRange(new object[] {
-            //"Yapı Ruhsatı",
-            //"Tapu",
-            //"Katalog",
-            //"Sözleşme"});
-            this.cmbDocumentType.Location = new System.Drawing.Point(177, 151);
-            this.cmbDocumentType.Name = "cmbDocumentType";
-            this.cmbDocumentType.Size = new System.Drawing.Size(379, 21);
-            this.cmbDocumentType.TabIndex = 3;
+            cmbDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDocumentType.Location = new System.Drawing.Point(177, 151);
+            cmbDocumentType.Name = "cmbDocumentType";
+            cmbDocumentType.Size = new System.Drawing.Size(379, 21);
+            cmbDocumentType.TabIndex = 3;
             // 
             // cmbTerm
             // 
-            this.cmbTerm.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbTerm.FormattingEnabled = true;
-            this.cmbTerm.Items.AddRange(new object[] {
+            cmbTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            cmbTerm.BackColor = System.Drawing.SystemColors.Menu;
+            cmbTerm.FormattingEnabled = true;
+            cmbTerm.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4"});
-            this.cmbTerm.Location = new System.Drawing.Point(177, 251);
-            this.cmbTerm.Name = "cmbTerm";
-            this.cmbTerm.Size = new System.Drawing.Size(379, 21);
-            this.cmbTerm.TabIndex = 11;
+            cmbTerm.Location = new System.Drawing.Point(177, 251);
+            cmbTerm.Name = "cmbTerm";
+            cmbTerm.Size = new System.Drawing.Size(379, 21);
+            cmbTerm.TabIndex = 11;
             // 
             // ProjectsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(596, 371);
             this.Controls.Add(this.lblTerm);
             this.Controls.Add(this.lblCategoryYear);
-            this.Controls.Add(this.cmbTerm);
+            this.Controls.Add(cmbTerm);
             this.Controls.Add(this.dtpYear);
             this.Controls.Add(this.lblFolderRoot);
             this.Controls.Add(this.lblChild);
             this.Controls.Add(this.lblCategoryDocumentType);
             this.Controls.Add(this.txtFolderRoot);
-            this.Controls.Add(this.cmbChildRoot);
-            this.Controls.Add(this.cmbDocumentType);
+            this.Controls.Add(cmbChildRoot);
+            this.Controls.Add(cmbDocumentType);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "ProjectsForm";
@@ -196,9 +223,9 @@
         }
 
         #endregion
-        private System.Windows.Forms.ComboBox cmbChildRoot;
-        private System.Windows.Forms.ComboBox cmbDocumentType;
-        private System.Windows.Forms.ComboBox cmbTerm;
+        System.Windows.Forms.ComboBox cmbChildRoot;
+        System.Windows.Forms.ComboBox cmbDocumentType;
+        System.Windows.Forms.ComboBox cmbTerm;
         private System.Windows.Forms.DateTimePicker dtpYear;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOk;
