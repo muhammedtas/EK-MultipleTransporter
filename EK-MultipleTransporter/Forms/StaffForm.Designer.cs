@@ -66,7 +66,6 @@
             this.lblCategoryYear.Size = new System.Drawing.Size(18, 13);
             this.lblCategoryYear.TabIndex = 17;
             this.lblCategoryYear.Text = "Yıl";
-            this.lblCategoryYear.Click += new System.EventHandler(this.lblCategoryYear_Click);
             // 
             // dtpStaffYear
             // 

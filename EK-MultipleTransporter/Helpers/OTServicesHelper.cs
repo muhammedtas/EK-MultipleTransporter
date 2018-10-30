@@ -23,6 +23,12 @@ namespace EK_MultipleTransporter.Helpers
 
         }
 
+        //public async Task<EntityNode[]> GetChildNodesByIdAsync(long id)
+        //{
+        //    return null;
+
+        //}
+
         public KeyValuePair[] GetFolderListIncludingChildren (long id)
         {
             return VariableHelper.Dmo.GetFolderListIncludingChildren("admin", VariableHelper.Token, id);

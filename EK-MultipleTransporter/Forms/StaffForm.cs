@@ -294,9 +294,5 @@ namespace EK_MultipleTransporter.Forms
 
         }
 
-        private void lblCategoryYear_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

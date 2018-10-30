@@ -16,9 +16,8 @@ namespace EK_MultipleTransporter.Forms
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
+
             base.Dispose(disposing);
         }
 
@@ -44,10 +43,11 @@ namespace EK_MultipleTransporter.Forms
             this.cLstBxWorkSpaceType = new System.Windows.Forms.ListView();
             this.hdWorkSpaceType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtFilter = new System.Windows.Forms.TextBox();
-            cmbDistriborTerm = new System.Windows.Forms.ComboBox();
-            cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
-            cmbDistOTFolder = new System.Windows.Forms.ComboBox();
-            cmbDocumentType = new System.Windows.Forms.ComboBox();
+            this.cScrollofLst = new System.Windows.Forms.VScrollBar();
+            this.cmbDistriborTerm = new System.Windows.Forms.ComboBox();
+            this.cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
+            this.cmbDistOTFolder = new System.Windows.Forms.ComboBox();
+            this.cmbDocumentType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lblTerm
@@ -68,7 +68,7 @@ namespace EK_MultipleTransporter.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCategoryYear.AutoSize = true;
-            this.lblCategoryYear.Location = new System.Drawing.Point(48, 245);
+            this.lblCategoryYear.Location = new System.Drawing.Point(48, 248);
             this.lblCategoryYear.Name = "lblCategoryYear";
             this.lblCategoryYear.Size = new System.Drawing.Size(18, 13);
             this.lblCategoryYear.TabIndex = 29;
@@ -82,7 +82,7 @@ namespace EK_MultipleTransporter.Forms
             this.dtpDistributorYear.CalendarMonthBackground = System.Drawing.SystemColors.Menu;
             this.dtpDistributorYear.CustomFormat = "yyyy";
             this.dtpDistributorYear.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpDistributorYear.Location = new System.Drawing.Point(162, 238);
+            this.dtpDistributorYear.Location = new System.Drawing.Point(162, 241);
             this.dtpDistributorYear.Name = "dtpDistributorYear";
             this.dtpDistributorYear.ShowUpDown = true;
             this.dtpDistributorYear.Size = new System.Drawing.Size(379, 20);
@@ -211,58 +211,69 @@ namespace EK_MultipleTransporter.Forms
             this.txtFilter.MouseClick += new System.Windows.Forms.MouseEventHandler(this.txtFilter_MouseClick);
             this.txtFilter.TextChanged += new System.EventHandler(this.txtFilter_TextChanged);
             // 
+            // cScrollofLst
+            // 
+            this.cScrollofLst.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cScrollofLst.Location = new System.Drawing.Point(521, 373);
+            this.cScrollofLst.Name = "cScrollofLst";
+            this.cScrollofLst.Size = new System.Drawing.Size(17, 295);
+            this.cScrollofLst.TabIndex = 45;
+            this.cScrollofLst.Scroll += new System.Windows.Forms.ScrollEventHandler(this.cScrollofLst_Scroll);
+            this.cScrollofLst.ValueChanged += new System.EventHandler(this.cScrollofLst_ValueChanged);
+            // 
             // cmbDistriborTerm
             // 
-            cmbDistriborTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.cmbDistriborTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            cmbDistriborTerm.BackColor = System.Drawing.SystemColors.Menu;
-            cmbDistriborTerm.FormattingEnabled = true;
-            cmbDistriborTerm.Items.AddRange(new object[] {
+            this.cmbDistriborTerm.BackColor = System.Drawing.SystemColors.Menu;
+            this.cmbDistriborTerm.FormattingEnabled = true;
+            this.cmbDistriborTerm.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4"});
-            cmbDistriborTerm.Location = new System.Drawing.Point(162, 288);
-            cmbDistriborTerm.Name = "cmbDistriborTerm";
-            cmbDistriborTerm.Size = new System.Drawing.Size(379, 21);
-            cmbDistriborTerm.TabIndex = 35;
+            this.cmbDistriborTerm.Location = new System.Drawing.Point(162, 288);
+            this.cmbDistriborTerm.Name = "cmbDistriborTerm";
+            this.cmbDistriborTerm.Size = new System.Drawing.Size(379, 21);
+            this.cmbDistriborTerm.TabIndex = 35;
             // 
             // cmbDistWorkPlaceType
             // 
-            cmbDistWorkPlaceType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.cmbDistWorkPlaceType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            cmbDistWorkPlaceType.BackColor = System.Drawing.SystemColors.Menu;
-            cmbDistWorkPlaceType.FormattingEnabled = true;
-            cmbDistWorkPlaceType.Location = new System.Drawing.Point(162, 41);
-            cmbDistWorkPlaceType.Name = "cmbDistWorkPlaceType";
-            cmbDistWorkPlaceType.Size = new System.Drawing.Size(379, 21);
-            cmbDistWorkPlaceType.TabIndex = 26;
-            cmbDistWorkPlaceType.SelectedIndexChanged += new System.EventHandler(this.cmbDistWorkPlaceType_SelectedIndexChanged);
+            this.cmbDistWorkPlaceType.BackColor = System.Drawing.SystemColors.Menu;
+            this.cmbDistWorkPlaceType.FormattingEnabled = true;
+            this.cmbDistWorkPlaceType.Location = new System.Drawing.Point(162, 41);
+            this.cmbDistWorkPlaceType.Name = "cmbDistWorkPlaceType";
+            this.cmbDistWorkPlaceType.Size = new System.Drawing.Size(379, 21);
+            this.cmbDistWorkPlaceType.TabIndex = 26;
+            this.cmbDistWorkPlaceType.SelectedIndexChanged += new System.EventHandler(this.cmbDistWorkPlaceType_SelectedIndexChanged);
             // 
             // cmbDistOTFolder
             // 
-            cmbDistOTFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.cmbDistOTFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            cmbDistOTFolder.BackColor = System.Drawing.SystemColors.Menu;
-            cmbDistOTFolder.Location = new System.Drawing.Point(162, 95);
-            cmbDistOTFolder.Name = "cmbDistOTFolder";
-            cmbDistOTFolder.Size = new System.Drawing.Size(379, 21);
-            cmbDistOTFolder.TabIndex = 27;
-            cmbDistOTFolder.SelectedIndexChanged += new System.EventHandler(this.cmbDistOTFolder_SelectedIndexChanged);
+            this.cmbDistOTFolder.BackColor = System.Drawing.SystemColors.Menu;
+            this.cmbDistOTFolder.Location = new System.Drawing.Point(162, 95);
+            this.cmbDistOTFolder.Name = "cmbDistOTFolder";
+            this.cmbDistOTFolder.Size = new System.Drawing.Size(379, 21);
+            this.cmbDistOTFolder.TabIndex = 27;
+            this.cmbDistOTFolder.SelectedIndexChanged += new System.EventHandler(this.cmbDistOTFolder_SelectedIndexChanged);
             // 
             // cmbDocumentType
             // 
-            cmbDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.cmbDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
-            cmbDocumentType.Location = new System.Drawing.Point(162, 196);
-            cmbDocumentType.Name = "cmbDocumentType";
-            cmbDocumentType.Size = new System.Drawing.Size(379, 21);
-            cmbDocumentType.TabIndex = 39;
+            this.cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
+            this.cmbDocumentType.Location = new System.Drawing.Point(162, 196);
+            this.cmbDocumentType.Name = "cmbDocumentType";
+            this.cmbDocumentType.Size = new System.Drawing.Size(379, 21);
+            this.cmbDocumentType.TabIndex = 39;
             // 
             // DistributorForm
             // 
@@ -272,20 +283,21 @@ namespace EK_MultipleTransporter.Forms
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(599, 749);
+            this.Controls.Add(this.cScrollofLst);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.cLstBxWorkSpaceType);
             this.Controls.Add(this.lblDocType);
-            this.Controls.Add(cmbDocumentType);
+            this.Controls.Add(this.cmbDocumentType);
             this.Controls.Add(this.lblTerm);
             this.Controls.Add(this.lblCategoryYear);
-            this.Controls.Add(cmbDistriborTerm);
+            this.Controls.Add(this.cmbDistriborTerm);
             this.Controls.Add(this.dtpDistributorYear);
             this.Controls.Add(this.lblDistriboturDocumentRoot);
             this.Controls.Add(this.lblWorkPlaceType);
             this.Controls.Add(this.lblCategoryDocumentType);
             this.Controls.Add(this.txtDistDocumentRoot);
-            this.Controls.Add(cmbDistWorkPlaceType);
-            this.Controls.Add(cmbDistOTFolder);
+            this.Controls.Add(this.cmbDistWorkPlaceType);
+            this.Controls.Add(this.cmbDistOTFolder);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "DistributorForm";
@@ -298,10 +310,10 @@ namespace EK_MultipleTransporter.Forms
         }
 
         #endregion
-        System.Windows.Forms.ComboBox cmbDistriborTerm;
-        System.Windows.Forms.ComboBox cmbDistWorkPlaceType;
-        System.Windows.Forms.ComboBox cmbDistOTFolder;
-        System.Windows.Forms.ComboBox cmbDocumentType;
+        private System.Windows.Forms.ComboBox cmbDistriborTerm;
+        private System.Windows.Forms.ComboBox cmbDistWorkPlaceType;
+        private System.Windows.Forms.ComboBox cmbDistOTFolder;
+        private System.Windows.Forms.ComboBox cmbDocumentType;
         private System.Windows.Forms.Label lblTerm;
         private System.Windows.Forms.Label lblCategoryYear;
         private System.Windows.Forms.DateTimePicker dtpDistributorYear;
@@ -312,9 +324,10 @@ namespace EK_MultipleTransporter.Forms
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label lblDocType;
-        private OpenFileDialog ofdDocument;
-        private ListView cLstBxWorkSpaceType;
-        private ColumnHeader hdWorkSpaceType;
-        private TextBox txtFilter;
+        private System.Windows.Forms.OpenFileDialog ofdDocument;
+        private System.Windows.Forms.ListView cLstBxWorkSpaceType;
+        private System.Windows.Forms.ColumnHeader hdWorkSpaceType;
+        private System.Windows.Forms.TextBox txtFilter;
+        private VScrollBar cScrollofLst;
     }
 }

@@ -151,4 +151,7 @@
   <data name="ChooseDocument" xml:space="preserve">
     <value>Dökümanınızı Seçiniz...</value>
   </data>
+  <data name="filterText" xml:space="preserve">
+    <value>İş alanlarını filtreleyin...</value>
+  </data>
 </root>

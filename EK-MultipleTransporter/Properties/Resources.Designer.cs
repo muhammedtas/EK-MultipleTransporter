@@ -127,6 +127,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to İş alanlarını filtreleyin....
+        /// </summary>
+        public static string filterText {
+            get {
+                return ResourceManager.GetString("filterText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap images {

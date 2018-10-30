@@ -34,14 +34,21 @@ namespace EK_MultipleTransporter.Forms
         public static long contentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
         public OTServicesHelper serviceHelper = new OTServicesHelper();
         List<ListViewItem> workPlaceMasterList;
+        List<ListViewItem> filteredWorkPlaceMasterList;
+        IEnumerable<ListViewItem> itemsToAdd;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private readonly CancellationToken _cancellationToken;
         private Trigger _worker;
+        private static int ItemsPerpage = 100;
+        private static int CurrentScrool = 1;
 
         public DistributorForm()
         {
             InitializeComponent();
             workPlaceMasterList = new List<ListViewItem>();
+            filteredWorkPlaceMasterList = new List<ListViewItem>();
+            itemsToAdd = new List<ListViewItem>();
+
             _worker = Worker;
             _cancellationToken = _cts.Token;
 
@@ -114,6 +121,10 @@ namespace EK_MultipleTransporter.Forms
                 }
             }
         }
+        private void lstViewScrolled(object sender, ScrollEventArgs e)
+        {
+
+        }
 
         private async void DistributorForm_Load(object sender, EventArgs e)
         {
@@ -122,34 +133,32 @@ namespace EK_MultipleTransporter.Forms
         private async void cmbDistWorkPlaceType_SelectedIndexChanged(object sender, EventArgs e)
         {
             cLstBxWorkSpaceType.Items.Clear();
-            //await Task.Run(() => LoadSelectedWorkSpacesChilds());
-            //await Task.Run(() => LoadSelectedWorkSpacesTargetChildsToListBox());
+            CurrentScrool = 1;
+            //ItemsPerpage = 100;
+            cScrollofLst.Maximum = 100;
 
             await Task.Factory.StartNew(_worker.Invoke, _cancellationToken, TaskCreationOptions.LongRunning,
-                    TaskScheduler.Current)
-                .ConfigureAwait(false);
-
-            
-
-            //List<Task> tasks = new List<Task>();
-            //tasks.Add(Task.Run(() => { LoadSelectedWorkSpacesChilds(); }));
-            //tasks.Add(Task.Run(() => { LoadSelectedWorkSpacesTargetChildsToListBox(); }));
-            //Task.WaitAll(tasks.ToArray());
-
-            //var task1 = Task.Run(() => LoadSelectedWorkSpacesChilds());
-            //var task2 = Task.Run(() => LoadSelectedWorkSpacesTargetChildsToListBox());
-            //Task task1 = LoadSelectedWorkSpacesChilds();
-            //Task task2 = LoadSelectedWorkSpacesTargetChildsToListBox();
-
-            // Task.WhenAll(task1, task2);
+            TaskScheduler.Current)
+            .ConfigureAwait(false);
 
         }
 
         public async void Worker()
         {
+
             var task = Task.Factory.StartNew(() =>
             {
-                Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
+
+                try
+                {
+                    Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
+
+                }
+                catch (Exception)
+                {
+                    //throw;
+                }
+
 
             }).ConfigureAwait(false);
 
@@ -190,20 +199,22 @@ namespace EK_MultipleTransporter.Forms
             }
 
         }
-        public async void LoadSelectedWorkSpacesChilds()
+        public void LoadSelectedWorkSpacesChilds()
         {
             // Üstteki çalışma alanı değiştikçe burası asyn bir şekilde document template ten gelmesini istiyoruz.
             // Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
             // Adı ile aratarak target nodumuzu bulacağız.
 
-            var task = Task.Run(() => {
+            //var task = Task.Run(() =>
+            //{
 
+            try
+            {
                 cmbDistOTFolder.Items.Clear();
 
                 var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(contentServerDocumentTemplatesNodeId, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
 
                 var childFoldersNodes = serviceHelper.GetChildNodesById(docTemplateNode.Id);
-
 
                 foreach (var childNode in childFoldersNodes)
                 {
@@ -245,19 +256,28 @@ namespace EK_MultipleTransporter.Forms
                     }
                 }
 
+            }
+            catch (Exception)
+            {
+                Logger.Error("Büyük ihtimal bir workspace itemleri listlere doldurulurken workspace değişti");
 
-            }).ConfigureAwait(false);
+                //throw;
+            }
 
+            //}).ConfigureAwait(false);
 
-           await task;
-      
+            //await task;
+
 
         }
 
-        public async void LoadSelectedWorkSpacesTargetChildsToListBox()
+        public void LoadSelectedWorkSpacesTargetChildsToListBox()
         {  // cmbDistWorkPlaceType
 
-            var task = Task.Run(() =>
+            //var task = Task.Run(() =>
+            //{
+
+            try
             {
                 cLstBxWorkSpaceType.Items.Clear();
 
@@ -269,13 +289,24 @@ namespace EK_MultipleTransporter.Forms
                     listItem.Text = targetNode.Name;
                     listItem.Tag = new DistributorChilds() { Id = targetNode.Id, Name = targetNode.Name };
                     workPlaceMasterList.Add(listItem);
-                    cLstBxWorkSpaceType.Items.Add(listItem);
+                    //  workPlaceMasterList.ToArray();
+                    //cLstBxWorkSpaceType.Items.Add(listItem);
                     //cLstBxWorkSpaceType.Items.AddRange(workPlaceMasterList);
                 }
-            }).ConfigureAwait(false);
+                // Skip(ItemsPerpage * (CurrentPage-1)).Таке(ItemsPerpage);
+                var itemsToAdd = workPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(100);
+                cLstBxWorkSpaceType.Items.AddRange(itemsToAdd.ToArray());
+            }
+            catch (Exception)
+            {
+                Logger.Error("Workspace dolarken değiştirilmiş olmalı...");
+                //throw;
+            }
 
-            await task;
-        
+            //}).ConfigureAwait(false);
+
+            //await task;
+
         }
 
         private void txtDistDocumentRoot_Click(object sender, EventArgs e)
@@ -301,6 +332,35 @@ namespace EK_MultipleTransporter.Forms
         {
             this.Close();
         }
+
+        private void txtFilter_TextChanged(object sender, EventArgs e)
+        {
+            filteredWorkPlaceMasterList.Clear();
+            cLstBxWorkSpaceType.Items.Clear();
+
+            if (txtFilter.Text != String.Empty || txtFilter.Text == Resources.filterText) FilterItems();
+
+        }
+
+        private void txtFilter_MouseClick(object sender, MouseEventArgs e)
+        {
+            txtFilter.Text = String.Empty;
+        }
+
+        private void FilterItems()
+        {
+            CurrentScrool = 1;
+            cScrollofLst.Maximum = 100;
+            // ListView filter ediliyor.
+            foreach (ListViewItem item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
+            {
+                filteredWorkPlaceMasterList.Add(item);
+            }
+
+            cLstBxWorkSpaceType.Items.AddRange(filteredWorkPlaceMasterList.ToArray());
+
+        }
+
         public async void DoDistributorWorks()
         {
             Debugger.NotifyOfCrossThreadDependency();
@@ -388,30 +448,50 @@ namespace EK_MultipleTransporter.Forms
             }
         }
 
-        private void FilterItems()
+        private void cScrollofLst_ValueChanged(object sender, EventArgs e)
         {
+            if (cScrollofLst.Maximum >= workPlaceMasterList.Count) return;
+            
+            if (cScrollofLst.Maximum - 20 > ((VScrollBar)sender).Value) return;
 
-            cLstBxWorkSpaceType.Items.Clear();
+            cScrollofLst.Maximum += 100;
+            
+            CurrentScrool++;
 
-            //var task = Task.Run(() => {
-            // This filters and adds your filtered items to listView1
-            foreach (ListViewItem item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
+            // Filter text'e bir şey girmemişse filtered listten getir.
+            if (!String.Equals(txtFilter.Text, Resources.filterText) && !String.IsNullOrEmpty(txtFilter.Text))
             {
-                cLstBxWorkSpaceType.Items.Add(item);
+                cLstBxWorkSpaceType.Items.Clear();
+                itemsToAdd = filteredWorkPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
+                if (itemsToAdd != null)
+                    cLstBxWorkSpaceType.Items.AddRange(itemsToAdd.ToArray());
+                itemsToAdd = null;
             }
-            // });
+            else // Filtered liste hiç dokunulmadıysa masterList ten getir.
+            {
+                itemsToAdd = workPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
+                if (itemsToAdd != null)
+                    cLstBxWorkSpaceType.Items.AddRange(itemsToAdd.ToArray());
 
-            // await task;
+                itemsToAdd = null;
+            }
+            
         }
 
-        private void txtFilter_TextChanged(object sender, EventArgs e)
+        private void cScrollofLst_Scroll(object sender, ScrollEventArgs e)
         {
-            if (txtFilter.Text != String.Empty) FilterItems();
-        }
-
-        private void txtFilter_MouseClick(object sender, MouseEventArgs e)
-        {
-            txtFilter.Text = String.Empty;
+            try
+            {
+                if (cScrollofLst.Maximum >= e.NewValue)
+                {
+                    cLstBxWorkSpaceType.EnsureVisible(e.NewValue);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Occur moccur bro" + ex);
+            }
+            
         }
     }
 }
