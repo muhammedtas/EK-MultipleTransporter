@@ -192,9 +192,8 @@ namespace EK_MultipleTransporter.Helpers
             var docTerm = eag.Values.First(x => x.Description == "Çeyrek");
             docTerm.Values = new object[] { term };
 
-            var emdNew = new EntityMetadata();
+            var emdNew = new EntityMetadata {AttributeGroups = new[] {eag}};
 
-            emdNew.AttributeGroups = new[] { eag };
 
             return emdNew;
 

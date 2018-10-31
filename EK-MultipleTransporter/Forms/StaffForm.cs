@@ -269,9 +269,10 @@ namespace EK_MultipleTransporter.Forms
             var term = eag.Values.First(x => x.Description == "Çeyrek");
             term.Values = new object[] { cmbStaffTerm.Text };
 
-            var emdNew = new EntityMetadata();
-
-            emdNew.AttributeGroups = new[] { eag };
+            var emdNew = new EntityMetadata
+            {
+                AttributeGroups = new[] { eag }
+            };
 
             foreach (var item in docsToUpload)
             {
@@ -281,8 +282,7 @@ namespace EK_MultipleTransporter.Forms
 
         private void txtStaffFolderRoot_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderDlg = new FolderBrowserDialog();
-            folderDlg.ShowNewFolderButton = true;
+            FolderBrowserDialog folderDlg = new FolderBrowserDialog {ShowNewFolderButton = true};
             DialogResult result = folderDlg.ShowDialog();
             if (result == DialogResult.OK)
             {

@@ -128,13 +128,12 @@ namespace EK_MultipleTransporter.Forms
         private void txtFolderRoot_Click(object sender, EventArgs e)
         {
 
-            FolderBrowserDialog folderDlg = new FolderBrowserDialog();
-            folderDlg.ShowNewFolderButton = true;
-            DialogResult result = folderDlg.ShowDialog();
+            var folderDlg = new FolderBrowserDialog {ShowNewFolderButton = true};
+            var result = folderDlg.ShowDialog();
             if (result == DialogResult.OK)
             {
                 txtFolderRoot.Text = folderDlg.SelectedPath;
-                Environment.SpecialFolder root = folderDlg.RootFolder;
+                var root = folderDlg.RootFolder;
             }
             StreamHelper.RootPathOfUsersFolder = folderDlg.SelectedPath;
 

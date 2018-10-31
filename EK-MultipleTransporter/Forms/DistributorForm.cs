@@ -17,6 +17,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Services.Protocols;
 using System.Windows.Forms;
+using JetBrains.Util;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace EK_MultipleTransporter.Forms
 {
@@ -27,18 +29,16 @@ namespace EK_MultipleTransporter.Forms
     {
 
         public static Logger Logger = LogManager.GetCurrentClassLogger();
-        public static long projectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
-        public static long projectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
-        public static long generalCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
-        public static long workSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]);
-        public static long contentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
-        public OTServicesHelper serviceHelper = new OTServicesHelper();
-        List<ListViewItem> workPlaceMasterList;
-        List<ListViewItem> filteredWorkPlaceMasterList;
-        IEnumerable<ListViewItem> itemsToAdd;
+        public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
+        public static long WorkSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]);
+        public static long ContentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
+        private readonly OTServicesHelper _serviceHelper;
+        private List<ListViewItem> workPlaceMasterList;
+        private List<ListViewItem> filteredWorkPlaceMasterList;
+        private IEnumerable<ListViewItem> _itemsToAdd;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private readonly CancellationToken _cancellationToken;
-        private Trigger _worker;
+        private readonly Trigger _worker;
         private static int ItemsPerpage = 100;
         private static int CurrentScrool = 1;
 
@@ -47,8 +47,8 @@ namespace EK_MultipleTransporter.Forms
             InitializeComponent();
             workPlaceMasterList = new List<ListViewItem>();
             filteredWorkPlaceMasterList = new List<ListViewItem>();
-            itemsToAdd = new List<ListViewItem>();
-
+            _itemsToAdd = new List<ListViewItem>();
+            _serviceHelper = new OTServicesHelper();
             _worker = Worker;
             _cancellationToken = _cts.Token;
 
@@ -132,10 +132,16 @@ namespace EK_MultipleTransporter.Forms
         }
         private async void cmbDistWorkPlaceType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cmbDistOTFolder.Items.Clear();
             cLstBxWorkSpaceType.Items.Clear();
             CurrentScrool = 1;
             //ItemsPerpage = 100;
             cScrollofLst.Maximum = 100;
+
+            await Task.Factory.StartNew(() => { VariableHelper.Cts.Cancel(); }, _cancellationToken, TaskCreationOptions.LongRunning,
+                TaskScheduler.FromCurrentSynchronizationContext()).
+                ConfigureAwait(false);
+
 
             await Task.Factory.StartNew(_worker.Invoke, _cancellationToken, TaskCreationOptions.LongRunning,
             TaskScheduler.Current)
@@ -145,13 +151,16 @@ namespace EK_MultipleTransporter.Forms
 
         public async void Worker()
         {
+            cmbDistOTFolder.Items.Clear();
+            workPlaceMasterList.Clear();
+            cLstBxWorkSpaceType.Items.Clear();
 
             var task = Task.Factory.StartNew(() =>
             {
 
                 try
                 {
-                    Parallel.Invoke(() => LoadSelectedWorkSpacesChilds(), () => LoadSelectedWorkSpacesTargetChildsToListBox());
+                    Parallel.Invoke(LoadSelectedWorkSpacesChilds, LoadSelectedWorkSpacesTargetChildsToListBox);
 
                 }
                 catch (Exception)
@@ -160,7 +169,7 @@ namespace EK_MultipleTransporter.Forms
                 }
 
 
-            }).ConfigureAwait(false);
+            }, _cancellationToken).ConfigureAwait(false);
 
             await task;
 
@@ -175,7 +184,7 @@ namespace EK_MultipleTransporter.Forms
         public void LoadFormsDefault()
         {
             // Categories loaded.
-            var categoryItems = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
             if (categoryItems != null)
             {
                 var itemArray = categoryItems.Values[0].ValidValues;
@@ -183,7 +192,7 @@ namespace EK_MultipleTransporter.Forms
             }
 
             // Work Spaces Loaded.
-            var workSpacesTypes = serviceHelper.GetChildNodesById(workSpacesNodeId);
+            var workSpacesTypes = _serviceHelper.GetChildNodesById(WorkSpacesNodeId);
 
             if (workSpacesTypes != null)
             {
@@ -212,9 +221,15 @@ namespace EK_MultipleTransporter.Forms
             {
                 cmbDistOTFolder.Items.Clear();
 
-                var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(contentServerDocumentTemplatesNodeId, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
+                var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(ContentServerDocumentTemplatesNodeId, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
 
-                var childFoldersNodes = serviceHelper.GetChildNodesById(docTemplateNode.Id);
+                var childFoldersNodes = _serviceHelper.GetChildNodesById(docTemplateNode.Id);
+
+                //Task.Factory.StartNew(() =>
+                //        {
+
+                //        }, _cancellationToken, TaskCreationOptions.LongRunning,
+                //        TaskScheduler.FromCurrentSynchronizationContext());
 
                 foreach (var childNode in childFoldersNodes)
                 {
@@ -223,33 +238,25 @@ namespace EK_MultipleTransporter.Forms
                         Id = childNode.Id,
                         Name = childNode.Name
                     });
+                    if (!_serviceHelper.HasChildNode(childNode.Id)) continue;
+                    var innerChilds = _serviceHelper.GetChildNodesById(childNode.Id);
 
-                    if (serviceHelper.HasChildNode(childNode.Id))
+                    foreach (var innerChild in innerChilds)
                     {
-                        var innerChilds = serviceHelper.GetChildNodesById(childNode.Id);
-
-                        foreach (var innerChild in innerChilds)
+                        cmbDistOTFolder.Items.Add(new DistributorChilds()
                         {
-                            cmbDistOTFolder.Items.Add(new DistributorChilds()
+                            Id = innerChild.Id,
+                            Name = childNode.Name + "\\" + innerChild.Name
+                        });
+                        if (!_serviceHelper.HasChildNode(innerChild.Id)) continue;
+                        var innersOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
+                        foreach (var innerOfInnerChild in innersOfInnerChild)
+                        {
+                            cmbDistOTFolder.Items.Add(new ProjectChilds()
                             {
-                                Id = innerChild.Id,
-                                Name = childNode.Name + "\\" + innerChild.Name
+                                Id = innerOfInnerChild.Id,
+                                Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
                             });
-
-                            if (serviceHelper.HasChildNode(innerChild.Id))
-                            {
-                                var innersOfInnerChild = serviceHelper.GetChildNodesById(innerChild.Id);
-                                foreach (var innerOfInnerChild in innersOfInnerChild)
-                                {
-                                    cmbDistOTFolder.Items.Add(new ProjectChilds()
-                                    {
-                                        Id = innerOfInnerChild.Id,
-                                        Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
-                                    });
-
-                                }
-
-                            }
 
                         }
 
@@ -272,22 +279,20 @@ namespace EK_MultipleTransporter.Forms
         }
 
         public void LoadSelectedWorkSpacesTargetChildsToListBox()
-        {  // cmbDistWorkPlaceType
-
-            //var task = Task.Run(() =>
-            //{
-
+        {  
             try
             {
                 cLstBxWorkSpaceType.Items.Clear();
 
-                var workSpaceTargetNodes = serviceHelper.GetChildNodesById((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id);
+                var workSpaceTargetNodes = _serviceHelper.GetChildNodesById((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id);
 
                 foreach (var targetNode in workSpaceTargetNodes)
                 {
-                    var listItem = new ListViewItem();
-                    listItem.Text = targetNode.Name;
-                    listItem.Tag = new DistributorChilds() { Id = targetNode.Id, Name = targetNode.Name };
+                    var listItem = new ListViewItem
+                    {
+                        Text = targetNode.Name,
+                        Tag = new DistributorChilds() {Id = targetNode.Id, Name = targetNode.Name}
+                    };
                     workPlaceMasterList.Add(listItem);
                     //  workPlaceMasterList.ToArray();
                     //cLstBxWorkSpaceType.Items.Add(listItem);
@@ -303,9 +308,6 @@ namespace EK_MultipleTransporter.Forms
                 //throw;
             }
 
-            //}).ConfigureAwait(false);
-
-            //await task;
 
         }
 
@@ -325,7 +327,7 @@ namespace EK_MultipleTransporter.Forms
 
         private async void btnOk_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => DoDistributorWorks());
+            await Task.Run(() => DoDistributorWorks(), _cancellationToken);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -338,13 +340,13 @@ namespace EK_MultipleTransporter.Forms
             filteredWorkPlaceMasterList.Clear();
             cLstBxWorkSpaceType.Items.Clear();
 
-            if (txtFilter.Text != String.Empty || txtFilter.Text == Resources.filterText) FilterItems();
+            if (txtFilter.Text != string.Empty || txtFilter.Text == Resources.filterText) FilterItems();
 
         }
 
         private void txtFilter_MouseClick(object sender, MouseEventArgs e)
         {
-            txtFilter.Text = String.Empty;
+            txtFilter.Text = string.Empty;
         }
 
         private void FilterItems()
@@ -352,7 +354,7 @@ namespace EK_MultipleTransporter.Forms
             CurrentScrool = 1;
             cScrollofLst.Maximum = 100;
             // ListView filter ediliyor.
-            foreach (ListViewItem item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
+            foreach (var item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
             {
                 filteredWorkPlaceMasterList.Add(item);
             }
@@ -401,7 +403,7 @@ namespace EK_MultipleTransporter.Forms
                     var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
 
                     var generalSecondStepTargetNodeName = targetOTAddress.Split('\\')[1];
-
+                    if (firstStepTargetNode == null) continue;
                     var trgtChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
                     if (trgtChldnd != null)
@@ -413,7 +415,7 @@ namespace EK_MultipleTransporter.Forms
                     var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
 
                     var generalSecondStepTargetNodeName = targetOTAddress.Split('\\')[1];
-
+                    if (firstStepTargetNode == null) continue;
                     var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
                     var generalThirdStepTargetNodeName = targetOTAddress.Split('\\')[2];
@@ -441,10 +443,10 @@ namespace EK_MultipleTransporter.Forms
 
         private async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
         {
-            var emdNew = serviceHelper.CategoryMaker(cmbDocumentType.Text, dtpDistributorYear.Text, cmbDistriborTerm.Text, generalCategoryNodeId);
+            var emdNew = _serviceHelper.CategoryMaker(cmbDocumentType.Text, dtpDistributorYear.Text, cmbDistriborTerm.Text, GeneralCategoryNodeId);
             foreach (var item in docsToUpload)
             {
-                await Task.Run(() => serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
+                await Task.Run(() => _serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew), _cancellationToken);
             }
         }
 
@@ -459,21 +461,21 @@ namespace EK_MultipleTransporter.Forms
             CurrentScrool++;
 
             // Filter text'e bir şey girmemişse filtered listten getir.
-            if (!String.Equals(txtFilter.Text, Resources.filterText) && !String.IsNullOrEmpty(txtFilter.Text))
+            if (!string.Equals(txtFilter.Text, Resources.filterText) && !string.IsNullOrEmpty(txtFilter.Text))
             {
                 cLstBxWorkSpaceType.Items.Clear();
-                itemsToAdd = filteredWorkPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
-                if (itemsToAdd != null)
-                    cLstBxWorkSpaceType.Items.AddRange(itemsToAdd.ToArray());
-                itemsToAdd = null;
+                _itemsToAdd = filteredWorkPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
+                if (_itemsToAdd != null)
+                    cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
+                _itemsToAdd = null;
             }
             else // Filtered liste hiç dokunulmadıysa masterList ten getir.
             {
-                itemsToAdd = workPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
-                if (itemsToAdd != null)
-                    cLstBxWorkSpaceType.Items.AddRange(itemsToAdd.ToArray());
+                _itemsToAdd = workPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
+                if (_itemsToAdd != null)
+                    cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
 
-                itemsToAdd = null;
+                _itemsToAdd = null;
             }
             
         }
@@ -482,7 +484,7 @@ namespace EK_MultipleTransporter.Forms
         {
             try
             {
-                if (cScrollofLst.Maximum >= e.NewValue)
+                if (cScrollofLst.Maximum >= e.NewValue || cScrollofLst.Maximum >= filteredWorkPlaceMasterList.Count())
                 {
                     cLstBxWorkSpaceType.EnsureVisible(e.NewValue);
                 }
