@@ -505,7 +505,6 @@
             <s:element minOccurs="1" maxOccurs="1" name="dmsTargetNodeId" type="s:long" />
             <s:element minOccurs="0" maxOccurs="1" name="newName" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="east" type="tns:EntityAttributeSourceType" />
-            <s:element minOccurs="1" maxOccurs="1" name="systemOperation" type="s:boolean" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -694,7 +693,7 @@
       <s:element name="AddVersionResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="AddVersionResult" type="tns:EntityVersion" />
+            <s:element minOccurs="1" maxOccurs="1" name="AddVersionResult" type="s:long" />
           </s:sequence>
         </s:complexType>
       </s:element>
@@ -1989,10 +1988,10 @@
   </wsdl:binding>
   <wsdl:service name="DmsOps">
     <wsdl:port name="DmsOpsSoap" binding="tns:DmsOpsSoap">
-      <soap:address location="http://192.168.50.121/DmsWebServices/DmsOps.asmx" />
+      <soap:address location="http://192.168.50.97/DmsWebServices/DmsOps.asmx" />
     </wsdl:port>
     <wsdl:port name="DmsOpsSoap12" binding="tns:DmsOpsSoap12">
-      <soap12:address location="http://192.168.50.121/DmsWebServices/DmsOps.asmx" />
+      <soap12:address location="http://192.168.50.97/DmsWebServices/DmsOps.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

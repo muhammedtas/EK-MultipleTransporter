@@ -157,4 +157,7 @@
   <data name="NodeDeepnessExceed" xml:space="preserve">
     <value>Node derinliği beklenen değerin üzerinde. </value>
   </data>
+  <data name="ProcessIsDone" xml:space="preserve">
+    <value>İşlem Tamamlandı...</value>
+  </data>
 </root>

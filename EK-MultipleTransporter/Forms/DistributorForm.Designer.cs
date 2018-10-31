@@ -44,10 +44,11 @@ namespace EK_MultipleTransporter.Forms
             this.hdWorkSpaceType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.cScrollofLst = new System.Windows.Forms.VScrollBar();
-            this.cmbDistriborTerm = new System.Windows.Forms.ComboBox();
-            this.cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
-            this.cmbDistOTFolder = new System.Windows.Forms.ComboBox();
-            this.cmbDocumentType = new System.Windows.Forms.ComboBox();
+            this.cbCheckAll = new System.Windows.Forms.CheckBox();
+            cmbDistriborTerm = new System.Windows.Forms.ComboBox();
+            cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
+            cmbDistOTFolder = new System.Windows.Forms.ComboBox();
+            cmbDocumentType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lblTerm
@@ -194,7 +195,7 @@ namespace EK_MultipleTransporter.Forms
             // hdWorkSpaceType
             // 
             this.hdWorkSpaceType.Name = "hdWorkSpaceType";
-            this.hdWorkSpaceType.Text = "İş Alanı Türü";
+            this.hdWorkSpaceType.Text = "     İş Alanı Türü";
             this.hdWorkSpaceType.Width = 486;
             // 
             // txtFilter
@@ -222,58 +223,68 @@ namespace EK_MultipleTransporter.Forms
             this.cScrollofLst.Scroll += new System.Windows.Forms.ScrollEventHandler(this.cScrollofLst_Scroll);
             this.cScrollofLst.ValueChanged += new System.EventHandler(this.cScrollofLst_ValueChanged);
             // 
+            // cbCheckAll
+            // 
+            this.cbCheckAll.AutoSize = true;
+            this.cbCheckAll.Location = new System.Drawing.Point(57, 376);
+            this.cbCheckAll.Name = "cbCheckAll";
+            this.cbCheckAll.Size = new System.Drawing.Size(15, 14);
+            this.cbCheckAll.TabIndex = 46;
+            this.cbCheckAll.UseVisualStyleBackColor = true;
+            this.cbCheckAll.Click += new System.EventHandler(this.cbCheckAll_Click);
+            // 
             // cmbDistriborTerm
             // 
-            this.cmbDistriborTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            cmbDistriborTerm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbDistriborTerm.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbDistriborTerm.FormattingEnabled = true;
-            this.cmbDistriborTerm.Items.AddRange(new object[] {
+            cmbDistriborTerm.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDistriborTerm.FormattingEnabled = true;
+            cmbDistriborTerm.Items.AddRange(new object[] {
             "1",
             "2",
             "3",
             "4"});
-            this.cmbDistriborTerm.Location = new System.Drawing.Point(162, 288);
-            this.cmbDistriborTerm.Name = "cmbDistriborTerm";
-            this.cmbDistriborTerm.Size = new System.Drawing.Size(379, 21);
-            this.cmbDistriborTerm.TabIndex = 35;
+            cmbDistriborTerm.Location = new System.Drawing.Point(162, 288);
+            cmbDistriborTerm.Name = "cmbDistriborTerm";
+            cmbDistriborTerm.Size = new System.Drawing.Size(379, 21);
+            cmbDistriborTerm.TabIndex = 35;
             // 
             // cmbDistWorkPlaceType
             // 
-            this.cmbDistWorkPlaceType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            cmbDistWorkPlaceType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbDistWorkPlaceType.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbDistWorkPlaceType.FormattingEnabled = true;
-            this.cmbDistWorkPlaceType.Location = new System.Drawing.Point(162, 41);
-            this.cmbDistWorkPlaceType.Name = "cmbDistWorkPlaceType";
-            this.cmbDistWorkPlaceType.Size = new System.Drawing.Size(379, 21);
-            this.cmbDistWorkPlaceType.TabIndex = 26;
-            this.cmbDistWorkPlaceType.SelectedIndexChanged += new System.EventHandler(this.cmbDistWorkPlaceType_SelectedIndexChanged);
+            cmbDistWorkPlaceType.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDistWorkPlaceType.FormattingEnabled = true;
+            cmbDistWorkPlaceType.Location = new System.Drawing.Point(162, 41);
+            cmbDistWorkPlaceType.Name = "cmbDistWorkPlaceType";
+            cmbDistWorkPlaceType.Size = new System.Drawing.Size(379, 21);
+            cmbDistWorkPlaceType.TabIndex = 26;
+            cmbDistWorkPlaceType.SelectedIndexChanged += new System.EventHandler(this.cmbDistWorkPlaceType_SelectedIndexChanged);
             // 
             // cmbDistOTFolder
             // 
-            this.cmbDistOTFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            cmbDistOTFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbDistOTFolder.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbDistOTFolder.Location = new System.Drawing.Point(162, 95);
-            this.cmbDistOTFolder.Name = "cmbDistOTFolder";
-            this.cmbDistOTFolder.Size = new System.Drawing.Size(379, 21);
-            this.cmbDistOTFolder.TabIndex = 27;
-            this.cmbDistOTFolder.SelectedIndexChanged += new System.EventHandler(this.cmbDistOTFolder_SelectedIndexChanged);
+            cmbDistOTFolder.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDistOTFolder.Location = new System.Drawing.Point(162, 95);
+            cmbDistOTFolder.Name = "cmbDistOTFolder";
+            cmbDistOTFolder.Size = new System.Drawing.Size(379, 21);
+            cmbDistOTFolder.TabIndex = 27;
+            cmbDistOTFolder.SelectedIndexChanged += new System.EventHandler(this.cmbDistOTFolder_SelectedIndexChanged);
             // 
             // cmbDocumentType
             // 
-            this.cmbDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            cmbDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
-            this.cmbDocumentType.Location = new System.Drawing.Point(162, 196);
-            this.cmbDocumentType.Name = "cmbDocumentType";
-            this.cmbDocumentType.Size = new System.Drawing.Size(379, 21);
-            this.cmbDocumentType.TabIndex = 39;
+            cmbDocumentType.BackColor = System.Drawing.SystemColors.Menu;
+            cmbDocumentType.Location = new System.Drawing.Point(162, 196);
+            cmbDocumentType.Name = "cmbDocumentType";
+            cmbDocumentType.Size = new System.Drawing.Size(379, 21);
+            cmbDocumentType.TabIndex = 39;
             // 
             // DistributorForm
             // 
@@ -283,21 +294,22 @@ namespace EK_MultipleTransporter.Forms
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(599, 749);
+            this.Controls.Add(this.cbCheckAll);
             this.Controls.Add(this.cScrollofLst);
             this.Controls.Add(this.txtFilter);
             this.Controls.Add(this.cLstBxWorkSpaceType);
             this.Controls.Add(this.lblDocType);
-            this.Controls.Add(this.cmbDocumentType);
+            this.Controls.Add(cmbDocumentType);
             this.Controls.Add(this.lblTerm);
             this.Controls.Add(this.lblCategoryYear);
-            this.Controls.Add(this.cmbDistriborTerm);
+            this.Controls.Add(cmbDistriborTerm);
             this.Controls.Add(this.dtpDistributorYear);
             this.Controls.Add(this.lblDistriboturDocumentRoot);
             this.Controls.Add(this.lblWorkPlaceType);
             this.Controls.Add(this.lblCategoryDocumentType);
             this.Controls.Add(this.txtDistDocumentRoot);
-            this.Controls.Add(this.cmbDistWorkPlaceType);
-            this.Controls.Add(this.cmbDistOTFolder);
+            this.Controls.Add(cmbDistWorkPlaceType);
+            this.Controls.Add(cmbDistOTFolder);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.btnCancel);
             this.Name = "DistributorForm";
@@ -310,10 +322,10 @@ namespace EK_MultipleTransporter.Forms
         }
 
         #endregion
-        private System.Windows.Forms.ComboBox cmbDistriborTerm;
-        private System.Windows.Forms.ComboBox cmbDistWorkPlaceType;
-        private System.Windows.Forms.ComboBox cmbDistOTFolder;
-        private System.Windows.Forms.ComboBox cmbDocumentType;
+        System.Windows.Forms.ComboBox cmbDistriborTerm;
+        System.Windows.Forms.ComboBox cmbDistWorkPlaceType;
+        System.Windows.Forms.ComboBox cmbDistOTFolder;
+        System.Windows.Forms.ComboBox cmbDocumentType;
         private System.Windows.Forms.Label lblTerm;
         private System.Windows.Forms.Label lblCategoryYear;
         private System.Windows.Forms.DateTimePicker dtpDistributorYear;
@@ -326,8 +338,10 @@ namespace EK_MultipleTransporter.Forms
         private System.Windows.Forms.Label lblDocType;
         private System.Windows.Forms.OpenFileDialog ofdDocument;
         private System.Windows.Forms.ListView cLstBxWorkSpaceType;
-        private System.Windows.Forms.ColumnHeader hdWorkSpaceType;
+        private System.Windows.Forms.ColumnHeader hdWorkSpaceType; 
+        //private System.Windows.Forms.ColumnHeader hdCheckBoxField;
         private System.Windows.Forms.TextBox txtFilter;
         private VScrollBar cScrollofLst;
+        private CheckBox cbCheckAll;
     }
 }

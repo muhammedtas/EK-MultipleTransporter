@@ -26,7 +26,7 @@ namespace EK_MultipleTransporter.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://192.168.50.121/DmsWebServices/AuthOps.asmx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://192.168.50.97/DmsWebServices/AuthOps.asmx")]
         public string EK_MultipleTransporter_DmsAuthenticationService_AuthOps {
             get {
                 return ((string)(this["EK_MultipleTransporter_DmsAuthenticationService_AuthOps"]));
@@ -36,7 +36,7 @@ namespace EK_MultipleTransporter.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://192.168.50.121/DmsWebServices/DmsOps.asmx")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://192.168.50.97/DmsWebServices/DmsOps.asmx")]
         public string EK_MultipleTransporter_DmsDocumentManagementService_DmsOps {
             get {
                 return ((string)(this["EK_MultipleTransporter_DmsDocumentManagementService_DmsOps"]));

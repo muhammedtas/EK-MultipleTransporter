@@ -103,10 +103,10 @@
   </wsdl:binding>
   <wsdl:service name="AuthOps">
     <wsdl:port name="AuthOpsSoap" binding="tns:AuthOpsSoap">
-      <soap:address location="http://192.168.50.121/DmsWebServices/AuthOps.asmx" />
+      <soap:address location="http://192.168.50.97/DmsWebServices/AuthOps.asmx" />
     </wsdl:port>
     <wsdl:port name="AuthOpsSoap12" binding="tns:AuthOpsSoap12">
-      <soap12:address location="http://192.168.50.121/DmsWebServices/AuthOps.asmx" />
+      <soap12:address location="http://192.168.50.97/DmsWebServices/AuthOps.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

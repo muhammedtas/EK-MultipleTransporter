@@ -175,6 +175,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to İşlem Tamamlandı....
+        /// </summary>
+        public static string ProcessIsDone {
+            get {
+                return ResourceManager.GetString("ProcessIsDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Web Services is not working now!.
         /// </summary>
         public static string WebServicesNotWorking {

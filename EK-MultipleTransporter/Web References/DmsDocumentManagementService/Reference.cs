@@ -784,25 +784,24 @@ namespace EK_MultipleTransporter.DmsDocumentManagementService {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://adm-danismanlik.com/services/dms/DmsService/MoveNode", RequestNamespace="http://adm-danismanlik.com/services/dms/DmsService", ResponseNamespace="http://adm-danismanlik.com/services/dms/DmsService", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public bool MoveNode(string clientuser, string refToken, long dmsSourceNodeId, long dmsTargetNodeId, string newName, EntityAttributeSourceType east, bool systemOperation) {
+        public bool MoveNode(string clientuser, string refToken, long dmsSourceNodeId, long dmsTargetNodeId, string newName, EntityAttributeSourceType east) {
             object[] results = this.Invoke("MoveNode", new object[] {
                         clientuser,
                         refToken,
                         dmsSourceNodeId,
                         dmsTargetNodeId,
                         newName,
-                        east,
-                        systemOperation});
+                        east});
             return ((bool)(results[0]));
         }
         
         /// <remarks/>
-        public void MoveNodeAsync(string clientuser, string refToken, long dmsSourceNodeId, long dmsTargetNodeId, string newName, EntityAttributeSourceType east, bool systemOperation) {
-            this.MoveNodeAsync(clientuser, refToken, dmsSourceNodeId, dmsTargetNodeId, newName, east, systemOperation, null);
+        public void MoveNodeAsync(string clientuser, string refToken, long dmsSourceNodeId, long dmsTargetNodeId, string newName, EntityAttributeSourceType east) {
+            this.MoveNodeAsync(clientuser, refToken, dmsSourceNodeId, dmsTargetNodeId, newName, east, null);
         }
         
         /// <remarks/>
-        public void MoveNodeAsync(string clientuser, string refToken, long dmsSourceNodeId, long dmsTargetNodeId, string newName, EntityAttributeSourceType east, bool systemOperation, object userState) {
+        public void MoveNodeAsync(string clientuser, string refToken, long dmsSourceNodeId, long dmsTargetNodeId, string newName, EntityAttributeSourceType east, object userState) {
             if ((this.MoveNodeOperationCompleted == null)) {
                 this.MoveNodeOperationCompleted = new System.Threading.SendOrPostCallback(this.OnMoveNodeOperationCompleted);
             }
@@ -812,8 +811,7 @@ namespace EK_MultipleTransporter.DmsDocumentManagementService {
                         dmsSourceNodeId,
                         dmsTargetNodeId,
                         newName,
-                        east,
-                        systemOperation}, this.MoveNodeOperationCompleted, userState);
+                        east}, this.MoveNodeOperationCompleted, userState);
         }
         
         private void OnMoveNodeOperationCompleted(object arg) {
@@ -1161,14 +1159,14 @@ namespace EK_MultipleTransporter.DmsDocumentManagementService {
         
         /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://adm-danismanlik.com/services/dms/DmsService/AddVersion", RequestNamespace="http://adm-danismanlik.com/services/dms/DmsService", ResponseNamespace="http://adm-danismanlik.com/services/dms/DmsService", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public EntityVersion AddVersion(string clientuser, string refToken, long nodeId, EntityAttachment ea, bool systemOperation) {
+        public long AddVersion(string clientuser, string refToken, long nodeId, EntityAttachment ea, bool systemOperation) {
             object[] results = this.Invoke("AddVersion", new object[] {
                         clientuser,
                         refToken,
                         nodeId,
                         ea,
                         systemOperation});
-            return ((EntityVersion)(results[0]));
+            return ((long)(results[0]));
         }
         
         /// <remarks/>
@@ -4155,10 +4153,10 @@ namespace EK_MultipleTransporter.DmsDocumentManagementService {
         }
         
         /// <remarks/>
-        public EntityVersion Result {
+        public long Result {
             get {
                 this.RaiseExceptionIfNecessary();
-                return ((EntityVersion)(this.results[0]));
+                return ((long)(this.results[0]));
             }
         }
     }

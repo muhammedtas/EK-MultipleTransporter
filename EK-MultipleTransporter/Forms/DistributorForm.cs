@@ -41,6 +41,7 @@ namespace EK_MultipleTransporter.Forms
         private readonly Trigger _worker;
         private static readonly int ItemsPerPage = 100;
         private static  int CurrentScrool = 1;
+        public bool isChecked = false;
 
         public DistributorForm()
         {
@@ -321,10 +322,19 @@ namespace EK_MultipleTransporter.Forms
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(txtFilter.Text))
+            {
+                cLstBxWorkSpaceType.Items.Clear();
+                _filteredWorkPlaceMasterList.Clear();
+                cLstBxWorkSpaceType.Items.AddRange(_workPlaceMasterList.ToArray());
+                return;
+            }
+           
             _filteredWorkPlaceMasterList.Clear();
             cLstBxWorkSpaceType.Items.Clear();
 
             if (txtFilter.Text != string.Empty || txtFilter.Text == Resources.filterText) FilterItems();
+            //if (txtFilter.Text == Resources.filterText) FilterItems();
 
         }
 
@@ -349,6 +359,7 @@ namespace EK_MultipleTransporter.Forms
 
         public async void DoDistributorWorks()
         {
+            btnOk.Enabled = false;
             Debugger.NotifyOfCrossThreadDependency();
 
             var selectedItemList = cLstBxWorkSpaceType.CheckedItems;
@@ -428,7 +439,10 @@ namespace EK_MultipleTransporter.Forms
             // nodeId, dos-ya adı, ve hed-ef nodeId ile ya-rat-tı-ğı-mız dictionary i open-text e yük-le-ne-bi-lir hale getireceğiz.
 
             await UploadDocuments(preparedList);
-            
+            btnOk.Enabled = true;
+
+            MessageBox.Show(Resources.ProcessIsDone);
+
         }
 
         private async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
@@ -461,9 +475,13 @@ namespace EK_MultipleTransporter.Forms
             }
             else // Filtered liste hiç dokunulmadıysa masterList ten getir.
             {
+                _filteredWorkPlaceMasterList.Clear();
+                cLstBxWorkSpaceType.Items.Clear();
                 _itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScrool - 1)).Take(ItemsPerPage);
                 if (_itemsToAdd != null)
+                {
                     cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
+                }
 
                 _itemsToAdd = null;
             }
@@ -484,6 +502,22 @@ namespace EK_MultipleTransporter.Forms
                 Console.WriteLine("Occur moccur bro" + ex);
             }
             
+        }
+
+        private void cbCheckAll_Click(object sender, EventArgs e)
+        {
+            if (!isChecked)
+            {
+                isChecked = true;
+                cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = isChecked);
+            }
+            else
+            {
+                isChecked = false;
+                cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = isChecked);
+
+            }
+
         }
     }
 }
