@@ -22,12 +22,10 @@ namespace EK_MultipleTransporter.Forms
     public partial class ProjectsForm : Form
     {
         public static Logger Logger = LogManager.GetCurrentClassLogger();
-        public static long projectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
-        public static long projectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
-        public static long generalCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
-        public OTServicesHelper serviceHelper = new OTServicesHelper();
-        // public delegate Task StartProcess();
-
+        public static long ProjectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
+        public static long ProjectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
+        public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
+        public OtServicesHelper ServiceHelper = new OtServicesHelper();
 
         public ProjectsForm()
         {
@@ -145,77 +143,81 @@ namespace EK_MultipleTransporter.Forms
             try
             {
 
-                var mainChildRootNodeId = Convert.ToInt64((cmbChildRoot.SelectedItem as ProjectChilds).Id); // Şimdi Bu nodeId ye karşılık gelen 
+                //var mainChildRootNodeId = Convert.ToInt64((cmbChildRoot.SelectedItem as ProjectChilds).Id); // Şimdi Bu nodeId ye karşılık gelen 
 
-                var mainChildRootElement = serviceHelper.GetEntityNodeFromId(mainChildRootNodeId);
+                //var mainChildRootElement = ServiceHelper.GetEntityNodeFromId(mainChildRootNodeId);
 
-                var targetNodesList = new List<EntityNode>(); // Bu boş liste doldurulup streamer helper methoduna verilecek.
 
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
-                var allChildNodesOfMainProject = serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(projectsNodeId, (cmbChildRoot.SelectedItem as ProjectChilds).Name);
-
+                var targetNodesList = new List<EntityNode>(); // Bu boş liste doldurulup streamer helper methoduna verilecek.
+                var allChildNodesOfMainProject = ServiceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(ProjectsNodeId, (cmbChildRoot.SelectedItem as ProjectChilds).Name);
+                var targetRootAddress = (cmbChildRoot.SelectedItem as ProjectChilds).Name;
+                var countDeepness = targetRootAddress.Split('\\').Count();
+                if (countDeepness > 3)
+                {
+                    MessageBox.Show(Resources.NodeDeepnessExceed);
+                    return;
+                }
                 // Bu yüzden tüm node ların içerisine girip, node derinliğini hesaplayarak iç nodelara ulaşacağız ve maplemek üzere node keyleri tek tek StreamHelper a göndereceğiz.
                 // Streamer helper aldığı bu node id ile bir ilişki kurabilirse map in içerisine koyup bize verecek, kuramazsa eklemeyecek.
                 foreach (var childNodeOfMainProject in allChildNodesOfMainProject)
                 {
-                    var targetRootAddres = (cmbChildRoot.SelectedItem as ProjectChilds).Name;
-                    var countDeepness = targetRootAddres.Split('\\').Count();
-
+                  
                     if (countDeepness == 1)
                     {
-                        var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainProject.Id, targetRootAddres);
+                        var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainProject.Id, targetRootAddress);
                         targetNodesList.Add(oneOfTargetNode);
                     }
                     else if (countDeepness == 2)
                     {
-                        var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
+                        var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
                         var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
+                        var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
 
-                        var trgtChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                        var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
                         // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        if (trgtChldnd != null)
-                            targetNodesList.Add(trgtChldnd);
+                        if (targetChildNode != null)
+                            targetNodesList.Add(targetChildNode);
 
 
                         // Child kırınımı 2 ise 
                     }
                     else if (countDeepness == 3)
                     {
-                        var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
+                        var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
                         var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
+                        var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
 
-                        var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                        var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                        var generalThirdStepTargetNodeName = targetRootAddres.Split('\\')[2];
+                        var generalThirdStepTargetNodeName = targetRootAddress.Split('\\')[2];
 
-                        var trgtChldnd = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
+                        var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
 
                         // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        if (trgtChldnd != null)
-                            targetNodesList.Add(trgtChldnd);
+                        if (targetChildNode != null)
+                            targetNodesList.Add(targetChildNode);
                         // Child kırınımı 3 ise
                     }
                     else
                     {
-                        Console.WriteLine("Dont leak the water into donkey's cunt!!");
+                        Console.WriteLine(Resources.NodeDeepnessExceed);
                     }
                 }
 
                 // Bu mainChildRootElement => Document Templates içerisinde seçmiş olduğumuz child 
                 // mainChildRootElement inin adı ile Emlak Konut iş alanları altındaki Projeler içerisinde ne kadar aynı isimde child element varsa Bunlardan bir dictionary yap.
 
-                var mainNodeResult = serviceHelper.GetEntityNodeFromId(projectsNodeId); // ProjectsNodeId asıl dökümanların atılacağı yer.
+                // var mainNodeResult = ServiceHelper.GetEntityNodeFromId(ProjectsNodeId); // ProjectsNodeId asıl dökümanların atılacağı yer.
 
 
-                if (txtFolderRoot.Text == String.Empty || cmbChildRoot.SelectedIndex == -1)
+                if (txtFolderRoot.Text == string.Empty || cmbChildRoot.SelectedIndex == -1)
                 {
                     MessageBox.Show("Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz.");
                     return;
@@ -231,24 +233,6 @@ namespace EK_MultipleTransporter.Forms
 
                 // Hazır hale gelmiş olan  dictionary nin her bir elementine bir kategori bilgisi gir.
                 //var eag = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
-
-                //var docType = eag.Values.First(x => x.Description == "Doküman Türü");
-                //docType.Values = new object[] { cmbDocumentType.Text };
-
-                //var year = eag.Values.First(x => x.Description == "Yıl");
-                //year.Values = new object[] { dtpYear.Text };
-
-                //var term = eag.Values.First(x => x.Description == "Çeyrek");
-                //term.Values = new object[] { cmbTerm.Text };
-
-                //var emdNew = new EntityMetadata();
-
-                //emdNew.AttributeGroups = new[] { eag };
-
-                //foreach (var item in docsToUpload)
-                //{
-                //   serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew);
-                //}
             }
             catch (Exception ex)
             {
@@ -260,39 +244,24 @@ namespace EK_MultipleTransporter.Forms
 
         public async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
         {
-            //var eag = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
-
-            //var docType = eag.Values.First(x => x.Description == "Doküman Türü");
-            //docType.Values = new object[] { cmbDocumentType.Text };
-
-            //var year = eag.Values.First(x => x.Description == "Yıl");
-            //year.Values = new object[] { dtpYear.Text };
-
-            //var term = eag.Values.First(x => x.Description == "Çeyrek");
-            //term.Values = new object[] { cmbTerm.Text };
-
-            //var emdNew = new EntityMetadata();
-
-            //emdNew.AttributeGroups = new[] { eag };
-
-            var emdNew = serviceHelper.CategoryMaker(cmbDocumentType.Text, dtpYear.Text, cmbTerm.Text, generalCategoryNodeId); 
+            var emdNew = ServiceHelper.CategoryMaker(cmbDocumentType.Text, dtpYear.Text, cmbTerm.Text, GeneralCategoryNodeId); 
 
             foreach (var item in docsToUpload)
             {
-                await Task.Run(()=>serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
+                await Task.Run(()=>ServiceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
             }
         }
 
         public void LoadFormsDefault ()
         {
-            var categoryItems = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+            var categoryItems = ServiceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
             if (categoryItems != null)
             {
                 var itemArray = categoryItems.Values[0].ValidValues;
                 cmbDocumentType.Items.AddRange(itemArray);
             }
 
-            var childNodes = serviceHelper.GetChildNodesById(projectsChildElementsNodeId);
+            var childNodes = ServiceHelper.GetChildNodesById(ProjectsChildElementsNodeId);
 
             foreach (var childNode in childNodes)
             {
@@ -301,33 +270,25 @@ namespace EK_MultipleTransporter.Forms
                     Id = childNode.Id,
                     Name = childNode.Name
                 });
+                if (!ServiceHelper.HasChildNode(childNode.Id)) continue;
+                var innerChilds = ServiceHelper.GetChildNodesById(childNode.Id);
 
-                if (serviceHelper.HasChildNode(childNode.Id))
+                foreach (var innerChild in innerChilds)
                 {
-                    var innerChilds = serviceHelper.GetChildNodesById(childNode.Id);
-
-                    foreach (var innerChild in innerChilds)
+                    cmbChildRoot.Items.Add(new ProjectChilds()
+                    {
+                        Id = innerChild.Id,
+                        Name = childNode.Name + "\\" + innerChild.Name
+                    });
+                    if (!ServiceHelper.HasChildNode(innerChild.Id)) continue;
+                    var innersOfInnerChild = ServiceHelper.GetChildNodesById(innerChild.Id);
+                    foreach (var innerOfInnerChild in innersOfInnerChild)
                     {
                         cmbChildRoot.Items.Add(new ProjectChilds()
                         {
-                            Id = innerChild.Id,
-                            Name = childNode.Name + "\\" + innerChild.Name
+                            Id = innerOfInnerChild.Id,
+                            Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
                         });
-
-                        if (serviceHelper.HasChildNode(innerChild.Id))
-                        {
-                            var innersOfInnerChild = serviceHelper.GetChildNodesById(innerChild.Id);
-                            foreach (var innerOfInnerChild in innersOfInnerChild)
-                            {
-                                cmbChildRoot.Items.Add(new ProjectChilds()
-                                {
-                                    Id = innerOfInnerChild.Id,
-                                    Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
-                                });
-
-                            }
-
-                        }
 
                     }
 

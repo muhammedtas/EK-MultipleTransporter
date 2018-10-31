@@ -156,6 +156,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Node derinliği beklenen değerin üzerinde. .
+        /// </summary>
+        public static string NodeDeepnessExceed {
+            get {
+                return ResourceManager.GetString("NodeDeepnessExceed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap personel {

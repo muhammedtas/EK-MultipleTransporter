@@ -32,23 +32,23 @@ namespace EK_MultipleTransporter.Forms
         public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
         public static long WorkSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]);
         public static long ContentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
-        private readonly OTServicesHelper _serviceHelper;
-        private List<ListViewItem> workPlaceMasterList;
-        private List<ListViewItem> filteredWorkPlaceMasterList;
+        private readonly OtServicesHelper _serviceHelper;
+        private readonly List<ListViewItem> _workPlaceMasterList;
+        private readonly List<ListViewItem> _filteredWorkPlaceMasterList;
         private IEnumerable<ListViewItem> _itemsToAdd;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
         private readonly CancellationToken _cancellationToken;
         private readonly Trigger _worker;
-        private static int ItemsPerpage = 100;
-        private static int CurrentScrool = 1;
+        private static readonly int ItemsPerPage = 100;
+        private static  int CurrentScrool = 1;
 
         public DistributorForm()
         {
             InitializeComponent();
-            workPlaceMasterList = new List<ListViewItem>();
-            filteredWorkPlaceMasterList = new List<ListViewItem>();
+            _workPlaceMasterList = new List<ListViewItem>();
+            _filteredWorkPlaceMasterList = new List<ListViewItem>();
             _itemsToAdd = new List<ListViewItem>();
-            _serviceHelper = new OTServicesHelper();
+            _serviceHelper = new OtServicesHelper();
             _worker = Worker;
             _cancellationToken = _cts.Token;
 
@@ -121,7 +121,7 @@ namespace EK_MultipleTransporter.Forms
                 }
             }
         }
-        private void lstViewScrolled(object sender, ScrollEventArgs e)
+        private void LstViewScrolled(object sender, ScrollEventArgs e)
         {
 
         }
@@ -135,7 +135,6 @@ namespace EK_MultipleTransporter.Forms
             cmbDistOTFolder.Items.Clear();
             cLstBxWorkSpaceType.Items.Clear();
             CurrentScrool = 1;
-            //ItemsPerpage = 100;
             cScrollofLst.Maximum = 100;
 
             await Task.Factory.StartNew(() => { VariableHelper.Cts.Cancel(); }, _cancellationToken, TaskCreationOptions.LongRunning,
@@ -152,7 +151,7 @@ namespace EK_MultipleTransporter.Forms
         public async void Worker()
         {
             cmbDistOTFolder.Items.Clear();
-            workPlaceMasterList.Clear();
+            _workPlaceMasterList.Clear();
             cLstBxWorkSpaceType.Items.Clear();
 
             var task = Task.Factory.StartNew(() =>
@@ -193,18 +192,15 @@ namespace EK_MultipleTransporter.Forms
 
             // Work Spaces Loaded.
             var workSpacesTypes = _serviceHelper.GetChildNodesById(WorkSpacesNodeId);
-
-            if (workSpacesTypes != null)
+            if (workSpacesTypes == null) return;
+            foreach (var workSpace in workSpacesTypes)
             {
-                foreach (var workSpace in workSpacesTypes)
+                cmbDistWorkPlaceType.Items.Add(new DistributorChilds()
                 {
-                    cmbDistWorkPlaceType.Items.Add(new DistributorChilds()
-                    {
-                        Id = workSpace.Id,
-                        Name = workSpace.Name
-                    });
+                    Id = workSpace.Id,
+                    Name = workSpace.Name
+                });
 
-                }
             }
 
         }
@@ -213,10 +209,7 @@ namespace EK_MultipleTransporter.Forms
             // Üstteki çalışma alanı değiştikçe burası asyn bir şekilde document template ten gelmesini istiyoruz.
             // Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
             // Adı ile aratarak target nodumuzu bulacağız.
-
-            //var task = Task.Run(() =>
-            //{
-
+            
             try
             {
                 cmbDistOTFolder.Items.Clear();
@@ -267,14 +260,7 @@ namespace EK_MultipleTransporter.Forms
             catch (Exception)
             {
                 Logger.Error("Büyük ihtimal bir workspace itemleri listlere doldurulurken workspace değişti");
-
-                //throw;
             }
-
-            //}).ConfigureAwait(false);
-
-            //await task;
-
 
         }
 
@@ -293,13 +279,11 @@ namespace EK_MultipleTransporter.Forms
                         Text = targetNode.Name,
                         Tag = new DistributorChilds() {Id = targetNode.Id, Name = targetNode.Name}
                     };
-                    workPlaceMasterList.Add(listItem);
-                    //  workPlaceMasterList.ToArray();
-                    //cLstBxWorkSpaceType.Items.Add(listItem);
-                    //cLstBxWorkSpaceType.Items.AddRange(workPlaceMasterList);
+                    _workPlaceMasterList.Add(listItem);
+
                 }
-                // Skip(ItemsPerpage * (CurrentPage-1)).Таке(ItemsPerpage);
-                var itemsToAdd = workPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(100);
+
+                var itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScrool - 1)).Take(100);
                 cLstBxWorkSpaceType.Items.AddRange(itemsToAdd.ToArray());
             }
             catch (Exception)
@@ -319,7 +303,7 @@ namespace EK_MultipleTransporter.Forms
             ofdDocument.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
             if (ofdDocument.ShowDialog() != DialogResult.OK) return;
-            // txtDistDocumentRoot.Text = ofdDocument.FileName.Split('\\').Last();
+
             txtDistDocumentRoot.Text = ofdDocument.FileName;
             StreamHelper.RootPathOfUsersFolder = ofdDocument.FileName;
 
@@ -337,7 +321,7 @@ namespace EK_MultipleTransporter.Forms
 
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
-            filteredWorkPlaceMasterList.Clear();
+            _filteredWorkPlaceMasterList.Clear();
             cLstBxWorkSpaceType.Items.Clear();
 
             if (txtFilter.Text != string.Empty || txtFilter.Text == Resources.filterText) FilterItems();
@@ -354,12 +338,12 @@ namespace EK_MultipleTransporter.Forms
             CurrentScrool = 1;
             cScrollofLst.Maximum = 100;
             // ListView filter ediliyor.
-            foreach (var item in workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
+            foreach (var item in _workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
             {
-                filteredWorkPlaceMasterList.Add(item);
+                _filteredWorkPlaceMasterList.Add(item);
             }
 
-            cLstBxWorkSpaceType.Items.AddRange(filteredWorkPlaceMasterList.ToArray());
+            cLstBxWorkSpaceType.Items.AddRange(_filteredWorkPlaceMasterList.ToArray());
 
         }
 
@@ -374,9 +358,14 @@ namespace EK_MultipleTransporter.Forms
             var targetNodesList = new List<EntityNode>();
             var selectedNodeList = new List<DistributorChilds>();
             var selectedNodeIdList = new List<long>();
-            var targetOTAddress = cmbDistOTFolder.Text;
+            var targetOpenTextAddress = cmbDistOTFolder.Text;
             var countDeepness = cmbDistOTFolder.Text.Split('\\').Count();
-
+            if (countDeepness > 3)
+            {
+                MessageBox.Show(Resources.NodeDeepnessExceed);
+                return;
+            }
+   
             foreach (var item in selectedItemList)
             {
 
@@ -399,46 +388,47 @@ namespace EK_MultipleTransporter.Forms
                 }
                 else if (countDeepness == 2)
                 {
-                    var generalFirstStepTargetNodeName = targetOTAddress.Split('\\')[0];
+                    var generalFirstStepTargetNodeName = targetOpenTextAddress.Split('\\')[0];
                     var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                    var generalSecondStepTargetNodeName = targetOTAddress.Split('\\')[1];
+                    var generalSecondStepTargetNodeName = targetOpenTextAddress.Split('\\')[1];
                     if (firstStepTargetNode == null) continue;
-                    var trgtChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                    var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                    if (trgtChldnd != null)
-                        targetNodesList.Add(trgtChldnd);
+                    if (targetChildNode != null)
+                        targetNodesList.Add(targetChildNode);
                 }
                 else if (countDeepness == 3)
                 {
-                    var generalFirstStepTargetNodeName = targetOTAddress.Split('\\')[0];
+                    var generalFirstStepTargetNodeName = targetOpenTextAddress.Split('\\')[0];
                     var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                    var generalSecondStepTargetNodeName = targetOTAddress.Split('\\')[1];
+                    var generalSecondStepTargetNodeName = targetOpenTextAddress.Split('\\')[1];
                     if (firstStepTargetNode == null) continue;
-                    var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                    var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                    var generalThirdStepTargetNodeName = targetOTAddress.Split('\\')[2];
+                    var generalThirdStepTargetNodeName = targetOpenTextAddress.Split('\\')[2];
 
-                    var trgtChldnd = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
+                    var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
 
-                    if (trgtChldnd != null)
-                        targetNodesList.Add(trgtChldnd);
+                    if (targetChildNode != null)
+                        targetNodesList.Add(targetChildNode);
                 }
                 else
                 {
-                    Console.WriteLine("Fuck your nodes!!");
-
+                    Console.WriteLine(Resources.NodeDeepnessExceed);
+                    //Console.WriteLine("Node derinliği beklenen değerin üzerinde.");
                 }
 
             }
 
-            var preparedList = StreamHelper.PrepareDocumentToSendMultipleTarger(targetNodesList, txtDistDocumentRoot.Text);
+            var preparedList = StreamHelper.PrepareDocumentToSendMultipleTarget(targetNodesList, txtDistDocumentRoot.Text);
 
             if (preparedList.Count < 1) return;
-            // nodeId, dosya adı, ve hedef nodeId ile yarattığımız dictionary i opentext e yüklenebilir hale getireceğiz.
+            // nodeId, dos-ya adı, ve hed-ef nodeId ile ya-rat-tı-ğı-mız dictionary i open-text e yük-le-ne-bi-lir hale getireceğiz.
 
             await UploadDocuments(preparedList);
+            
         }
 
         private async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
@@ -452,26 +442,26 @@ namespace EK_MultipleTransporter.Forms
 
         private void cScrollofLst_ValueChanged(object sender, EventArgs e)
         {
-            if (cScrollofLst.Maximum >= workPlaceMasterList.Count) return;
+            if (cScrollofLst.Maximum >= _workPlaceMasterList.Count) return;
             
             if (cScrollofLst.Maximum - 20 > ((VScrollBar)sender).Value) return;
 
             cScrollofLst.Maximum += 100;
-            
+
             CurrentScrool++;
 
             // Filter text'e bir şey girmemişse filtered listten getir.
             if (!string.Equals(txtFilter.Text, Resources.filterText) && !string.IsNullOrEmpty(txtFilter.Text))
             {
                 cLstBxWorkSpaceType.Items.Clear();
-                _itemsToAdd = filteredWorkPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
+                _itemsToAdd = _filteredWorkPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScrool - 1)).Take(ItemsPerPage);
                 if (_itemsToAdd != null)
                     cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
                 _itemsToAdd = null;
             }
             else // Filtered liste hiç dokunulmadıysa masterList ten getir.
             {
-                _itemsToAdd = workPlaceMasterList.ToArray().Skip(ItemsPerpage * (CurrentScrool - 1)).Take(ItemsPerpage);
+                _itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScrool - 1)).Take(ItemsPerPage);
                 if (_itemsToAdd != null)
                     cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
 
@@ -484,7 +474,7 @@ namespace EK_MultipleTransporter.Forms
         {
             try
             {
-                if (cScrollofLst.Maximum >= e.NewValue || cScrollofLst.Maximum >= filteredWorkPlaceMasterList.Count())
+                if (cScrollofLst.Maximum >= e.NewValue || cScrollofLst.Maximum >= _filteredWorkPlaceMasterList.Count())
                 {
                     cLstBxWorkSpaceType.EnsureVisible(e.NewValue);
                 }

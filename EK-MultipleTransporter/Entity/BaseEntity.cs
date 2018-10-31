@@ -23,7 +23,7 @@ namespace EK_MultipleTransporter.Entity
 
         public static string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-        public OTServicesHelper ServiceHelper { get; } = new OTServicesHelper();
+        public OtServicesHelper ServiceHelper { get; } = new OtServicesHelper();
 
         public DmsOps Dmo { get; } = VariableHelper.Dmo;
 

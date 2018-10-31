@@ -6,37 +6,37 @@ using System.Threading.Tasks;
 
 namespace EK_MultipleTransporter.Data
 {
-    public class RepositoryBase<T, Id> where T : class
+    public class RepositoryBase<T, TId> where T : class
     {
-        protected internal static OTCSDbContext dbContext;
+        protected internal static OtcsDbContext DbContext;
 
         public virtual List<T> GetAll()
         {
-            dbContext = new OTCSDbContext();
-            return dbContext.Set<T>().ToList();
+            DbContext = new OtcsDbContext();
+            return DbContext.Set<T>().ToList();
         }
         public virtual async Task<List<T>> GetAllAsync()
         {
-            dbContext = new OTCSDbContext();
-            return await dbContext.Set<T>().ToListAsync();
+            DbContext = new OtcsDbContext();
+            return await DbContext.Set<T>().ToListAsync();
         }
-        public virtual T GetById(Id id)
+        public virtual T GetById(TId id)
         {
-            dbContext = new OTCSDbContext();
-            return dbContext.Set<T>().Find(id);
+            DbContext = new OtcsDbContext();
+            return DbContext.Set<T>().Find(id);
         }
-        public virtual async Task<T> GetByIdAsync(Id id)
+        public virtual async Task<T> GetByIdAsync(TId id)
         {
-            dbContext = new OTCSDbContext();
-            return await dbContext.Set<T>().FindAsync(id);
+            DbContext = new OtcsDbContext();
+            return await DbContext.Set<T>().FindAsync(id);
         }
         public virtual int Insert(T entity)
         {
             try
             {
-                dbContext = dbContext ?? new OTCSDbContext();
-                dbContext.Set<T>().Add(entity);
-                return dbContext.SaveChanges();
+                DbContext = DbContext ?? new OtcsDbContext();
+                DbContext.Set<T>().Add(entity);
+                return DbContext.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -47,9 +47,9 @@ namespace EK_MultipleTransporter.Data
         {
             try
             {
-                dbContext = dbContext ?? new OTCSDbContext();
-                dbContext.Set<T>().Add(entity);
-                return await dbContext.SaveChangesAsync();
+                DbContext = DbContext ?? new OtcsDbContext();
+                DbContext.Set<T>().Add(entity);
+                return await DbContext.SaveChangesAsync();
             }
             catch (Exception)
             {
@@ -61,9 +61,9 @@ namespace EK_MultipleTransporter.Data
         {
             try
             {
-                dbContext = dbContext ?? new OTCSDbContext();
-                dbContext.Set<T>().Remove(entity);
-                return dbContext.SaveChanges();
+                DbContext = DbContext ?? new OtcsDbContext();
+                DbContext.Set<T>().Remove(entity);
+                return DbContext.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -75,9 +75,9 @@ namespace EK_MultipleTransporter.Data
         {
             try
             {
-                dbContext = dbContext ?? new OTCSDbContext();
-                dbContext.Set<T>().Remove(entity);
-                return await dbContext.SaveChangesAsync();
+                DbContext = DbContext ?? new OtcsDbContext();
+                DbContext.Set<T>().Remove(entity);
+                return await DbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -88,8 +88,8 @@ namespace EK_MultipleTransporter.Data
         {
             try
             {
-                dbContext = dbContext ?? new OTCSDbContext();
-                return dbContext.SaveChanges();
+                DbContext = DbContext ?? new OtcsDbContext();
+                return DbContext.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -100,8 +100,8 @@ namespace EK_MultipleTransporter.Data
         {
             try
             {
-                dbContext = dbContext ?? new OTCSDbContext();
-                return await dbContext.SaveChangesAsync();
+                DbContext = DbContext ?? new OtcsDbContext();
+                return await DbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {

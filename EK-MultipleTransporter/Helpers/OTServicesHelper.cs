@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace EK_MultipleTransporter.Helpers
 {
-    public class OTServicesHelper
+    public class OtServicesHelper
     {
 
         public static Logger Logger = LogManager.GetCurrentClassLogger();
         private static string _desktopPath;        
 
-        public OTServicesHelper()
+        public OtServicesHelper()
         {
             _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
@@ -22,12 +22,6 @@ namespace EK_MultipleTransporter.Helpers
            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false);
 
         }
-
-        //public async Task<EntityNode[]> GetChildNodesByIdAsync(long id)
-        //{
-        //    return null;
-
-        //}
 
         public KeyValuePair[] GetFolderListIncludingChildren (long id)
         {
@@ -52,7 +46,7 @@ namespace EK_MultipleTransporter.Helpers
 
         public bool HasChildNode (long id)
         {
-            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false) == null ? false : true;
+            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false) != null;
         }
 
         public long FindChildNodeIdByName (long parentNodeId, string childNodeName)

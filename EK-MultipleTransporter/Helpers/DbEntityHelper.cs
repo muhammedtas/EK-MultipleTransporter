@@ -14,17 +14,17 @@ namespace EK_MultipleTransporter.Helpers
             EntityNode result = null;
             //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
             // Index i kullanalım hacı.
-            string query = "Select DataID, OwnerID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
-            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            const string query = "Select DataID, OwnerID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
+            using (var connection = new SqlConnection(GetConnectionString()))
             {
-                SqlCommand command = new SqlCommand(query, connection);
+                var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@name", "%"+name+"%");
                 command.Parameters.AddWithValue("@parentNodeId", parentNodeId);
 
                 try
                 {
                     connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
+                    var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
@@ -47,22 +47,22 @@ namespace EK_MultipleTransporter.Helpers
 
         public static List<EntityNode> GetNodesByNameInExactParent(long parentNodeId, string name)
         {
-            List<EntityNode> result = new List<EntityNode>();
+            var result = new List<EntityNode>();
             //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
 
-            string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
+            const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
 
 
-            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            using (var connection = new SqlConnection(GetConnectionString()))
             {
-                SqlCommand command = new SqlCommand(query, connection);
+                var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@name", "%" + name + "%");
                 command.Parameters.AddWithValue("@parentNodeId", parentNodeId);
 
                 try
                 {
                     connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
+                    var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
@@ -85,19 +85,19 @@ namespace EK_MultipleTransporter.Helpers
 
         public static List<EntityNode> GetNodesByName(string name)
         {
-            List<EntityNode> result = new List<EntityNode>();
+            var result = new List<EntityNode>();
             //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where [Name] LIKE @name";
-            string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where [Name] LIKE @name";
+            const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where [Name] LIKE @name";
 
-            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            using (var connection = new SqlConnection(GetConnectionString()))
             {
-                SqlCommand command = new SqlCommand(query, connection);
+                var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@name", "%" + name + "%");
 
                 try
                 {
                     connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
+                    var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
 
@@ -125,19 +125,19 @@ namespace EK_MultipleTransporter.Helpers
         {
             EntityNode result = null;
             //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND UPPER([Name]) LIKE @name";
-            string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND UPPER([Name]) LIKE @name";
+            const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND UPPER([Name]) LIKE @name";
 
 
-            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
+            using (var connection = new SqlConnection(GetConnectionString()))
             {
-                SqlCommand command = new SqlCommand(query, connection);
+                var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@name", "%" + name + "%");
                 command.Parameters.AddWithValue("@parentNodeId", parentNodeId);
 
                 try
                 {
                     connection.Open();
-                    SqlDataReader reader = command.ExecuteReader();
+                    var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);

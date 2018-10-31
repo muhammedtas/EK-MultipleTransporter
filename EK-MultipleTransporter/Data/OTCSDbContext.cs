@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace EK_MultipleTransporter.Data
 {
-    public class OTCSDbContext : DbContext
+    public class OtcsDbContext : DbContext
     {
-        public OTCSDbContext()
+        public OtcsDbContext()
            : base("name=OTCSCnnStr")
         { }
         public virtual DbSet<IndependentSection> IndependentSections { get; set; }

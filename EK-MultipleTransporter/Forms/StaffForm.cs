@@ -21,12 +21,11 @@ namespace EK_MultipleTransporter.Forms
 {
     public partial class StaffForm : Form
     {
-
         public static Logger Logger = LogManager.GetCurrentClassLogger();
-        public static long staffsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffNodeId"]);
-        public static long staffsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffChildElementsNodeId"]);
-        public static long generalCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
-        public OTServicesHelper serviceHelper = new OTServicesHelper();
+        public static long StaffsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffNodeId"]);
+        public static long StaffsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffChildElementsNodeId"]);
+        public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
+        public OtServicesHelper ServiceHelper = new OtServicesHelper();
 
         public StaffForm()
         {
@@ -110,14 +109,14 @@ namespace EK_MultipleTransporter.Forms
 
         public void LoadStaffFormDefault()
         {
-            var categoryItems = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+            var categoryItems = ServiceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
             if (categoryItems != null)
             {
                 var itemArray = categoryItems.Values[0].ValidValues;
                 cmbStaffDocumentType.Items.AddRange(itemArray);
             }
 
-            var childNodes = serviceHelper.GetChildNodesById(staffsChildElementsNodeId);
+            var childNodes = ServiceHelper.GetChildNodesById(StaffsChildElementsNodeId);
 
             foreach (var childNode in childNodes)
             {
@@ -127,9 +126,9 @@ namespace EK_MultipleTransporter.Forms
                     Name = childNode.Name
                 });
 
-                if (serviceHelper.HasChildNode(childNode.Id))
+                if (ServiceHelper.HasChildNode(childNode.Id))
                 {
-                    var innerChilds = serviceHelper.GetChildNodesById(childNode.Id);
+                    var innerChilds = ServiceHelper.GetChildNodesById(childNode.Id);
 
                     foreach (var innerChild in innerChilds)
                     {
@@ -139,9 +138,9 @@ namespace EK_MultipleTransporter.Forms
                             Name = childNode.Name + "\\" + innerChild.Name
                         });
 
-                        if (serviceHelper.HasChildNode(innerChild.Id))
+                        if (ServiceHelper.HasChildNode(innerChild.Id))
                         {
-                            var innersOfInnerChild = serviceHelper.GetChildNodesById(innerChild.Id);
+                            var innersOfInnerChild = ServiceHelper.GetChildNodesById(innerChild.Id);
                             foreach (var innerOfInnerChild in innersOfInnerChild)
                             {
                                 cmbStaffChildRoot.Items.Add(new StaffChilds()
@@ -178,17 +177,23 @@ namespace EK_MultipleTransporter.Forms
             try
             {
 
-                var mainChildRootNodeId = Convert.ToInt64((cmbStaffChildRoot.SelectedItem as StaffChilds).Id); // Şimdi Bu nodeId ye karşılık gelen 
+                // var mainChildRootNodeId = Convert.ToInt64((cmbStaffChildRoot.SelectedItem as StaffChilds).Id); // Şimdi Bu nodeId ye karşılık gelen 
 
-                var mainChildRootElement = serviceHelper.GetEntityNodeFromId(mainChildRootNodeId);
+                // var mainChildRootElement = ServiceHelper.GetEntityNodeFromId(mainChildRootNodeId);
 
                 var targetNodesList = new List<EntityNode>(); // Bu boş liste doldurulup streamer helper methoduna verilecek.
 
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
-                var allChildNodesOfMainStaff = serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(staffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds).Name);
+                var allChildNodesOfMainStaff = ServiceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(StaffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds).Name);
                 var targetRootAddres = (cmbStaffChildRoot.SelectedItem as StaffChilds).Name;
                 var countDeepness = targetRootAddres.Split('\\').Count();
+
+                if (countDeepness > 3)
+                {
+                    MessageBox.Show(Resources.NodeDeepnessExceed);
+                    return;
+                }
 
                 foreach (var childNodeOfMainStaff in allChildNodesOfMainStaff)
                 {
@@ -206,10 +211,10 @@ namespace EK_MultipleTransporter.Forms
 
                         var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
 
-                        var trgtChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                        var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                        if (trgtChldnd != null)
-                            targetNodesList.Add(trgtChldnd);
+                        if (targetChildNode != null)
+                            targetNodesList.Add(targetChildNode);
 
                     }
                     else if (countDeepness == 3)
@@ -218,26 +223,26 @@ namespace EK_MultipleTransporter.Forms
                         var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainStaff.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
                         var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
-
+                        if (firstStepTargetNode == null) continue;
                         var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
                         var generalThirdStepTargetNodeName = targetRootAddres.Split('\\')[2];
 
-                        var trgtChldnd = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
+                        var targetChildNode = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
 
-                        if (trgtChldnd != null)
-                            targetNodesList.Add(trgtChldnd);
+                        if (targetChildNode != null)
+                            targetNodesList.Add(targetChildNode);
                     }
                     else
                     {
-                        Console.WriteLine("Dont leak the water into donkey's cunt!!");
+                        Console.WriteLine(Resources.NodeDeepnessExceed);
                     }
                 }
 
-                var mainNodeResult = serviceHelper.GetEntityNodeFromId(staffsNodeId); 
+                // var mainNodeResult = ServiceHelper.GetEntityNodeFromId(StaffsNodeId); 
 
 
-                if (txtStaffFolderRoot.Text == String.Empty || cmbStaffChildRoot.SelectedIndex == -1)
+                if (txtStaffFolderRoot.Text == string.Empty || cmbStaffChildRoot.SelectedIndex == -1)
                 {
                     MessageBox.Show("Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz.");
                     return;
@@ -258,7 +263,7 @@ namespace EK_MultipleTransporter.Forms
 
         public async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
         {
-            var eag = serviceHelper.GetEntityAttributeGroupOfCategory(generalCategoryNodeId);
+            var eag = ServiceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
 
             var docType = eag.Values.First(x => x.Description == "Doküman Türü");
             docType.Values = new object[] { cmbStaffDocumentType.Text };
@@ -276,7 +281,7 @@ namespace EK_MultipleTransporter.Forms
 
             foreach (var item in docsToUpload)
             {
-                await Task.Run(() => serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
+                await Task.Run(() => ServiceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
             }
         }
 

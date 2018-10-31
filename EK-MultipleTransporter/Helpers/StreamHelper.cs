@@ -11,16 +11,14 @@ namespace EK_MultipleTransporter.Helpers
 {
     public class StreamHelper
     {
-        public static string _backUpFolderRoot = ConfigurationManager.AppSettings["BackUpFolderRoot"];
-        public static string _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        public static string BackUpFolderRoot = ConfigurationManager.AppSettings["BackUpFolderRoot"];
+        public static string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         public static Logger Logger;
         public static string RootPathOfUsersFolder { get; set; }
-        public static string RootPathOfSelectedFile { get; set; }
-        // public static string TargetBackUpRoot { get; set; }
 
         public StreamHelper()
         {
-            if (!Directory.Exists(_desktopPath + @"\" + _backUpFolderRoot)) Directory.CreateDirectory(_desktopPath + @"\" + _backUpFolderRoot);
+            if (!Directory.Exists(DesktopPath + @"\" + BackUpFolderRoot)) Directory.CreateDirectory(DesktopPath + @"\" + BackUpFolderRoot);
 
         }
 
@@ -31,7 +29,6 @@ namespace EK_MultipleTransporter.Helpers
             {
                 if (nodeList == null) return null;
 
-                var docList = new List<byte[]>();
                 var dict = new Dictionary<Tuple<long, string>, byte[]>();
 
                 var fileArray = Directory.GetFiles(rootFolderPath);
@@ -46,34 +43,30 @@ namespace EK_MultipleTransporter.Helpers
                     {
                         if (dict.Count == fileArray.Count()) return dict;
 
-                        var newDocName = file.Split('\\').LastOrDefault().Split('.').FirstOrDefault().Split('-').FirstOrDefault();
+                        var newDocName = file.Split('\\').LastOrDefault()?.Split('.').FirstOrDefault()?.Split('-').FirstOrDefault();
                         var newDocNameWithTail = file.Split('\\').LastOrDefault();
 
-                        if (parentNode.Name.Contains(newDocName))
+                        if (newDocName != null && parentNode.Name.Contains(newDocName))
                         {
                             var newFile = File.ReadAllBytes(file);
 
                             dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
                         }
-                        else if (parentOfFirstParentNode != null)
+                        else if (parentOfFirstParentNode.Id > 0)
                         {
-                            if (parentOfFirstParentNode.Name.Contains(newDocName))
-                            {
-                                // 2. Kırınım için
-                                var newFile = File.ReadAllBytes(file);
+                            if (newDocName == null || !parentOfFirstParentNode.Name.Contains(newDocName)) continue;
+                            // 2. Kırınım için
+                            var newFile = File.ReadAllBytes(file);
 
-                                dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
-                            }
-                           
+                            dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
+
                         }
-                        else if (parentOfSecondParentNode != null)
+                        else if (parentOfSecondParentNode.Id > 0)
                         {
-                            if (parentOfSecondParentNode.Name.Contains(newDocName))
-                            {
-                                var newFile = File.ReadAllBytes(file);
+                            if (newDocName != null && !parentOfSecondParentNode.Name.Contains(newDocName)) continue;
+                            var newFile = File.ReadAllBytes(file);
 
-                                dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
-                            }
+                            dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
                             // 3.Kırınım için
                            
                         }
@@ -95,7 +88,7 @@ namespace EK_MultipleTransporter.Helpers
             
         }
 
-        public static Dictionary<Tuple<long, string>, byte[]> PrepareDocumentToSendMultipleTarger(List<EntityNode> nodeIdList, string rootFolderPath)
+        public static Dictionary<Tuple<long, string>, byte[]> PrepareDocumentToSendMultipleTarget(List<EntityNode> nodeIdList, string rootFolderPath)
         {
             var dict = new Dictionary<Tuple<long, string>, byte[]>();
 
@@ -112,9 +105,8 @@ namespace EK_MultipleTransporter.Helpers
 
         public static bool MoveUnUploadedDocumentsToBackUpFolder(string docName)
         {
-
             //var docName = FileRoot.Split('\\').LastOrDefault();
-            File.Move(RootPathOfUsersFolder + docName , _desktopPath + @"\" + _backUpFolderRoot);
+            File.Move(RootPathOfUsersFolder + docName , DesktopPath + @"\" + BackUpFolderRoot);
 
             Logger.Info("Document named" + docName + "Could not be uploaded to Opentext");
             return true;

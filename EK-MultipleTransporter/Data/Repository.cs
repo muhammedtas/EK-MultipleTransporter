@@ -9,10 +9,10 @@ namespace EK_MultipleTransporter.Data
 {
     public class ProjectRepo : RepositoryBase<Project, int>
     {
-        public Project GetByName(string name )
+        public Project GetByName(string name)
         {
-            OTCSDbContext db = new OTCSDbContext();
-            return db.Projects.Where(x => x.Name == name).FirstOrDefault();
+            var db = new OtcsDbContext();
+            return db.Projects.FirstOrDefault(x => x.Name == name);
         }
     }
 }
