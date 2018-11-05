@@ -197,45 +197,47 @@ namespace EK_MultipleTransporter.Forms
 
                 foreach (var childNodeOfMainStaff in allChildNodesOfMainStaff)
                 {
-                   
-
-                    if (countDeepness == 1)
+                    switch (countDeepness)
                     {
-                        var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainStaff.Id, targetRootAddres);
-                        targetNodesList.Add(oneOfTargetNode);
-                    }
-                    else if (countDeepness == 2)
-                    {
-                        var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
-                        var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainStaff.Id, generalFirstStepTargetNodeName).FirstOrDefault();
+                        case 1:
+                        {
+                            var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainStaff.Id, targetRootAddres);
+                            targetNodesList.Add(oneOfTargetNode);
+                            break;
+                        }
+                        case 2:
+                        {
+                            var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
+                            var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainStaff.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
+                            var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
 
-                        var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                            var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                        if (targetChildNode != null)
-                            targetNodesList.Add(targetChildNode);
+                            if (targetChildNode != null)
+                                targetNodesList.Add(targetChildNode);
+                            break;
+                        }
+                        case 3:
+                        {
+                            var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
+                            var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainStaff.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                    }
-                    else if (countDeepness == 3)
-                    {
-                        var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
-                        var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainStaff.Id, generalFirstStepTargetNodeName).FirstOrDefault();
+                            var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
+                            if (firstStepTargetNode == null) continue;
+                            var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                        var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
-                        if (firstStepTargetNode == null) continue;
-                        var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                            var generalThirdStepTargetNodeName = targetRootAddres.Split('\\')[2];
 
-                        var generalThirdStepTargetNodeName = targetRootAddres.Split('\\')[2];
+                            var targetChildNode = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
 
-                        var targetChildNode = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
-
-                        if (targetChildNode != null)
-                            targetNodesList.Add(targetChildNode);
-                    }
-                    else
-                    {
-                        Console.WriteLine(Resources.NodeDeepnessExceed);
+                            if (targetChildNode != null)
+                                targetNodesList.Add(targetChildNode);
+                            break;
+                        }
+                        default:
+                            Console.WriteLine(Resources.NodeDeepnessExceed);
+                            break;
                     }
                 }
 

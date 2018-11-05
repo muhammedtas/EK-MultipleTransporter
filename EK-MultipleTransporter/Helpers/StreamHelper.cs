@@ -106,7 +106,9 @@ namespace EK_MultipleTransporter.Helpers
         public static bool MoveUnUploadedDocumentsToBackUpFolder(string docName)
         {
             //var docName = FileRoot.Split('\\').LastOrDefault();
-            File.Move(RootPathOfUsersFolder + docName , DesktopPath + @"\" + BackUpFolderRoot);
+            //File.Move(RootPathOfUsersFolder + docName , DesktopPath + @"\" + BackUpFolderRoot);
+
+            File.Move(RootPathOfUsersFolder, DesktopPath + @"\" + BackUpFolderRoot);
 
             Logger.Info("Document named" + docName + "Could not be uploaded to Opentext");
             return true;

@@ -19,8 +19,25 @@ namespace EK_MultipleTransporter.Helpers
 
         public EntityNode[] GetChildNodesById (long id)
         {
-           return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false);
+            EntityNode[] data = null;
+            data = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, int.MaxValue, false, false);
+            return data; 
 
+        }
+
+        public EntityNode[] GetChildNodesByIdTop1000Nodes(long id)
+        {
+            EntityNode[] data = null;
+            try
+            {
+                data = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return data;
         }
 
         public KeyValuePair[] GetFolderListIncludingChildren (long id)
@@ -46,7 +63,7 @@ namespace EK_MultipleTransporter.Helpers
 
         public bool HasChildNode (long id)
         {
-            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false) != null;
+            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, int.MaxValue, false, false) != null;
         }
 
         public long FindChildNodeIdByName (long parentNodeId, string childNodeName)
@@ -57,10 +74,9 @@ namespace EK_MultipleTransporter.Helpers
         {
             try
             {
-                EntityAttachment eaj;
                 if (fileByteArray != null && targetFolder > 0)
                 {
-                    eaj = new EntityAttachment
+                    var eaj = new EntityAttachment
                     {
                         Contents = fileByteArray,
                         CreatedDate = DateTime.Now,
@@ -68,7 +84,6 @@ namespace EK_MultipleTransporter.Helpers
                         ModifiedDate = DateTime.Now,
                         FileSize = fileByteArray.Length
                     };
-
 
                     var idj = VariableHelper.Dmo.AddDocumentOrVersion("Admin", VariableHelper.Token, eaj, targetFolder, "", true);
                     fileByteArray = null;
@@ -99,7 +114,6 @@ namespace EK_MultipleTransporter.Helpers
                         ModifiedDate = DateTime.Now,
                         FileSize = fileByteArray.Length
                     };
-
                 }
 
                 var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
@@ -187,7 +201,6 @@ namespace EK_MultipleTransporter.Helpers
             docTerm.Values = new object[] { term };
 
             var emdNew = new EntityMetadata {AttributeGroups = new[] {eag}};
-
 
             return emdNew;
 

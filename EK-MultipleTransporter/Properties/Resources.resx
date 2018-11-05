@@ -160,4 +160,10 @@
   <data name="ProcessIsDone" xml:space="preserve">
     <value>İşlem Tamamlandı...</value>
   </data>
+  <data name="SelectedItemNumber" xml:space="preserve">
+    <value>Seçili alan sayısı   :</value>
+  </data>
+  <data name="ChooseAllRequiredFields" xml:space="preserve">
+    <value>Lütfen Yükleme yapmadan önce tüm zorunlu alanları için birer seçim yapınız</value>
+  </data>
 </root>

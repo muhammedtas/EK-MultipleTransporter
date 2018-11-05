@@ -45,6 +45,7 @@ namespace EK_MultipleTransporter.Forms
             this.txtFilter = new System.Windows.Forms.TextBox();
             this.cScrollofLst = new System.Windows.Forms.VScrollBar();
             this.cbCheckAll = new System.Windows.Forms.CheckBox();
+            this.lblCounter = new System.Windows.Forms.Label();
             cmbDistriborTerm = new System.Windows.Forms.ComboBox();
             cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
             cmbDistOTFolder = new System.Windows.Forms.ComboBox();
@@ -191,6 +192,7 @@ namespace EK_MultipleTransporter.Forms
             this.cLstBxWorkSpaceType.TabIndex = 43;
             this.cLstBxWorkSpaceType.UseCompatibleStateImageBehavior = false;
             this.cLstBxWorkSpaceType.View = System.Windows.Forms.View.Details;
+            this.cLstBxWorkSpaceType.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.cLstBxWorkSpaceType_ItemCheck);
             // 
             // hdWorkSpaceType
             // 
@@ -232,6 +234,14 @@ namespace EK_MultipleTransporter.Forms
             this.cbCheckAll.TabIndex = 46;
             this.cbCheckAll.UseVisualStyleBackColor = true;
             this.cbCheckAll.Click += new System.EventHandler(this.cbCheckAll_Click);
+            // 
+            // lblCounter
+            // 
+            this.lblCounter.AutoSize = true;
+            this.lblCounter.Location = new System.Drawing.Point(48, 684);
+            this.lblCounter.Name = "lblCounter";
+            this.lblCounter.Size = new System.Drawing.Size(0, 13);
+            this.lblCounter.TabIndex = 47;
             // 
             // cmbDistriborTerm
             // 
@@ -294,6 +304,7 @@ namespace EK_MultipleTransporter.Forms
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(599, 749);
+            this.Controls.Add(this.lblCounter);
             this.Controls.Add(this.cbCheckAll);
             this.Controls.Add(this.cScrollofLst);
             this.Controls.Add(this.txtFilter);
@@ -315,6 +326,7 @@ namespace EK_MultipleTransporter.Forms
             this.Name = "DistributorForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Dökümanınızı Dağıtın";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DistributorForm_FormClosing);
             this.Load += new System.EventHandler(this.DistributorForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -343,5 +355,6 @@ namespace EK_MultipleTransporter.Forms
         private System.Windows.Forms.TextBox txtFilter;
         private VScrollBar cScrollofLst;
         private CheckBox cbCheckAll;
+        private Label lblCounter;
     }
 }

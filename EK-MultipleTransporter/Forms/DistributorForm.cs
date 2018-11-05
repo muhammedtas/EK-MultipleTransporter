@@ -5,19 +5,15 @@ using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.ServiceModel;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Services.Protocols;
 using System.Windows.Forms;
-using JetBrains.Util;
+using JetBrains.Interop.WinApi;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace EK_MultipleTransporter.Forms
@@ -40,8 +36,11 @@ namespace EK_MultipleTransporter.Forms
         private readonly CancellationToken _cancellationToken;
         private readonly Trigger _worker;
         private static readonly int ItemsPerPage = 100;
-        private static  int CurrentScrool = 1;
-        public bool isChecked = false;
+        private static int CurrentScroll = 1;
+        public bool IsChecked;
+        public bool IsProcessing;
+        public static int SelectedItemCounter;
+        public readonly List<ListViewItem> _distributedWorkSpaceList;
 
         public DistributorForm()
         {
@@ -49,6 +48,7 @@ namespace EK_MultipleTransporter.Forms
             _workPlaceMasterList = new List<ListViewItem>();
             _filteredWorkPlaceMasterList = new List<ListViewItem>();
             _itemsToAdd = new List<ListViewItem>();
+            _distributedWorkSpaceList = new List<ListViewItem>();
             _serviceHelper = new OtServicesHelper();
             _worker = Worker;
             _cancellationToken = _cts.Token;
@@ -56,6 +56,7 @@ namespace EK_MultipleTransporter.Forms
             var dmo = VariableHelper.Dmo;
             var ops = VariableHelper.Ops;
             CheckForIllegalCrossThreadCalls = false;
+            this.FormClosing += DistributorForm_FormClosing;
 
             if (string.IsNullOrEmpty(VariableHelper.Token))
             {
@@ -135,7 +136,7 @@ namespace EK_MultipleTransporter.Forms
         {
             cmbDistOTFolder.Items.Clear();
             cLstBxWorkSpaceType.Items.Clear();
-            CurrentScrool = 1;
+            CurrentScroll = 1;
             cScrollofLst.Maximum = 100;
 
             await Task.Factory.StartNew(() => { VariableHelper.Cts.Cancel(); }, _cancellationToken, TaskCreationOptions.LongRunning,
@@ -154,14 +155,13 @@ namespace EK_MultipleTransporter.Forms
             cmbDistOTFolder.Items.Clear();
             _workPlaceMasterList.Clear();
             cLstBxWorkSpaceType.Items.Clear();
-
+         
             var task = Task.Factory.StartNew(() =>
             {
 
                 try
                 {
                     Parallel.Invoke(LoadSelectedWorkSpacesChilds, LoadSelectedWorkSpacesTargetChildsToListBox);
-
                 }
                 catch (Exception)
                 {
@@ -210,7 +210,7 @@ namespace EK_MultipleTransporter.Forms
             // Üstteki çalışma alanı değiştikçe burası asyn bir şekilde document template ten gelmesini istiyoruz.
             // Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
             // Adı ile aratarak target nodumuzu bulacağız.
-            
+
             try
             {
                 cmbDistOTFolder.Items.Clear();
@@ -266,30 +266,57 @@ namespace EK_MultipleTransporter.Forms
         }
 
         public void LoadSelectedWorkSpacesTargetChildsToListBox()
-        {  
+        {
             try
             {
                 cLstBxWorkSpaceType.Items.Clear();
 
+                if (string.Equals(cmbDistWorkPlaceType.Text, "BAĞIMSIZ BÖLÜM"))
+                {
+
+
+                    var childLists =
+                        _serviceHelper.GetChildNodesByIdTop1000Nodes((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id);
+                        //DbEntityHelper.GetNodesByNameByPart((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id, 0, 1000);
+
+                    foreach (var item in childLists)
+                    {
+                        var listItem = new ListViewItem
+                        {
+                            Text = item.Name,
+                            Tag = new DistributorChilds() { Id = item.Id, Name = item.Name }
+                        };
+                        _filteredWorkPlaceMasterList.Add(listItem);
+                    }
+
+                    var task = Task.Run(() => FillDistributedWorkSpacesList()).ConfigureAwait(false); // Bir taraftan asıl bağımsız bölüm listesini asyn dolduracağız.
+                    return;
+                }
+
                 var workSpaceTargetNodes = _serviceHelper.GetChildNodesById((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id);
+
+                //var data1 = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id, 0, 100, false, false);
+                //var data2 = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id, 100, 100, false, false);
+                //var data3 = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id, 200, 100, false, false);
 
                 foreach (var targetNode in workSpaceTargetNodes)
                 {
                     var listItem = new ListViewItem
                     {
                         Text = targetNode.Name,
-                        Tag = new DistributorChilds() {Id = targetNode.Id, Name = targetNode.Name}
+                        Tag = new DistributorChilds() { Id = targetNode.Id, Name = targetNode.Name }
                     };
                     _workPlaceMasterList.Add(listItem);
 
                 }
 
-                var itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScrool - 1)).Take(100);
+                 var itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScroll - 1)).Take(100);
                 cLstBxWorkSpaceType.Items.AddRange(itemsToAdd.ToArray());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Logger.Error("Workspace dolarken değiştirilmiş olmalı...");
+                Logger.Error("Details   :" + ex);
                 //throw;
             }
 
@@ -312,7 +339,8 @@ namespace EK_MultipleTransporter.Forms
 
         private async void btnOk_Click(object sender, EventArgs e)
         {
-            await Task.Run(() => DoDistributorWorks(), _cancellationToken);
+            if (CheckFormsIfSuitableForUpload()) await Task.Run(() => DoDistributorWorks(), _cancellationToken);
+            else MessageBox.Show(Resources.ChooseAllRequiredFields);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -329,7 +357,7 @@ namespace EK_MultipleTransporter.Forms
                 cLstBxWorkSpaceType.Items.AddRange(_workPlaceMasterList.ToArray());
                 return;
             }
-           
+
             _filteredWorkPlaceMasterList.Clear();
             cLstBxWorkSpaceType.Items.Clear();
 
@@ -345,21 +373,24 @@ namespace EK_MultipleTransporter.Forms
 
         private void FilterItems()
         {
-            CurrentScrool = 1;
+            if (string.IsNullOrEmpty(txtFilter.Text))  return;
+
+            CurrentScroll = 1;
             cScrollofLst.Maximum = 100;
             // ListView filter ediliyor.
             foreach (var item in _workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
             {
                 _filteredWorkPlaceMasterList.Add(item);
             }
-
+            cLstBxWorkSpaceType.Items.Clear(); // **
             cLstBxWorkSpaceType.Items.AddRange(_filteredWorkPlaceMasterList.ToArray());
 
         }
 
         public async void DoDistributorWorks()
         {
-            btnOk.Enabled = false;
+            //btnOk.Enabled = false;
+            InvokedFormState();
             Debugger.NotifyOfCrossThreadDependency();
 
             var selectedItemList = cLstBxWorkSpaceType.CheckedItems;
@@ -376,7 +407,7 @@ namespace EK_MultipleTransporter.Forms
                 MessageBox.Show(Resources.NodeDeepnessExceed);
                 return;
             }
-   
+
             foreach (var item in selectedItemList)
             {
 
@@ -388,47 +419,50 @@ namespace EK_MultipleTransporter.Forms
                 var itemNodeName = (((listViewItem.Tag) as DistributorChilds)).Name;
 
                 selectedNodeIdList.Add(itemNodeId);
-
-
-
-                if (countDeepness == 1)
+                
+                switch (countDeepness)
                 {
-                    // var targetNode = serviceHelper.GetNodeByName(itemNodeId, itemNodeName);
-                    var oneOfTargetNode = DbEntityHelper.GetNodeByName(itemNodeId, itemNodeName);
-                    targetNodesList.Add(oneOfTargetNode);
-                }
-                else if (countDeepness == 2)
-                {
-                    var generalFirstStepTargetNodeName = targetOpenTextAddress.Split('\\')[0];
-                    var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
+                    case 1:
+                    {
+                        // var targetNode = serviceHelper.GetNodeByName(itemNodeId, itemNodeName);
+                        var oneOfTargetNode = DbEntityHelper.GetNodeByName(itemNodeId, itemNodeName);
+                        targetNodesList.Add(oneOfTargetNode);
+                        break;
+                    }
+                    case 2:
+                    {
+                        var generalFirstStepTargetNodeName = targetOpenTextAddress.Split('\\')[0];
+                        var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                    var generalSecondStepTargetNodeName = targetOpenTextAddress.Split('\\')[1];
-                    if (firstStepTargetNode == null) continue;
-                    var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                        var generalSecondStepTargetNodeName = targetOpenTextAddress.Split('\\')[1];
+                        if (firstStepTargetNode == null) continue;
+                        var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                    if (targetChildNode != null)
-                        targetNodesList.Add(targetChildNode);
-                }
-                else if (countDeepness == 3)
-                {
-                    var generalFirstStepTargetNodeName = targetOpenTextAddress.Split('\\')[0];
-                    var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
+                        if (targetChildNode != null)
+                            targetNodesList.Add(targetChildNode);
+                        break;
+                    }
+                    case 3:
+                    {
+                        var generalFirstStepTargetNodeName = targetOpenTextAddress.Split('\\')[0];
+                        var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(itemNodeId, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                    var generalSecondStepTargetNodeName = targetOpenTextAddress.Split('\\')[1];
-                    if (firstStepTargetNode == null) continue;
-                    var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                        var generalSecondStepTargetNodeName = targetOpenTextAddress.Split('\\')[1];
+                        if (firstStepTargetNode == null) continue;
+                        var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                    var generalThirdStepTargetNodeName = targetOpenTextAddress.Split('\\')[2];
+                        var generalThirdStepTargetNodeName = targetOpenTextAddress.Split('\\')[2];
 
-                    var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
+                        var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
 
-                    if (targetChildNode != null)
-                        targetNodesList.Add(targetChildNode);
-                }
-                else
-                {
-                    Console.WriteLine(Resources.NodeDeepnessExceed);
-                    //Console.WriteLine("Node derinliği beklenen değerin üzerinde.");
+                        if (targetChildNode != null)
+                            targetNodesList.Add(targetChildNode);
+                        break;
+                    }
+                    default:
+                        Console.WriteLine(Resources.NodeDeepnessExceed);
+                        //Console.WriteLine("Node derinliği beklenen değerin üzerinde.");
+                        break;
                 }
 
             }
@@ -439,8 +473,7 @@ namespace EK_MultipleTransporter.Forms
             // nodeId, dos-ya adı, ve hed-ef nodeId ile ya-rat-tı-ğı-mız dictionary i open-text e yük-le-ne-bi-lir hale getireceğiz.
 
             await UploadDocuments(preparedList);
-            btnOk.Enabled = true;
-
+            WaitedFormState();
             MessageBox.Show(Resources.ProcessIsDone);
 
         }
@@ -457,18 +490,22 @@ namespace EK_MultipleTransporter.Forms
         private void cScrollofLst_ValueChanged(object sender, EventArgs e)
         {
             if (cScrollofLst.Maximum >= _workPlaceMasterList.Count) return;
-            
+
             if (cScrollofLst.Maximum - 20 > ((VScrollBar)sender).Value) return;
 
             cScrollofLst.Maximum += 100;
 
-            CurrentScrool++;
+            CurrentScroll++;
 
             // Filter text'e bir şey girmemişse filtered listten getir.
             if (!string.Equals(txtFilter.Text, Resources.filterText) && !string.IsNullOrEmpty(txtFilter.Text))
             {
+                if (cScrollofLst.Maximum >= _filteredWorkPlaceMasterList.Count && _filteredWorkPlaceMasterList.Count > 0)
+                {
+                    return;
+                }
                 cLstBxWorkSpaceType.Items.Clear();
-                _itemsToAdd = _filteredWorkPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScrool - 1)).Take(ItemsPerPage);
+                _itemsToAdd = _filteredWorkPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScroll - 1)).Take(ItemsPerPage);
                 if (_itemsToAdd != null)
                     cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
                 _itemsToAdd = null;
@@ -476,8 +513,8 @@ namespace EK_MultipleTransporter.Forms
             else // Filtered liste hiç dokunulmadıysa masterList ten getir.
             {
                 _filteredWorkPlaceMasterList.Clear();
-                cLstBxWorkSpaceType.Items.Clear();
-                _itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScrool - 1)).Take(ItemsPerPage);
+                
+                _itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScroll - 1)).Take(ItemsPerPage);
                 if (_itemsToAdd != null)
                 {
                     cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
@@ -485,7 +522,7 @@ namespace EK_MultipleTransporter.Forms
 
                 _itemsToAdd = null;
             }
-            
+
         }
 
         private void cScrollofLst_Scroll(object sender, ScrollEventArgs e)
@@ -499,24 +536,119 @@ namespace EK_MultipleTransporter.Forms
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Occur moccur bro" + ex);
+                Console.WriteLine("Scrooling is not working properly..." + ex);
             }
-            
+
+        }
+
+        public void InvokedFormState()
+        {
+            IsProcessing = true;
+            cbCheckAll.Enabled = false;
+            cmbDistWorkPlaceType.Enabled = false;
+            cmbDistOTFolder.Enabled = false;
+            txtDistDocumentRoot.Enabled = false;
+            cmbDocumentType.Enabled = false;
+            dtpDistributorYear.Enabled = false;
+            cmbDistriborTerm.Enabled = false;
+            txtFilter.Enabled = false;
+            cLstBxWorkSpaceType.Enabled = false;
+            cScrollofLst.Enabled = false;
+            btnOk.Enabled = false;
+            btnCancel.Enabled = true;
+            //this.Enabled = false;
+        }
+
+        public void WaitedFormState()
+        {
+            IsProcessing = false;
+
+            cbCheckAll.Enabled = true;
+            cmbDistWorkPlaceType.Enabled = true;
+            cmbDistOTFolder.Enabled = true;
+            txtDistDocumentRoot.Enabled = true;
+            cmbDocumentType.Enabled = true;
+            dtpDistributorYear.Enabled = true;
+            cmbDistriborTerm.Enabled = true;
+            txtFilter.Enabled = true;
+            cLstBxWorkSpaceType.Enabled = true;
+            cScrollofLst.Enabled = true;
+            btnOk.Enabled = true;
+            btnCancel.Enabled = true;
+            this.Enabled = true;
+
         }
 
         private void cbCheckAll_Click(object sender, EventArgs e)
         {
-            if (!isChecked)
+            if (!IsChecked)
             {
-                isChecked = true;
-                cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = isChecked);
+                IsChecked = true;
+                cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = IsChecked);
             }
             else
             {
-                isChecked = false;
-                cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = isChecked);
-
+                IsChecked = false;
+                cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ToList().ForEach(item => item.Checked = IsChecked);
+                SelectedItemCounter = 0;
             }
+        }
+
+        private void cLstBxWorkSpaceType_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            //if (cLstBxWorkSpaceType.SelectedItems.Count > 0 && IsChecked) return;
+            //if (IsChecked) return;
+            if (!string.IsNullOrEmpty(txtFilter.Text) && !string.Equals(txtFilter.Text, Resources.filterText)) return;
+            switch (e.NewValue)
+            {
+                case CheckState.Unchecked:
+                    SelectedItemCounter--;
+                    break;
+                case CheckState.Checked:
+                    SelectedItemCounter++;
+                    break;
+                case CheckState.Indeterminate:
+                    break;
+                default:
+                    break;
+            }
+            lblCounter.Text = Resources.SelectedItemNumber + SelectedItemCounter;
+
+        }
+
+        private void DistributorForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CurrentScroll = 1;
+            IsChecked = false;
+            IsProcessing = false;
+            SelectedItemCounter = 0;
+        }
+
+        private bool CheckFormsIfSuitableForUpload()
+        {
+            return cmbDocumentType.SelectedItem != null && cmbDistWorkPlaceType.SelectedItem != null && cmbDistOTFolder.SelectedItem != null && !string.IsNullOrEmpty(txtDistDocumentRoot.Text);
+        }
+
+        public void FillDistributedWorkSpacesList()
+        {
+            var distList = _serviceHelper.GetChildNodesById((cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Id);
+
+            foreach (var item in distList)
+            {
+                var listItem = new ListViewItem
+                {
+                    Text = item.Name,
+                    Tag = new DistributorChilds() { Id = item.Id, Name = item.Name }
+                };
+                _distributedWorkSpaceList.Add(listItem);
+            }
+        }
+
+        public void ListViewLoaderForDistributedWorkSpace(int startIndex, int length)
+        {
+            var itemsToLoad = _distributedWorkSpaceList.Skip(startIndex).Take(length);
+
+            cLstBxWorkSpaceType.Items.AddRange(itemsToLoad.ToArray());
 
         }
     }

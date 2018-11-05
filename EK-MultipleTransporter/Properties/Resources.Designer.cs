@@ -90,6 +90,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lütfen Yükleme yapmadan önce tüm zorunlu alanları için birer seçim yapınız.
+        /// </summary>
+        public static string ChooseAllRequiredFields {
+            get {
+                return ResourceManager.GetString("ChooseAllRequiredFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dökümanınızı Seçiniz....
         /// </summary>
         public static string ChooseDocument {
@@ -180,6 +189,15 @@ namespace EK_MultipleTransporter.Properties {
         public static string ProcessIsDone {
             get {
                 return ResourceManager.GetString("ProcessIsDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seçili alan sayısı   :.
+        /// </summary>
+        public static string SelectedItemNumber {
+            get {
+                return ResourceManager.GetString("SelectedItemNumber", resourceCulture);
             }
         }
         

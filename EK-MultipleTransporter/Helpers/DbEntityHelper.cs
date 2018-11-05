@@ -83,6 +83,45 @@ namespace EK_MultipleTransporter.Helpers
 
         }
 
+        public static List<EntityNode> GetNodesByNameByPart(long parentNodeId, int startPoint, int endPoint)
+        {
+            var result = new List<EntityNode>();
+            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
+            const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Id] BETWEEN @startPoint AND @endPoint" ;
+
+            var connStrBuilder = new SqlConnectionStringBuilder(GetConnectionString()) {ConnectTimeout = 300};
+
+            using (var connection = new SqlConnection(connStrBuilder.ConnectionString))
+            {
+                
+                var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@startPoint",  startPoint);
+                command.Parameters.AddWithValue("@endPoint", endPoint);
+                command.Parameters.AddWithValue("@parentNodeId", parentNodeId);
+
+                try
+                {
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var itemNodeId = Convert.ToInt64(reader["DataID"]);
+                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
+                        result.Add(VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false));
+                    }
+                    reader.Close();
+                    connection.Close();
+
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    throw;
+                }
+            }
+        }
+
         public static List<EntityNode> GetNodesByName(string name)
         {
             var result = new List<EntityNode>();

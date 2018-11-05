@@ -163,51 +163,55 @@ namespace EK_MultipleTransporter.Forms
                 // Streamer helper aldığı bu node id ile bir ilişki kurabilirse map in içerisine koyup bize verecek, kuramazsa eklemeyecek.
                 foreach (var childNodeOfMainProject in allChildNodesOfMainProject)
                 {
-                  
-                    if (countDeepness == 1)
+                    switch (countDeepness)
                     {
-                        var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainProject.Id, targetRootAddress);
-                        targetNodesList.Add(oneOfTargetNode);
-                    }
-                    else if (countDeepness == 2)
-                    {
-                        var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
-                        var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
+                        case 1:
+                        {
+                            var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainProject.Id, targetRootAddress);
+                            targetNodesList.Add(oneOfTargetNode);
+                            break;
+                        }
+                        case 2:
+                        {
+                            var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
+                            var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
+                            var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
 
-                        var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                            var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                        // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
+                            // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        if (targetChildNode != null)
-                            targetNodesList.Add(targetChildNode);
+                            if (targetChildNode != null)
+                                targetNodesList.Add(targetChildNode);
 
 
-                        // Child kırınımı 2 ise 
-                    }
-                    else if (countDeepness == 3)
-                    {
-                        var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
-                        var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
+                            // Child kırınımı 2 ise 
+                            break;
+                        }
+                        case 3:
+                        {
+                            var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
+                            var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
+                            var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
 
-                        var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                            var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                        var generalThirdStepTargetNodeName = targetRootAddress.Split('\\')[2];
+                            var generalThirdStepTargetNodeName = targetRootAddress.Split('\\')[2];
 
-                        var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
+                            var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
 
-                        // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
+                            // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
 
-                        if (targetChildNode != null)
-                            targetNodesList.Add(targetChildNode);
-                        // Child kırınımı 3 ise
-                    }
-                    else
-                    {
-                        Console.WriteLine(Resources.NodeDeepnessExceed);
+                            if (targetChildNode != null)
+                                targetNodesList.Add(targetChildNode);
+                            // Child kırınımı 3 ise
+                            break;
+                        }
+                        default:
+                            Console.WriteLine(Resources.NodeDeepnessExceed);
+                            break;
                     }
                 }
 
