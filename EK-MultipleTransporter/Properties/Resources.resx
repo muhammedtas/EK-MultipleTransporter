@@ -166,4 +166,19 @@
   <data name="ChooseAllRequiredFields" xml:space="preserve">
     <value>Lütfen Yükleme yapmadan önce tüm zorunlu alanları için birer seçim yapınız</value>
   </data>
+  <data name="Admin" xml:space="preserve">
+    <value>admin</value>
+  </data>
+  <data name="DocType" xml:space="preserve">
+    <value>Doküman Türü</value>
+  </data>
+  <data name="Quarter" xml:space="preserve">
+    <value>Çeyrek</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Yıl</value>
+  </data>
+  <data name="IndependentWorkSpace" xml:space="preserve">
+    <value>BAĞIMSIZ BÖLÜM</value>
+  </data>
 </root>

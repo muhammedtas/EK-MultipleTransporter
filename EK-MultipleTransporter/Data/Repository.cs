@@ -1,9 +1,5 @@
 ﻿using EK_MultipleTransporter.Model;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EK_MultipleTransporter.Data
 {
@@ -13,6 +9,15 @@ namespace EK_MultipleTransporter.Data
         {
             var db = new OtcsDbContext();
             return db.Projects.FirstOrDefault(x => x.Name == name);
+        }
+    }
+
+    public class StaffRepo : RepositoryBase<Staff, int>
+    {
+        public Staff GetByName(string name)
+        {
+            var db = new OtcsDbContext();
+            return db.Staffs.FirstOrDefault(x => x.Name == name);
         }
     }
 }

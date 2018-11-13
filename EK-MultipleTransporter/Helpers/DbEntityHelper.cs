@@ -83,11 +83,14 @@ namespace EK_MultipleTransporter.Helpers
 
         }
 
-        public static List<EntityNode> GetNodesByNameByPart(long parentNodeId, int startPoint, int endPoint)
+        public static List<EntityNode> GetNodesByIdPartially(long parentNodeId, int offSetPoint, int fetchNextAmount)
         {
             var result = new List<EntityNode>();
+
+            // OFFSET 10 ROWS
+            // FETCH NEXT 10 ROWS ONLY;
             //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
-            const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Id] BETWEEN @startPoint AND @endPoint" ;
+            const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId ORDER BY (SELECT NULL) OFFSET @offSetPoint ROWS FETCH NEXT @fetchNextAmount ROWS ONLY";
 
             var connStrBuilder = new SqlConnectionStringBuilder(GetConnectionString()) {ConnectTimeout = 300};
 
@@ -95,8 +98,8 @@ namespace EK_MultipleTransporter.Helpers
             {
                 
                 var command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@startPoint",  startPoint);
-                command.Parameters.AddWithValue("@endPoint", endPoint);
+                command.Parameters.AddWithValue("@offSetPoint", offSetPoint);
+                command.Parameters.AddWithValue("@fetchNextAmount", fetchNextAmount);
                 command.Parameters.AddWithValue("@parentNodeId", parentNodeId);
 
                 try
@@ -200,6 +203,52 @@ namespace EK_MultipleTransporter.Helpers
         private static string GetConnectionString()
         {
             return OtcsDbConnStr;
+        }
+
+        public static List<EntityNode> GetNodesByCategoryAttribute(long defId, string valStr)
+        {
+
+            // PROJE İçerisindeki PYP NO Item in adının ilk kısmına denk geliyor. Örn 1001/ ALtındağ bina ... nın pyp nosu 1001 --
+            // Onu da ValStr içerisindeki 8 itemden birinde göreceksin. Diperleri projeno, proje tanım, pyp, lansman adı, yüklenici vs ...
+
+            var result = new List<EntityNode>();
+
+            // OFFSET 10 ROWS
+            // FETCH NEXT 10 ROWS ONLY;
+            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
+            const string query = "Select ID FROM [OTCS].[dbo].[LLAttrData] Where [DefID] = @defId AND [ValStr] LIKE @valStr";
+
+            var connStrBuilder = new SqlConnectionStringBuilder(GetConnectionString()) { ConnectTimeout = 300 };
+
+            using (var connection = new SqlConnection(connStrBuilder.ConnectionString))
+            {
+
+                var command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@defId", defId);
+                //command.Parameters.AddWithValue("@valStr", "%" + valStr);
+                command.Parameters.AddWithValue("@valStr", valStr);
+
+
+                try
+                {
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var itemNodeId = Convert.ToInt64(reader["ID"]);
+                        result.Add(VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false));
+                    }
+                    reader.Close();
+                    connection.Close();
+
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    throw;
+                }
+            }
         }
 
     }

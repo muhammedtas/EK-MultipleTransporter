@@ -1,4 +1,5 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
+using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
 using System.Linq;
@@ -10,27 +11,24 @@ namespace EK_MultipleTransporter.Helpers
     {
 
         public static Logger Logger = LogManager.GetCurrentClassLogger();
-        private static string _desktopPath;        
+        //private static string _desktopPath;        
 
-        public OtServicesHelper()
-        {
-            _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        }
+        //public OtServicesHelper()
+        //{
+        //    _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        //}
 
         public EntityNode[] GetChildNodesById (long id)
         {
-            EntityNode[] data = null;
-            data = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, int.MaxValue, false, false);
-            return data; 
-
+            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, int.MaxValue, false, false);
         }
 
         public EntityNode[] GetChildNodesByIdTop1000Nodes(long id)
         {
-            EntityNode[] data = null;
+            EntityNode[] data;
             try
             {
-                data = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 1000, false, false);
+                data = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 10, false, false);
             }
             catch (Exception e)
             {
@@ -42,33 +40,34 @@ namespace EK_MultipleTransporter.Helpers
 
         public KeyValuePair[] GetFolderListIncludingChildren (long id)
         {
-            return VariableHelper.Dmo.GetFolderListIncludingChildren("admin", VariableHelper.Token, id);
+            return VariableHelper.Dmo.GetFolderListIncludingChildren(Resources.Admin, VariableHelper.Token, id);
         }
         public EntityAttributeGroup GetEntityAttributeGroupOfCategory(long id)
         {
-            var entityAttributeGroup = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory("Admin", VariableHelper.Token, id);
+
+            var entityAttributeGroup = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory(Resources.Admin, VariableHelper.Token, id);
             return entityAttributeGroup;
         }
 
         public EntityNode GetNodeByName (long parentNodeId, string nodeName)
         {
-            var node = VariableHelper.Dmo.GetEntityNodeByName("admin", VariableHelper.Token, parentNodeId, nodeName, false, false, false);
+            var node = VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, parentNodeId, nodeName, false, false, false);
             return node;
         }
 
         public EntityNode GetEntityNodeFromId (long id)
         {
-            return VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, id, false, false, false);
+            return VariableHelper.Dmo.GetEntityNodeFromId(Resources.Admin, VariableHelper.Token, id, false, false, false);
         }
 
         public bool HasChildNode (long id)
         {
-            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, int.MaxValue, false, false) != null;
+            return VariableHelper.Dmo.GetChildNodes(Resources.Admin, VariableHelper.Token, id, 0, int.MaxValue, false, false) != null;
         }
 
         public long FindChildNodeIdByName (long parentNodeId, string childNodeName)
         {
-            return VariableHelper.Dmo.GetEntityNodeByName("admin", VariableHelper.Token, parentNodeId, childNodeName, false, false, false).Id;
+            return VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, parentNodeId, childNodeName, false, false, false).Id;
         }
         public bool AddDocumentOrVersion(string docName, byte[] fileByteArray, long targetFolder)
         {
@@ -86,8 +85,6 @@ namespace EK_MultipleTransporter.Helpers
                     };
 
                     var idj = VariableHelper.Dmo.AddDocumentOrVersion("Admin", VariableHelper.Token, eaj, targetFolder, "", true);
-                    fileByteArray = null;
-                    eaj = null;
                     return idj > 0;
                 }
             }
@@ -117,13 +114,8 @@ namespace EK_MultipleTransporter.Helpers
                 }
 
                 var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
-
-                fileByteArray = null;
-                eaj = null;
-
                 if (ida == 0) StreamHelper.MoveUnUploadedDocumentsToBackUpFolder(docName);
                 
-
                 return ida > 0;
             }
             catch (Exception ex)
@@ -153,9 +145,8 @@ namespace EK_MultipleTransporter.Helpers
 
                 }
 
-                await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync("Admin", VariableHelper.Token, targetFolder, emd, eaj, ""));
+                await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync(Resources.Admin, VariableHelper.Token, targetFolder, emd, eaj, ""));
                 // var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
-                fileByteArray = null;
                 eaj = null;
                 return true;
                 
@@ -172,7 +163,7 @@ namespace EK_MultipleTransporter.Helpers
         {
             try
             {
-                var isFileExist = VariableHelper.Dmo.GetEntityNodeByName("Admin", VariableHelper.Token, folderId, folderName, true, true, true);
+                var isFileExist = VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, folderId, folderName, true, true, true);
                 return isFileExist != null;
             }
             catch (Exception ex)
@@ -184,20 +175,20 @@ namespace EK_MultipleTransporter.Helpers
 
         public EntityNode[] GetEntityNodeListIncludingChildrenUsingTypeFilter(long parentNodeId, string typeFilter)
         {
-            return VariableHelper.Dmo.GetEntityNodeListIncludingChildrenUsingTypeFilter("admin", VariableHelper.Token, parentNodeId, 1000, typeFilter, false);
+            return VariableHelper.Dmo.GetEntityNodeListIncludingChildrenUsingTypeFilter(Resources.Admin, VariableHelper.Token, parentNodeId, 1000, typeFilter, false);
         }
 
         public EntityMetadata CategoryMaker (string docType, string year, string term, long nodeId )
         {
-            var eag = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory("Admin", VariableHelper.Token, nodeId);
+            var eag = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory(Resources.Admin, VariableHelper.Token, nodeId);
 
-            var documentType = eag.Values.First(x => x.Description == "Doküman Türü");
+            var documentType = eag.Values.First(x => x.Description == Resources.DocType);
             documentType.Values = new object[] { docType };
 
-            var docYear = eag.Values.First(x => x.Description == "Yıl");
+            var docYear = eag.Values.First(x => x.Description == Resources.Year);
             docYear.Values = new object[] { year };
 
-            var docTerm = eag.Values.First(x => x.Description == "Çeyrek");
+            var docTerm = eag.Values.First(x => x.Description == Resources.Quarter);
             docTerm.Values = new object[] { term };
 
             var emdNew = new EntityMetadata {AttributeGroups = new[] {eag}};

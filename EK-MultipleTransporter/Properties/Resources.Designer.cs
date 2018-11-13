@@ -61,6 +61,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to admin.
+        /// </summary>
+        public static string Admin {
+            get {
+                return ResourceManager.GetString("Admin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All files|*.*| Office Files|*.doc;*.docx;*.ppt| XLS files (*.xls)|*.xls| XLSX files (*.xlsx)|*.xlsx| Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;.
         /// </summary>
         public static string AllowedTypes {
@@ -136,6 +145,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Doküman Türü.
+        /// </summary>
+        public static string DocType {
+            get {
+                return ResourceManager.GetString("DocType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to İş alanlarını filtreleyin....
         /// </summary>
         public static string filterText {
@@ -151,6 +169,15 @@ namespace EK_MultipleTransporter.Properties {
             get {
                 object obj = ResourceManager.GetObject("images", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BAĞIMSIZ BÖLÜM.
+        /// </summary>
+        public static string IndependentWorkSpace {
+            get {
+                return ResourceManager.GetString("IndependentWorkSpace", resourceCulture);
             }
         }
         
@@ -193,6 +220,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Çeyrek.
+        /// </summary>
+        public static string Quarter {
+            get {
+                return ResourceManager.GetString("Quarter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Seçili alan sayısı   :.
         /// </summary>
         public static string SelectedItemNumber {
@@ -207,6 +243,15 @@ namespace EK_MultipleTransporter.Properties {
         public static string WebServicesNotWorking {
             get {
                 return ResourceManager.GetString("WebServicesNotWorking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yıl.
+        /// </summary>
+        public static string Year {
+            get {
+                return ResourceManager.GetString("Year", resourceCulture);
             }
         }
     }

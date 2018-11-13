@@ -46,10 +46,12 @@ namespace EK_MultipleTransporter.Forms
             this.cScrollofLst = new System.Windows.Forms.VScrollBar();
             this.cbCheckAll = new System.Windows.Forms.CheckBox();
             this.lblCounter = new System.Windows.Forms.Label();
+            this.lblProjectsOfDistricts = new System.Windows.Forms.Label();
             cmbDistriborTerm = new System.Windows.Forms.ComboBox();
             cmbDistWorkPlaceType = new System.Windows.Forms.ComboBox();
             cmbDistOTFolder = new System.Windows.Forms.ComboBox();
             cmbDocumentType = new System.Windows.Forms.ComboBox();
+            cmbProjectsOfDistricts = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lblTerm
@@ -141,7 +143,7 @@ namespace EK_MultipleTransporter.Forms
             // btnOk
             // 
             this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOk.Location = new System.Drawing.Point(466, 714);
+            this.btnOk.Location = new System.Drawing.Point(468, 714);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 30;
@@ -153,7 +155,7 @@ namespace EK_MultipleTransporter.Forms
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(308, 714);
+            this.btnCancel.Location = new System.Drawing.Point(310, 714);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 31;
@@ -186,9 +188,9 @@ namespace EK_MultipleTransporter.Forms
             this.cLstBxWorkSpaceType.CheckBoxes = true;
             this.cLstBxWorkSpaceType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.hdWorkSpaceType});
-            this.cLstBxWorkSpaceType.Location = new System.Drawing.Point(51, 369);
+            this.cLstBxWorkSpaceType.Location = new System.Drawing.Point(51, 401);
             this.cLstBxWorkSpaceType.Name = "cLstBxWorkSpaceType";
-            this.cLstBxWorkSpaceType.Size = new System.Drawing.Size(490, 302);
+            this.cLstBxWorkSpaceType.Size = new System.Drawing.Size(490, 277);
             this.cLstBxWorkSpaceType.TabIndex = 43;
             this.cLstBxWorkSpaceType.UseCompatibleStateImageBehavior = false;
             this.cLstBxWorkSpaceType.View = System.Windows.Forms.View.Details;
@@ -206,7 +208,7 @@ namespace EK_MultipleTransporter.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFilter.BackColor = System.Drawing.SystemColors.Menu;
-            this.txtFilter.Location = new System.Drawing.Point(51, 343);
+            this.txtFilter.Location = new System.Drawing.Point(51, 375);
             this.txtFilter.Name = "txtFilter";
             this.txtFilter.Size = new System.Drawing.Size(490, 20);
             this.txtFilter.TabIndex = 44;
@@ -218,9 +220,9 @@ namespace EK_MultipleTransporter.Forms
             // 
             this.cScrollofLst.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cScrollofLst.Location = new System.Drawing.Point(521, 373);
+            this.cScrollofLst.Location = new System.Drawing.Point(521, 405);
             this.cScrollofLst.Name = "cScrollofLst";
-            this.cScrollofLst.Size = new System.Drawing.Size(17, 295);
+            this.cScrollofLst.Size = new System.Drawing.Size(17, 270);
             this.cScrollofLst.TabIndex = 45;
             this.cScrollofLst.Scroll += new System.Windows.Forms.ScrollEventHandler(this.cScrollofLst_Scroll);
             this.cScrollofLst.ValueChanged += new System.EventHandler(this.cScrollofLst_ValueChanged);
@@ -228,7 +230,7 @@ namespace EK_MultipleTransporter.Forms
             // cbCheckAll
             // 
             this.cbCheckAll.AutoSize = true;
-            this.cbCheckAll.Location = new System.Drawing.Point(57, 376);
+            this.cbCheckAll.Location = new System.Drawing.Point(57, 408);
             this.cbCheckAll.Name = "cbCheckAll";
             this.cbCheckAll.Size = new System.Drawing.Size(15, 14);
             this.cbCheckAll.TabIndex = 46;
@@ -238,10 +240,24 @@ namespace EK_MultipleTransporter.Forms
             // lblCounter
             // 
             this.lblCounter.AutoSize = true;
-            this.lblCounter.Location = new System.Drawing.Point(48, 684);
+            this.lblCounter.Location = new System.Drawing.Point(48, 716);
             this.lblCounter.Name = "lblCounter";
             this.lblCounter.Size = new System.Drawing.Size(0, 13);
             this.lblCounter.TabIndex = 47;
+            // 
+            // lblProjectsOfDistricts
+            // 
+            this.lblProjectsOfDistricts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProjectsOfDistricts.AutoSize = true;
+            this.lblProjectsOfDistricts.Enabled = false;
+            this.lblProjectsOfDistricts.Location = new System.Drawing.Point(48, 340);
+            this.lblProjectsOfDistricts.Name = "lblProjectsOfDistricts";
+            this.lblProjectsOfDistricts.Size = new System.Drawing.Size(38, 13);
+            this.lblProjectsOfDistricts.TabIndex = 49;
+            this.lblProjectsOfDistricts.Text = "Projesi";
+            this.lblProjectsOfDistricts.Visible = false;
             // 
             // cmbDistriborTerm
             // 
@@ -296,6 +312,21 @@ namespace EK_MultipleTransporter.Forms
             cmbDocumentType.Size = new System.Drawing.Size(379, 21);
             cmbDocumentType.TabIndex = 39;
             // 
+            // cmbProjectsOfDistricts
+            // 
+            cmbProjectsOfDistricts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            cmbProjectsOfDistricts.BackColor = System.Drawing.SystemColors.Menu;
+            cmbProjectsOfDistricts.Enabled = false;
+            cmbProjectsOfDistricts.FormattingEnabled = true;
+            cmbProjectsOfDistricts.Location = new System.Drawing.Point(162, 332);
+            cmbProjectsOfDistricts.Name = "cmbProjectsOfDistricts";
+            cmbProjectsOfDistricts.Size = new System.Drawing.Size(379, 21);
+            cmbProjectsOfDistricts.TabIndex = 48;
+            cmbProjectsOfDistricts.Visible = false;
+            cmbProjectsOfDistricts.SelectedIndexChanged += new System.EventHandler(this.cmbProjectsOfDistricts_SelectedIndexChanged);
+            // 
             // DistributorForm
             // 
             this.AcceptButton = this.btnOk;
@@ -304,6 +335,8 @@ namespace EK_MultipleTransporter.Forms
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(599, 749);
+            this.Controls.Add(this.lblProjectsOfDistricts);
+            this.Controls.Add(cmbProjectsOfDistricts);
             this.Controls.Add(this.lblCounter);
             this.Controls.Add(this.cbCheckAll);
             this.Controls.Add(this.cScrollofLst);
@@ -338,6 +371,7 @@ namespace EK_MultipleTransporter.Forms
         System.Windows.Forms.ComboBox cmbDistWorkPlaceType;
         System.Windows.Forms.ComboBox cmbDistOTFolder;
         System.Windows.Forms.ComboBox cmbDocumentType;
+        System.Windows.Forms.ComboBox cmbProjectsOfDistricts;
         private System.Windows.Forms.Label lblTerm;
         private System.Windows.Forms.Label lblCategoryYear;
         private System.Windows.Forms.DateTimePicker dtpDistributorYear;
@@ -353,8 +387,9 @@ namespace EK_MultipleTransporter.Forms
         private System.Windows.Forms.ColumnHeader hdWorkSpaceType; 
         //private System.Windows.Forms.ColumnHeader hdCheckBoxField;
         private System.Windows.Forms.TextBox txtFilter;
-        private VScrollBar cScrollofLst;
-        private CheckBox cbCheckAll;
-        private Label lblCounter;
+        private System.Windows.Forms.VScrollBar cScrollofLst;
+        private System.Windows.Forms.CheckBox cbCheckAll;
+        private System.Windows.Forms.Label lblCounter;
+        private System.Windows.Forms.Label lblProjectsOfDistricts;
     }
 }
