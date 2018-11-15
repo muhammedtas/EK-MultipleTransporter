@@ -1,4 +1,6 @@
 ﻿using EK_MultipleTransporter.DmsDocumentManagementService;
+using EK_MultipleTransporter.Properties;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,6 +10,7 @@ namespace EK_MultipleTransporter.Helpers
 {
     public class DbEntityHelper
     {
+        public static Logger Logger = LogManager.GetCurrentClassLogger();
         private static readonly string OtcsDbConnStr = ConfigurationManager.ConnectionStrings["OTCSCnnStr"].ConnectionString;
         public static EntityNode GetNodeByName(long parentNodeId, string name)
         {
@@ -38,7 +41,8 @@ namespace EK_MultipleTransporter.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    Console.WriteLine(Resources.ErrorTypeDbTransacts + ex.ToString());
+                    Logger.Error(ex, Resources.ErrorTypeDbTransacts);
                     throw;
                 }
             }
@@ -76,7 +80,9 @@ namespace EK_MultipleTransporter.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    Console.WriteLine(Resources.ErrorTypeDbTransacts + ex.ToString());
+                    Logger.Error(ex, Resources.ErrorTypeDbTransacts);
+
                     throw;
                 }
             }
@@ -119,7 +125,9 @@ namespace EK_MultipleTransporter.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    Console.WriteLine(Resources.ErrorTypeDbTransacts + ex.ToString());
+                    Logger.Error(ex, Resources.ErrorTypeDbTransacts);
+
                     throw;
                 }
             }
@@ -156,7 +164,9 @@ namespace EK_MultipleTransporter.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    Console.WriteLine(Resources.ErrorTypeDbTransacts + ex.ToString());
+                    Logger.Error(ex, Resources.ErrorTypeDbTransacts);
+
                     throw;
                 }
             }
@@ -193,7 +203,8 @@ namespace EK_MultipleTransporter.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    Console.WriteLine(Resources.ErrorTypeDbTransacts + ex.ToString());
+                    Logger.Error(ex, Resources.ErrorTypeDbTransacts);
                     throw;
                 }
             }
@@ -245,7 +256,8 @@ namespace EK_MultipleTransporter.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Reading from OTCS db error. " + ex.ToString());
+                    Console.WriteLine(Resources.ErrorTypeDbTransacts + ex.ToString());
+                    Logger.Error(ex, Resources.ErrorTypeDbTransacts);
                     throw;
                 }
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,8 +11,9 @@ namespace EK_MultipleTransporter.Enums
     {
         //public OtCredentialsEnum(){}
 
-        public static readonly string User = "Admin";
-        public static readonly string Password = "Dty4208ab1!";
+        public static readonly string User = ConfigurationManager.AppSettings["otUserName"];
+        public static readonly string Password = ConfigurationManager.AppSettings["otPassword"];
+        public static readonly string Token = ConfigurationManager.AppSettings["otToken"];
 
         public enum OtAdminCredentials
         {

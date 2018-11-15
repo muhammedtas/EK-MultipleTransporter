@@ -246,7 +246,7 @@ namespace EK_MultipleTransporter.Forms
 
                 if (txtStaffFolderRoot.Text == string.Empty || cmbStaffChildRoot.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz.");
+                    MessageBox.Show(Resources.WarnMessageChooseTargets);
                     return;
                 }
                 var docsToUpload = StreamHelper.MakePreparedDocumentListToPush(txtStaffFolderRoot.Text, targetNodesList);
@@ -259,7 +259,9 @@ namespace EK_MultipleTransporter.Forms
             catch (Exception ex)
             {
                 Console.WriteLine("Ot categories update  error :  " + ex);
-                throw;
+                MessageBox.Show(Resources.ErrorTypeProccessing);
+                Logger.Error(ex , Resources.ErrorTypeProccessing);
+                //throw;
             }
         }
 

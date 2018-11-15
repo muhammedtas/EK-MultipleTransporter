@@ -154,6 +154,42 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reading from OTCS db error..
+        /// </summary>
+        public static string ErrorTypeDbTransacts {
+            get {
+                return ResourceManager.GetString("ErrorTypeDbTransacts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FaultException has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything..
+        /// </summary>
+        public static string ErrorTypeFaultException {
+            get {
+                return ResourceManager.GetString("ErrorTypeFaultException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dokumanlar yüklenirken bir hata oluştu. Detaylar için back-up dosyanıza bakınız..
+        /// </summary>
+        public static string ErrorTypeProccessing {
+            get {
+                return ResourceManager.GetString("ErrorTypeProccessing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything..
+        /// </summary>
+        public static string ErrorTypeSOAPException {
+            get {
+                return ResourceManager.GetString("ErrorTypeSOAPException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to İş alanlarını filtreleyin....
         /// </summary>
         public static string filterText {
@@ -234,6 +270,15 @@ namespace EK_MultipleTransporter.Properties {
         public static string SelectedItemNumber {
             get {
                 return ResourceManager.GetString("SelectedItemNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz..
+        /// </summary>
+        public static string WarnMessageChooseTargets {
+            get {
+                return ResourceManager.GetString("WarnMessageChooseTargets", resourceCulture);
             }
         }
         

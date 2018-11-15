@@ -50,6 +50,14 @@ namespace EK_MultipleTransporter.Helpers
             }
         }
 
+        public static void InitializeNewCancellationTokenSource()
+        {
+            if (Cts.Token.IsCancellationRequested)
+            {
+                Cts = new CancellationTokenSource();
+            }
+        }
+
         public VariableHelper()
         {
 

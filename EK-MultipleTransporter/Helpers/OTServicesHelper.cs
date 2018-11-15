@@ -30,9 +30,10 @@ namespace EK_MultipleTransporter.Helpers
             {
                 data = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 10, false, false);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e);
+                Console.WriteLine(ex);
+                Logger.Error(ex, Resources.WebServicesNotWorking);
                 throw;
             }
             return data;

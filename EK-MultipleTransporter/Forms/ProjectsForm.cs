@@ -241,7 +241,8 @@ namespace EK_MultipleTransporter.Forms
             catch (Exception ex)
             {
                 Console.WriteLine("Ot categories update  error :  " + ex);
-                throw;
+                //throw;
+                MessageBox.Show(Resources.ErrorTypeProccessing);
             }
 
         }

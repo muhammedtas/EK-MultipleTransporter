@@ -181,4 +181,19 @@
   <data name="IndependentWorkSpace" xml:space="preserve">
     <value>BAĞIMSIZ BÖLÜM</value>
   </data>
+  <data name="ErrorTypeDbTransacts" xml:space="preserve">
+    <value>Reading from OTCS db error.</value>
+  </data>
+  <data name="ErrorTypeFaultException" xml:space="preserve">
+    <value>FaultException has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything.</value>
+  </data>
+  <data name="ErrorTypeProccessing" xml:space="preserve">
+    <value>Dokumanlar yüklenirken bir hata oluştu. Detaylar için back-up dosyanıza bakınız.</value>
+  </data>
+  <data name="ErrorTypeSOAPException" xml:space="preserve">
+    <value>SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything.</value>
+  </data>
+  <data name="WarnMessageChooseTargets" xml:space="preserve">
+    <value>Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz.</value>
+  </data>
 </root>
