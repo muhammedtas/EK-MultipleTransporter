@@ -1,9 +1,13 @@
-﻿using EK_MultipleTransporter.DmsDocumentManagementService;
+﻿using EK_MultipleTransporter.Enums;
 using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
+using EK_MultipleTransporter.Models.HelperModel;
 
 namespace EK_MultipleTransporter.Helpers
 {
@@ -179,18 +183,19 @@ namespace EK_MultipleTransporter.Helpers
             return VariableHelper.Dmo.GetEntityNodeListIncludingChildrenUsingTypeFilter(Resources.Admin, VariableHelper.Token, parentNodeId, 1000, typeFilter, false);
         }
 
-        public EntityMetadata CategoryMaker (string docType, string year, string term, long nodeId )
+        public EntityMetadata CategoryMaker (GeneralCategoryModel categoryModel)
         {
-            var eag = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory(Resources.Admin, VariableHelper.Token, nodeId);
+            var eag = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory(Resources.Admin, VariableHelper.Token, categoryModel.NodeId);
 
-            var documentType = eag.Values.First(x => x.Description == Resources.DocType);
-            documentType.Values = new object[] { docType };
+            //var documentType = eag.Values.First(x => x.Description == Resources.DocType);
+            var documentType = eag.Values.First(x => x.Description == OtCategoriesEnum.ConvertString(OtCategoriesEnum.GeneralCategory.DocType));
+            documentType.Values = new object[] { categoryModel.DocumentType };
 
-            var docYear = eag.Values.First(x => x.Description == Resources.Year);
-            docYear.Values = new object[] { year };
+            var docYear = eag.Values.First(x => x.Description == OtCategoriesEnum.ConvertString(OtCategoriesEnum.GeneralCategory.Year));
+            docYear.Values = new object[] { categoryModel.Year };
 
-            var docTerm = eag.Values.First(x => x.Description == Resources.Quarter);
-            docTerm.Values = new object[] { term };
+            var docTerm = eag.Values.First(x => x.Description == OtCategoriesEnum.ConvertString(OtCategoriesEnum.GeneralCategory.Quarter));
+            docTerm.Values = new object[] { categoryModel.Term };
 
             var emdNew = new EntityMetadata {AttributeGroups = new[] {eag}};
 
@@ -198,5 +203,24 @@ namespace EK_MultipleTransporter.Helpers
 
         }
 
+        public async Task<bool> UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload, GeneralCategoryModel categoryModel)
+        {
+            try
+            {
+                var emdNew = CategoryMaker(categoryModel);
+                foreach (var item in docsToUpload)
+                {
+                    if (VariableHelper.Cts.IsCancellationRequested) return false;
+                    await Task.Run(() => AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew), VariableHelper.Cts.Token);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }   
+        }
     }
 }

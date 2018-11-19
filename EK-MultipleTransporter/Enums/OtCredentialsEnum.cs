@@ -9,7 +9,6 @@ namespace EK_MultipleTransporter.Enums
 {
     public sealed class OtCredentialsEnum
     {
-        //public OtCredentialsEnum(){}
 
         public static readonly string User = ConfigurationManager.AppSettings["otUserName"];
         public static readonly string Password = ConfigurationManager.AppSettings["otPassword"];
@@ -18,8 +17,26 @@ namespace EK_MultipleTransporter.Enums
         public enum OtAdminCredentials
         {
             User,
-            Password
+            Password,
+            Token
         }
-        
+
+
+        public static string ConvertString(OtAdminCredentials me)
+        {
+            switch (me)
+            {
+                case OtAdminCredentials.User:
+                    return ConfigurationManager.AppSettings["otUserName"];
+                case OtAdminCredentials.Password:
+                    return ConfigurationManager.AppSettings["otPassword"];
+                case OtAdminCredentials.Token:
+                    return ConfigurationManager.AppSettings["otToken"];
+                default:
+                    return "";
+            }
+        }
+
+
     }
 }

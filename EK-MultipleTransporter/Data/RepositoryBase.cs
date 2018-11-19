@@ -38,9 +38,9 @@ namespace EK_MultipleTransporter.Data
                 DbContext.Set<T>().Add(entity);
                 return DbContext.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         public virtual async Task<int> InsertAsync(T entity)
@@ -65,9 +65,9 @@ namespace EK_MultipleTransporter.Data
                 DbContext.Set<T>().Remove(entity);
                 return DbContext.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -79,9 +79,9 @@ namespace EK_MultipleTransporter.Data
                 DbContext.Set<T>().Remove(entity);
                 return await DbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         public virtual int Update()
@@ -91,9 +91,9 @@ namespace EK_MultipleTransporter.Data
                 DbContext = DbContext ?? new OtcsDbContext();
                 return DbContext.SaveChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         public virtual async Task<int> UpdateAsync()
@@ -103,9 +103,9 @@ namespace EK_MultipleTransporter.Data
                 DbContext = DbContext ?? new OtcsDbContext();
                 return await DbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }

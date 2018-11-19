@@ -1,11 +1,10 @@
-﻿using EK_MultipleTransporter.DmsDocumentManagementService;
-using EK_MultipleTransporter.Model.ChildModel;
-using NLog;
+﻿using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
 
 namespace EK_MultipleTransporter.Helpers
 {

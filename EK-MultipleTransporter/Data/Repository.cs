@@ -1,23 +1,11 @@
-﻿using EK_MultipleTransporter.Model;
-using System.Linq;
+﻿using System.Linq;
+using EK_MultipleTransporter.Models.RootModel;
 
 namespace EK_MultipleTransporter.Data
 {
-    public class ProjectRepo : RepositoryBase<Project, int>
-    {
-        public Project GetByName(string name)
-        {
-            var db = new OtcsDbContext();
-            return db.Projects.FirstOrDefault(x => x.Name == name);
-        }
-    }
-
-    public class StaffRepo : RepositoryBase<Staff, int>
-    {
-        public Staff GetByName(string name)
-        {
-            var db = new OtcsDbContext();
-            return db.Staffs.FirstOrDefault(x => x.Name == name);
-        }
-    }
+    public class ProjectRepo : RepositoryBase<Project, int> {}
+    public class StaffRepo : RepositoryBase<Staff, int>  {}
+    public class PlotRepo  : RepositoryBase<Plot, int> { }
+    public class LitigationRepo : RepositoryBase<Litigation, int> { }
+    public class IndependentSectionRepo : RepositoryBase<IndependentSection, int> { }
 }

@@ -9,8 +9,6 @@ namespace EK_MultipleTransporter.Enums
 {
     public sealed class OtCategoriesEnum
     {
-        private OtCategoriesEnum() { }
-
         public static readonly string DocType = Resources.DocType;
         public static readonly string Year = Resources.Year;
         public static readonly string Quarter = Resources.Quarter;
@@ -20,6 +18,21 @@ namespace EK_MultipleTransporter.Enums
             DocType = 1,
             Year = 2,
             Quarter =3
+        }
+
+        public static string ConvertString(GeneralCategory me)
+        {
+            switch (me)
+            {
+                case GeneralCategory.DocType:
+                    return Resources.DocType;
+                case GeneralCategory.Year:
+                    return Resources.Year;
+                case GeneralCategory.Quarter:
+                    return Resources.Quarter;
+                default:
+                    return "";
+            }
         }
     }
 }

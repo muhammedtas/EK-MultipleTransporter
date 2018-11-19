@@ -1,6 +1,4 @@
-﻿using EK_MultipleTransporter.DmsAuthenticationService;
-using EK_MultipleTransporter.DmsDocumentManagementService;
-using EK_MultipleTransporter.Helpers;
+﻿using EK_MultipleTransporter.Helpers;
 using Microsoft.Win32.SafeHandles;
 using NLog;
 using System;
@@ -9,6 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using EK_MultipleTransporter.Web_References.DmsAuthenticationService;
+using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
 
 namespace EK_MultipleTransporter.Entity
 {

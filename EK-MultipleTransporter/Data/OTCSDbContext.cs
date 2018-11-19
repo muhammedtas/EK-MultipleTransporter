@@ -1,10 +1,10 @@
-﻿using EK_MultipleTransporter.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EK_MultipleTransporter.Models.RootModel;
 
 namespace EK_MultipleTransporter.Data
 {

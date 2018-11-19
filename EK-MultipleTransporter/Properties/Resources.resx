@@ -134,7 +134,7 @@
     <value>..\Resources\personel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="WebServicesNotWorking" xml:space="preserve">
-    <value>Web Services is not working now!</value>
+    <value>Web Servis şu an çalışmıyor!</value>
   </data>
   <data name="AllowedTypes" xml:space="preserve">
     <value>All files|*.*| Office Files|*.doc;*.docx;*.ppt| XLS files (*.xls)|*.xls| XLSX files (*.xlsx)|*.xlsx| Image Files|*.jpg;*.jpeg;*.png;*.gif;*.tif;</value>
@@ -155,7 +155,7 @@
     <value>İş alanlarını filtreleyin...</value>
   </data>
   <data name="NodeDeepnessExceed" xml:space="preserve">
-    <value>Node derinliği beklenen değerin üzerinde. </value>
+    <value>Node derinliği beklenen değerin üzerinde. Lütfen bu işlemi gerçekleştiremediğinizi yüklenici firmaya bildiriniz.</value>
   </data>
   <data name="ProcessIsDone" xml:space="preserve">
     <value>İşlem Tamamlandı...</value>
@@ -195,5 +195,11 @@
   </data>
   <data name="WarnMessageChooseTargets" xml:space="preserve">
     <value>Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz.</value>
+  </data>
+  <data name="WorkerMethodException" xml:space="preserve">
+    <value>Listeler doldurulurken bir hata oluştu</value>
+  </data>
+  <data name="ProcessIsNotDone" xml:space="preserve">
+    <value>İşlem Tamamlanamadı...</value>
   </data>
 </root>

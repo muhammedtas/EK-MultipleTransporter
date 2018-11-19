@@ -1,10 +1,10 @@
-﻿using EK_MultipleTransporter.DmsDocumentManagementService;
-using EK_MultipleTransporter.Properties;
+﻿using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
 
 namespace EK_MultipleTransporter.Helpers
 {

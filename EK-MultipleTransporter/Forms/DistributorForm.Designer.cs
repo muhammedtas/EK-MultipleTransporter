@@ -239,6 +239,7 @@ namespace EK_MultipleTransporter.Forms
             // 
             // lblCounter
             // 
+            this.lblCounter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblCounter.AutoSize = true;
             this.lblCounter.Location = new System.Drawing.Point(48, 716);
             this.lblCounter.Name = "lblCounter";

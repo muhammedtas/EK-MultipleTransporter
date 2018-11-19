@@ -1,7 +1,4 @@
-﻿using EK_MultipleTransporter.DmsAuthenticationService;
-using EK_MultipleTransporter.DmsDocumentManagementService;
-using EK_MultipleTransporter.Helpers;
-using EK_MultipleTransporter.Model;
+﻿using EK_MultipleTransporter.Helpers;
 using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
@@ -10,6 +7,9 @@ using System.ServiceModel;
 using System.Threading;
 using System.Web.Services.Protocols;
 using System.Windows.Forms;
+using EK_MultipleTransporter.Models.RootModel;
+using EK_MultipleTransporter.Web_References.DmsAuthenticationService;
+using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
 
 namespace EK_MultipleTransporter.Forms
 {
@@ -94,7 +94,7 @@ namespace EK_MultipleTransporter.Forms
 
         private void DistrictsForm_Load(object sender, EventArgs e)
         {
-            DmsAuthenticationService.AuthOps ao = new AuthOps();
+            AuthOps ao = new AuthOps();
             string adminToken = ao.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
             //string userToken = ao.ImpersonateUser("admin", "token", adminToken);
             DmsOps dops = new DmsOps();

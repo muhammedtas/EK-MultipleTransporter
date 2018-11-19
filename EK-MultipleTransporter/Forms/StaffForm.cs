@@ -1,6 +1,4 @@
-﻿using EK_MultipleTransporter.DmsDocumentManagementService;
-using EK_MultipleTransporter.Helpers;
-using EK_MultipleTransporter.Model.ChildModel;
+﻿using EK_MultipleTransporter.Helpers;
 using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
@@ -16,6 +14,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Services.Protocols;
 using System.Windows.Forms;
+using EK_MultipleTransporter.Models.ChildModel;
+using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
+using EK_MultipleTransporter.Enums;
+using EK_MultipleTransporter.Models.HelperModel;
 
 namespace EK_MultipleTransporter.Forms
 {
@@ -25,8 +27,8 @@ namespace EK_MultipleTransporter.Forms
         public static long StaffsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffNodeId"]);
         public static long StaffsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffChildElementsNodeId"]);
         public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
-        public OtServicesHelper ServiceHelper = new OtServicesHelper();
-
+        private readonly OtServicesHelper _serviceHelper;
+        public bool IsProcessing;
         public StaffForm()
         {
             InitializeComponent();
@@ -34,6 +36,7 @@ namespace EK_MultipleTransporter.Forms
             var dmo = VariableHelper.Dmo;
             var ops = VariableHelper.Ops;
             CheckForIllegalCrossThreadCalls = false;
+            _serviceHelper = new OtServicesHelper();
 
             if (string.IsNullOrEmpty(VariableHelper.Token))
             {
@@ -44,7 +47,11 @@ namespace EK_MultipleTransporter.Forms
                         {
                             try
                             {
-                                VariableHelper.Token = ops.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
+                                VariableHelper.Token =
+                                    ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
+                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
                             }
                             catch (Exception ex)
                             {
@@ -62,12 +69,12 @@ namespace EK_MultipleTransporter.Forms
                 }
                 catch (FaultException ex)
                 {
-                    Logger.Error(ex, "SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeFaultException);
                     Thread.Sleep(1200000);
                 }
                 catch (SoapException ex)
                 {
-                    Logger.Error(ex, "SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
                     Thread.Sleep(1200000);
                 }
                 catch (Exception ex)
@@ -80,18 +87,20 @@ namespace EK_MultipleTransporter.Forms
             {
                 try
                 {
-                    VariableHelper.Token = ops.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
+                    VariableHelper.Token =
+                        ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
+                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
                 }
                 catch (FaultException ex)
                 {
-                    Logger.Error(ex, "Fault Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeFaultException);
                     Thread.Sleep(1200000);
-
                 }
                 catch (SoapException ex)
                 {
-
-                    Logger.Error(ex, "SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
                     Thread.Sleep(1200000);
                 }
                 catch (Exception ex)
@@ -109,14 +118,14 @@ namespace EK_MultipleTransporter.Forms
 
         public void LoadStaffFormDefault()
         {
-            var categoryItems = ServiceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
+            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
             if (categoryItems != null)
             {
                 var itemArray = categoryItems.Values[0].ValidValues;
                 cmbStaffDocumentType.Items.AddRange(itemArray);
             }
 
-            var childNodes = ServiceHelper.GetChildNodesById(StaffsChildElementsNodeId);
+            var childNodes = _serviceHelper.GetChildNodesById(StaffsChildElementsNodeId);
 
             foreach (var childNode in childNodes)
             {
@@ -125,33 +134,25 @@ namespace EK_MultipleTransporter.Forms
                     Id = childNode.Id,
                     Name = childNode.Name
                 });
+                if (!_serviceHelper.HasChildNode(childNode.Id)) continue;
+                var innerChilds = _serviceHelper.GetChildNodesById(childNode.Id);
 
-                if (ServiceHelper.HasChildNode(childNode.Id))
+                foreach (var innerChild in innerChilds)
                 {
-                    var innerChilds = ServiceHelper.GetChildNodesById(childNode.Id);
-
-                    foreach (var innerChild in innerChilds)
+                    cmbStaffChildRoot.Items.Add(new StaffChilds()
+                    {
+                        Id = innerChild.Id,
+                        Name = childNode.Name + "\\" + innerChild.Name
+                    });
+                    if (!_serviceHelper.HasChildNode(innerChild.Id)) continue;
+                    var innersOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
+                    foreach (var innerOfInnerChild in innersOfInnerChild)
                     {
                         cmbStaffChildRoot.Items.Add(new StaffChilds()
                         {
-                            Id = innerChild.Id,
-                            Name = childNode.Name + "\\" + innerChild.Name
+                            Id = innerOfInnerChild.Id,
+                            Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
                         });
-
-                        if (ServiceHelper.HasChildNode(innerChild.Id))
-                        {
-                            var innersOfInnerChild = ServiceHelper.GetChildNodesById(innerChild.Id);
-                            foreach (var innerOfInnerChild in innersOfInnerChild)
-                            {
-                                cmbStaffChildRoot.Items.Add(new StaffChilds()
-                                {
-                                    Id = innerOfInnerChild.Id,
-                                    Name = childNode.Name + "\\" + innerChild.Name + "\\" + innerOfInnerChild.Name
-                                });
-
-                            }
-
-                        }
 
                     }
 
@@ -176,16 +177,13 @@ namespace EK_MultipleTransporter.Forms
         {
             try
             {
-
-                // var mainChildRootNodeId = Convert.ToInt64((cmbStaffChildRoot.SelectedItem as StaffChilds).Id); // Şimdi Bu nodeId ye karşılık gelen 
-
-                // var mainChildRootElement = ServiceHelper.GetEntityNodeFromId(mainChildRootNodeId);
+                InvokedFormState();
 
                 var targetNodesList = new List<EntityNode>(); // Bu boş liste doldurulup streamer helper methoduna verilecek.
 
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
-                var allChildNodesOfMainStaff = ServiceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(StaffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds).Name);
+                var allChildNodesOfMainStaff = _serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(StaffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds).Name);
                 var targetRootAddres = (cmbStaffChildRoot.SelectedItem as StaffChilds).Name;
                 var countDeepness = targetRootAddres.Split('\\').Count();
 
@@ -241,8 +239,6 @@ namespace EK_MultipleTransporter.Forms
                     }
                 }
 
-                // var mainNodeResult = ServiceHelper.GetEntityNodeFromId(StaffsNodeId); 
-
 
                 if (txtStaffFolderRoot.Text == string.Empty || cmbStaffChildRoot.SelectedIndex == -1)
                 {
@@ -253,7 +249,18 @@ namespace EK_MultipleTransporter.Forms
 
                 if (docsToUpload.Count < 1) return;
 
-                await UploadDocuments(docsToUpload);
+                var categoryModel = new GeneralCategoryModel()
+                {
+                    DocumentType = cmbStaffDocumentType.Text,
+                    Year = dtpStaffYear.Text,
+                    Term = cmbStaffTerm.Text,
+                    NodeId = GeneralCategoryNodeId
+                };
+                //await UploadDocuments(preparedList);
+                var result = await _serviceHelper.UploadDocuments(docsToUpload, categoryModel);
+                MessageBox.Show(result ? Resources.ProcessIsDone : Resources.ProcessIsNotDone);
+                WaitedFormState();
+                //await UploadDocuments(docsToUpload);
 
             }
             catch (Exception ex)
@@ -264,43 +271,55 @@ namespace EK_MultipleTransporter.Forms
                 //throw;
             }
         }
-
-        public async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
-        {
-            var eag = ServiceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
-
-            var docType = eag.Values.First(x => x.Description == "Doküman Türü");
-            docType.Values = new object[] { cmbStaffDocumentType.Text };
-
-            var year = eag.Values.First(x => x.Description == "Yıl");
-            year.Values = new object[] { dtpStaffYear.Text };
-
-            var term = eag.Values.First(x => x.Description == "Çeyrek");
-            term.Values = new object[] { cmbStaffTerm.Text };
-
-            var emdNew = new EntityMetadata
-            {
-                AttributeGroups = new[] { eag }
-            };
-
-            foreach (var item in docsToUpload)
-            {
-                await Task.Run(() => ServiceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
-            }
-        }
-
+        
         private void txtStaffFolderRoot_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderDlg = new FolderBrowserDialog {ShowNewFolderButton = true};
-            DialogResult result = folderDlg.ShowDialog();
+            var folderDlg = new FolderBrowserDialog {ShowNewFolderButton = true};
+            var result = folderDlg.ShowDialog();
             if (result == DialogResult.OK)
             {
                 txtStaffFolderRoot.Text = folderDlg.SelectedPath;
-                Environment.SpecialFolder root = folderDlg.RootFolder;
+                var root = folderDlg.RootFolder;
             }
 
             StreamHelper.RootPathOfUsersFolder = folderDlg.SelectedPath;
 
+        }
+
+        public void InvokedFormState()
+        {
+            IsProcessing = true;
+            txtStaffFolderRoot.Enabled = false;
+            cmbStaffChildRoot.Enabled = false;
+            cmbStaffDocumentType.Enabled = false;
+            dtpStaffYear.Enabled = false;
+            cmbStaffTerm.Enabled = false;
+            btnOk.Enabled = false;
+            btnCancel.Enabled = true;
+            lblFolderRoot.Enabled = false;
+            lblChild.Enabled = false;
+            lblCategoryDocumentType.Enabled = false;
+            lblCategoryYear.Enabled = false;
+            lblTerm.Enabled = false;
+
+            //this.Enabled = false;
+        }
+
+        public void WaitedFormState()
+        {
+            IsProcessing = false;
+            txtStaffFolderRoot.Enabled = true;
+            cmbStaffChildRoot.Enabled = true;
+            cmbStaffDocumentType.Enabled = true;
+            dtpStaffYear.Enabled = true;
+            cmbStaffTerm.Enabled = true;
+            btnOk.Enabled = true;
+            btnCancel.Enabled = false;
+            lblFolderRoot.Enabled = true;
+            lblChild.Enabled = true;
+            lblCategoryDocumentType.Enabled = true;
+            lblCategoryYear.Enabled = true;
+            lblTerm.Enabled = true;
         }
 
     }

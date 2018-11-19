@@ -461,17 +461,18 @@
     <Compile Include="Helpers\OTServicesHelper.cs" />
     <Compile Include="Helpers\StreamHelper.cs" />
     <Compile Include="Helpers\VariableHelper.cs" />
-    <Compile Include="Model\ChildModel\DistributorChilds.cs" />
-    <Compile Include="Model\ChildModel\IndependentSectionChilds.cs" />
-    <Compile Include="Model\ChildModel\LitigationChilds.cs" />
-    <Compile Include="Model\ChildModel\PlotChilds.cs" />
-    <Compile Include="Model\ChildModel\ProjectChilds.cs" />
-    <Compile Include="Model\ChildModel\StaffChilds.cs" />
-    <Compile Include="Model\RootModel\IndependentSection.cs" />
-    <Compile Include="Model\RootModel\Litigation.cs" />
-    <Compile Include="Model\RootModel\Staff.cs" />
-    <Compile Include="Model\RootModel\Plot.cs" />
-    <Compile Include="Model\RootModel\Project.cs" />
+    <Compile Include="Models\ChildModel\DistributorChilds.cs" />
+    <Compile Include="Models\ChildModel\IndependentSectionChilds.cs" />
+    <Compile Include="Models\ChildModel\LitigationChilds.cs" />
+    <Compile Include="Models\ChildModel\PlotChilds.cs" />
+    <Compile Include="Models\ChildModel\ProjectChilds.cs" />
+    <Compile Include="Models\ChildModel\StaffChilds.cs" />
+    <Compile Include="Models\HelperModel\GeneralCategoryModel.cs" />
+    <Compile Include="Models\RootModel\IndependentSection.cs" />
+    <Compile Include="Models\RootModel\Litigation.cs" />
+    <Compile Include="Models\RootModel\Staff.cs" />
+    <Compile Include="Models\RootModel\Plot.cs" />
+    <Compile Include="Models\RootModel\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -492,6 +493,7 @@
     </Compile>
     <EmbeddedResource Include="CaseRibbons.resx">
       <DependentUpon>CaseRibbons.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DistributorForm.resx">
       <DependentUpon>DistributorForm.cs</DependentUpon>
@@ -633,6 +635,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

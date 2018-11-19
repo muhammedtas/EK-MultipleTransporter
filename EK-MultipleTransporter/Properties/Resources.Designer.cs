@@ -228,7 +228,7 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Node derinliği beklenen değerin üzerinde. .
+        ///   Looks up a localized string similar to Node derinliği beklenen değerin üzerinde. Lütfen bu işlemi gerçekleştiremediğinizi yüklenici firmaya bildiriniz..
         /// </summary>
         public static string NodeDeepnessExceed {
             get {
@@ -252,6 +252,15 @@ namespace EK_MultipleTransporter.Properties {
         public static string ProcessIsDone {
             get {
                 return ResourceManager.GetString("ProcessIsDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to İşlem Tamamlanamadı....
+        /// </summary>
+        public static string ProcessIsNotDone {
+            get {
+                return ResourceManager.GetString("ProcessIsNotDone", resourceCulture);
             }
         }
         
@@ -283,11 +292,20 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Web Services is not working now!.
+        ///   Looks up a localized string similar to Web Servis şu an çalışmıyor!.
         /// </summary>
         public static string WebServicesNotWorking {
             get {
                 return ResourceManager.GetString("WebServicesNotWorking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listeler doldurulurken bir hata oluştu.
+        /// </summary>
+        public static string WorkerMethodException {
+            get {
+                return ResourceManager.GetString("WorkerMethodException", resourceCulture);
             }
         }
         

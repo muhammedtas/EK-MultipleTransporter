@@ -4,18 +4,20 @@ using System.ServiceModel;
 using System.Threading;
 using System.Web.Services.Protocols;
 using EK_MultipleTransporter.Properties;
+using EK_MultipleTransporter.Web_References.DmsAuthenticationService;
+using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
 
 namespace EK_MultipleTransporter.Helpers
 {
     public class VariableHelper
     {
         public static CancellationTokenSource Cts = new CancellationTokenSource();
-        private static DmsAuthenticationService.AuthOps _ops;
-        private static DmsDocumentManagementService.DmsOps _dmo;
+        private static AuthOps _ops;
+        private static DmsOps _dmo;
         public static string Token { get; set; }
         public static Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static DmsAuthenticationService.AuthOps Ops
+        public static AuthOps Ops
         {
             get
             {
@@ -23,7 +25,7 @@ namespace EK_MultipleTransporter.Helpers
 
                 try
                 {
-                    _ops = new DmsAuthenticationService.AuthOps();
+                    _ops = new AuthOps();
                 }
                 catch (Exception ex)
                 {
@@ -32,14 +34,14 @@ namespace EK_MultipleTransporter.Helpers
                 return _ops;
             }
         }
-        public static DmsDocumentManagementService.DmsOps Dmo
+        public static DmsOps Dmo
         {
             get
             {
                 if (_dmo != null) return _dmo;
                 try
                 {
-                    _dmo = new DmsDocumentManagementService.DmsOps();
+                    _dmo = new DmsOps();
                 }
                 catch (Exception ex)
                 {
