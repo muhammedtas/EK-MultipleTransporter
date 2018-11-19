@@ -3,20 +3,40 @@ using System;
 using System.ServiceModel;
 using System.Threading;
 using System.Web.Services.Protocols;
+using System.Windows.Forms;
 using EK_MultipleTransporter.Properties;
 using EK_MultipleTransporter.Web_References.DmsAuthenticationService;
 using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
+using EK_MultipleTransporter.Enums;
 
 namespace EK_MultipleTransporter.Helpers
 {
     public class VariableHelper
     {
-        public static CancellationTokenSource Cts = new CancellationTokenSource();
+        private static CancellationTokenSource _cts;
         private static AuthOps _ops;
         private static DmsOps _dmo;
         public static string Token { get; set; }
         public static Logger Logger = LogManager.GetCurrentClassLogger();
 
+        public static CancellationTokenSource Cts
+        {
+            get
+            {
+                if (_cts != null) return _cts;
+                try
+                {
+                    _cts = new CancellationTokenSource();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+                return _cts;
+            }
+            set => _cts = value;
+        }
         public static AuthOps Ops
         {
             get
@@ -51,18 +71,9 @@ namespace EK_MultipleTransporter.Helpers
                 return _dmo;
             }
         }
-
-        public static void InitializeNewCancellationTokenSource()
+      
+        public static void InitializeVariables()
         {
-            if (Cts.Token.IsCancellationRequested)
-            {
-                Cts = new CancellationTokenSource();
-            }
-        }
-
-        public VariableHelper()
-        {
-
             if (string.IsNullOrEmpty(VariableHelper.Token))
             {
                 try
@@ -72,53 +83,59 @@ namespace EK_MultipleTransporter.Helpers
                         {
                             try
                             {
-                                VariableHelper.Token = _ops.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
+                                VariableHelper.Token =
+                                    VariableHelper.Ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
+                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
                             }
                             catch (Exception ex)
                             {
                                 Logger.Error(ex, "Web Services is not working...");
+                                MessageBox.Show(Resources.WebServicesNotWorking);
                             }
                         },
                         SynchronizationContext.Current,
                         TimeSpan.Zero,
                         TimeSpan.FromMinutes(5));
 
-                    _ops.Timeout = 3600000;
-                    _dmo.Timeout = 3600000;
+                    VariableHelper.Ops.Timeout = 3600000;
+                    VariableHelper.Dmo.Timeout = 3600000;
 
                 }
                 catch (FaultException ex)
                 {
-                    Logger.Error(ex, "SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeFaultException);
                     Thread.Sleep(1200000);
                 }
                 catch (SoapException ex)
                 {
-                    Logger.Error(ex, "SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
                     Thread.Sleep(1200000);
                 }
                 catch (Exception ex)
                 {
                     Logger.Error(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
                 }
-
             }
             else
             {
                 try
                 {
-                    VariableHelper.Token = _ops.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
+                    VariableHelper.Token =
+                        VariableHelper.Ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
+                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
                 }
                 catch (FaultException ex)
                 {
-                    Logger.Error(ex, "Fault Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeFaultException);
                     Thread.Sleep(1200000);
-
                 }
                 catch (SoapException ex)
                 {
-
-                    Logger.Error(ex, "SOAP Exception has been thrown. Web services will not return any answer for a while. Program is stopping itself for this period. Please do not do anything. ");
+                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
                     Thread.Sleep(1200000);
                 }
                 catch (Exception ex)
@@ -126,6 +143,15 @@ namespace EK_MultipleTransporter.Helpers
                     Logger.Warn(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
                 }
             }
-        } 
+        }
+
+        /// <summary>
+        /// Burada Bir Form kapatılıp yeniden açıldığında CancellationToken Cancel request i iptal etmek için
+        /// obje tekrar initialize edilir.
+        /// </summary>
+        public static void InitializeNewCancellationTokenSource()
+        {
+            if (Cts.Token.IsCancellationRequested) Cts = new CancellationTokenSource();
+        }
     }
 }

@@ -202,4 +202,7 @@
   <data name="ProcessIsNotDone" xml:space="preserve">
     <value>İşlem Tamamlanamadı...</value>
   </data>
+  <data name="AvaredErrorTypes" xml:space="preserve">
+    <value>Error that we are avare of but will finish it later. Details are :</value>
+  </data>
 </root>

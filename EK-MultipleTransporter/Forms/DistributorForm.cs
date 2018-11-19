@@ -49,6 +49,8 @@ namespace EK_MultipleTransporter.Forms
         public DistributorForm()
         {
             InitializeComponent();
+            VariableHelper.InitializeVariables();
+            VariableHelper.InitializeNewCancellationTokenSource();
             _workPlaceMasterList = new List<ListViewItem>();
             _filteredWorkPlaceMasterList = new List<ListViewItem>();
             _independentSectionsOfProjectList = new List<ListViewItem>();
@@ -56,84 +58,12 @@ namespace EK_MultipleTransporter.Forms
             _distributedWorkSpaceList = new List<ListViewItem>();
             _serviceHelper = new OtServicesHelper();
             _worker = Worker;
-            VariableHelper.InitializeNewCancellationTokenSource(); // Form açıldığında eğer cancellationtokenrequest verilmişse daha önce, bunu false'a çekmek için newledik.
             ItemsPerPage = 100;
             CurrentScroll = 1;
-            var dmo = VariableHelper.Dmo;
-            var ops = VariableHelper.Ops;
+           
             CheckForIllegalCrossThreadCalls = false;
             this.FormClosing += DistributorForm_FormClosing;
 
-            if (string.IsNullOrEmpty(VariableHelper.Token))
-            {
-                try
-                {
-                    var unused = new System.Threading.Timer(
-                        e =>
-                        {
-                            try
-                            {
-                                VariableHelper.Token =
-                                    ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
-                            }
-                            catch (Exception ex)
-                            {
-                                Logger.Error(ex, "Web Services is not working...");
-                                MessageBox.Show(Resources.WebServicesNotWorking);
-                            }
-                        },
-                        SynchronizationContext.Current,
-                        TimeSpan.Zero,
-                        TimeSpan.FromMinutes(5));
-
-                    ops.Timeout = 3600000;
-                    dmo.Timeout = 3600000;
-
-                }
-                catch (FaultException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeFaultException);
-                    Thread.Sleep(1200000);
-                }
-                catch (SoapException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
-                    Thread.Sleep(1200000);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
-                }
-
-            }
-            else
-            {
-                try
-                {
-                    VariableHelper.Token =
-                        ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
-                }
-                catch (FaultException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeFaultException);
-                    Thread.Sleep(1200000);
-                }
-                catch (SoapException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
-                    Thread.Sleep(1200000);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
-                }
-            }
         }
         private async void DistributorForm_Load(object sender, EventArgs e)
         {
@@ -151,7 +81,6 @@ namespace EK_MultipleTransporter.Forms
                 cmbProjectsOfDistricts.Enabled = true;
                 var distCmbLoaderTask = Task.Run(() => FillProjectsOfDistricts(), VariableHelper.Cts.Token);
                 await distCmbLoaderTask;
-                return;
             }
             else
             {
@@ -222,12 +151,14 @@ namespace EK_MultipleTransporter.Forms
             }
 
         }
+        /// <summary>
+        /// Üstteki çalışma alanı değiştikçe burası asyn bir şekilde document template ten gelmesini istiyoruz.
+        ///  Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
+        /// Adı ile aratarak target nodumuzu bulacağız.
+        /// </summary>
         public void LoadSelectedWorkSpacesChilds()
         {
-            // Üstteki çalışma alanı değiştikçe burası asyn bir şekilde document template ten gelmesini istiyoruz.
-            // Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
-            // Adı ile aratarak target nodumuzu bulacağız.
-
+           
             try
             {
                 cmbDistOTFolder.Items.Clear();
@@ -330,10 +261,13 @@ namespace EK_MultipleTransporter.Forms
         {
             this.Close();
         }
-
+        /// <summary>
+        /// Liste filter edilirken yapılacak işlemler. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtFilter_TextChanged(object sender, EventArgs e)
         {
-            //** Liste filter edilirken yapılacak işlemler. 
             if (string.IsNullOrEmpty(txtFilter.Text))
             {
                 cLstBxWorkSpaceType.Items.Clear();
@@ -360,7 +294,7 @@ namespace EK_MultipleTransporter.Forms
 
             CurrentScroll = 1;
             cScrollofLst.Maximum = 100;
-            // ListView filter ediliyor.
+            // ListView is filtering
             foreach (var item in _workPlaceMasterList.Where(lvi => lvi.Text.ToLower().Contains(txtFilter.Text.ToLower().Trim())))
             {
                 _filteredWorkPlaceMasterList.Add(item);
@@ -369,14 +303,16 @@ namespace EK_MultipleTransporter.Forms
             cLstBxWorkSpaceType.Items.AddRange(_filteredWorkPlaceMasterList.ToArray());
             lblCounter.Text = Resources.SelectedItemNumber + cLstBxWorkSpaceType.CheckedItems.Count;
         }
-
+        /// <summary>
+        /// SelectedItemList içerisinde EmlakKonut İş Alanı Türünü seçtiğimiz en alt taki checkedListBox taki node ların id sini tutar.
+        /// Şimdi biz bu node ların içerisinde dönerek 2. Combobox olan "Klasör Seçimi" Node larını bulacağız, Ki bunlar TARGET Node ID lerimiz olacak.
+        /// </summary>
         public async void DoDistributorWorks()
         {
             InvokedFormState();
             Debugger.NotifyOfCrossThreadDependency();
             var selectedItemList = cLstBxWorkSpaceType.CheckedItems;
-            // SelectedItemList içerisinde EmlakKonut İş Alanı Türünü seçtiğimiz en alt taki checkedListBox taki node ların id sini tutar.
-            // Şimdi biz bu node ların içerisinde dönerek 2. Combobox olan "Klasör Seçimi" Node larını bulacağız, Ki bunlar TARGET Node ID lerimiz olacak.
+            
             var targetNodesList = new List<EntityNode>();
             var targetOpenTextAddress = cmbDistOTFolder.Text;
             var countDeepness = cmbDistOTFolder.Text.Split('\\').Count();
@@ -456,29 +392,13 @@ namespace EK_MultipleTransporter.Forms
             WaitedFormState();
 
         }
-
-        private async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
-        {
-            var categoryModel = new GeneralCategoryModel()
-            {
-                DocumentType = cmbDocumentType.Text,
-                Year = dtpDistributorYear.Text,
-                Term = cmbDistriborTerm.Text,
-                NodeId = GeneralCategoryNodeId
-            };
-
-            var emdNew = _serviceHelper.CategoryMaker(categoryModel);
-            foreach (var item in docsToUpload)
-            {
-                if (VariableHelper.Cts.IsCancellationRequested) return;
-                await Task.Run(() => _serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew), VariableHelper.Cts.Token);
-            }
-            MessageBox.Show(Resources.ProcessIsDone);
-        }
-
+        /// <summary>
+        /// scRool listViewDen ayrı bir item. Ve bu limitine yaklaştıkça listview in itemlerini burada dolduracağız.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cScrollofLst_ValueChanged(object sender, EventArgs e)
         {
-            //scRool listViewDen ayrı bir item. Ve bu limitine yaklaştıkça listview in itemlerini burada dolduracağız.
             if (cScrollofLst.Maximum >= _workPlaceMasterList.Count) return;
             if (cScrollofLst.Maximum - 20 > ((VScrollBar)sender).Value) return;
 
@@ -498,45 +418,47 @@ namespace EK_MultipleTransporter.Forms
             }
             else if (string.IsNullOrEmpty(txtFilter.Text)) //Filtered liste dokunulmuş ama aratılmamışsa masterList ten getir.
             {
-                _filteredWorkPlaceMasterList.Clear();
-
-                _itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScroll - 1)).Take(ItemsPerPage);
-                if (_itemsToAdd != null)
+                try
                 {
-                    cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
-                }
+                    _filteredWorkPlaceMasterList.Clear();
 
-                _itemsToAdd = null;
+                    _itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScroll - 1)).Take(ItemsPerPage);
+                    if (_itemsToAdd != null)
+                    {
+                        cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
+                    }
+
+                    _itemsToAdd = null;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(Resources.AvaredErrorTypes + ex);
+                    //throw;
+                }
             }
-            else// Hiç dokunulmamış halindeyse sadece masterlist i scrool boyutunda getir. 
+            else // Hiç dokunulmamış halindeyse sadece masterlist i scrool boyutunda getir. 
             {
                 _filteredWorkPlaceMasterList.Clear();
-                //cLstBxWorkSpaceType.Items.Clear();
+
                 _itemsToAdd = _workPlaceMasterList.ToArray().Skip(ItemsPerPage * (CurrentScroll - 1)).Take(ItemsPerPage);
                 if (_itemsToAdd != null)
                 {
                     cLstBxWorkSpaceType.Items.AddRange(_itemsToAdd.ToArray());
                 }
-
                 _itemsToAdd = null;
             }
-
         }
 
         private void cScrollofLst_Scroll(object sender, ScrollEventArgs e)
         {
             try
             {
-                if (cScrollofLst.Maximum >= e.NewValue || cScrollofLst.Maximum >= _filteredWorkPlaceMasterList.Count())
-                {
-                    cLstBxWorkSpaceType.EnsureVisible(e.NewValue);
-                }
+                if (cScrollofLst.Maximum >= e.NewValue || cScrollofLst.Maximum >= _filteredWorkPlaceMasterList.Count()) cLstBxWorkSpaceType.EnsureVisible(e.NewValue);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Scrooling is not working properly..." + ex);
+                Console.WriteLine(Resources.AvaredErrorTypes + ex);
             }
-
         }
 
         public void InvokedFormState()
@@ -556,7 +478,6 @@ namespace EK_MultipleTransporter.Forms
             btnCancel.Enabled = true;
             lblProjectsOfDistricts.Enabled = false;
             cmbProjectsOfDistricts.Enabled = false;
-            //this.Enabled = false;
         }
 
         public void WaitedFormState()
@@ -592,6 +513,7 @@ namespace EK_MultipleTransporter.Forms
                 IsChecked = true;
 
                 // PERFORMANCE TESTS WILL BE DONE IN HERE! 
+                for (var i = 0; i < cLstBxWorkSpaceType.Items.Count; i++) cLstBxWorkSpaceType.Items[i].Checked = IsChecked; // 3.42
 
                 //var source = cLstBxWorkSpaceType.Items.OfType<ListViewItem>();
                 //source.AsParallel().WithDegreeOfParallelism(10).ForEach(x => x.Checked = IsChecked); // 3.45 dk
@@ -599,25 +521,22 @@ namespace EK_MultipleTransporter.Forms
                 //cLstBxWorkSpaceType.Items.OfType<ListViewItem>().AsQueryable().ForEach(x => x.Checked = IsChecked);
                 //cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ForEach(item => item.Checked = IsChecked);
                 //cLstBxWorkSpaceType.Items.OfType<ListViewItem>().AsParallel().ForEach(x => x.Checked = IsChecked); // 3.50
-
-                //for (var i = 0; i < cLstBxWorkSpaceType.Items.Count; i++) // 3.42
-                //{
-                //    cLstBxWorkSpaceType.Items[i].Checked = IsChecked;
-                //}
-
-                Parallel.ForEach(cLstBxWorkSpaceType.Items.Cast<ListViewItem>(), (item) => { item.Checked = IsChecked; }); // 4 dk.
-
+                //Parallel.ForEach(cLstBxWorkSpaceType.Items.Cast<ListViewItem>(), (item) => { item.Checked = IsChecked; }); // 4 dk.
             }
             else
             {
+                // PERFORMANCE TESTS WILL BE DONE IN HERE! 
                 IsChecked = false;
+
+                for (var i = 0; i < cLstBxWorkSpaceType.Items.Count; i++) cLstBxWorkSpaceType.Items[i].Checked = IsChecked; 
+
                 //var source = cLstBxWorkSpaceType.Items.OfType<ListViewItem>();
                 //source.AsParallel().WithDegreeOfParallelism(10).ForEach(x => x.Checked = IsChecked);
                 //cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ToList().AsParallel().ForAll(item => item.Checked = IsChecked);
                 //cLstBxWorkSpaceType.Items.OfType<ListViewItem>().AsQueryable().ForEach(x => x.Checked = IsChecked);
                 //cLstBxWorkSpaceType.Items.OfType<ListViewItem>().ForEach(item => item.Checked = IsChecked);
                 //cLstBxWorkSpaceType.Items.OfType<ListViewItem>().AsParallel().ForEach(x => x.Checked = IsChecked);
-                Parallel.ForEach(cLstBxWorkSpaceType.Items.Cast<ListViewItem>(), (item) => { item.Checked = IsChecked; });
+                //Parallel.ForEach(cLstBxWorkSpaceType.Items.Cast<ListViewItem>(), (item) => { item.Checked = IsChecked; });
                 SelectedItemCounter = 0;
                 lblCounter.Text = Resources.SelectedItemNumber + SelectedItemCounter;
             }
@@ -654,7 +573,6 @@ namespace EK_MultipleTransporter.Forms
             {
                 VariableHelper.Cts.Cancel();
             }, VariableHelper.Cts.Token, TaskCreationOptions.LongRunning, TaskScheduler.FromCurrentSynchronizationContext()).ConfigureAwait(false);
-
         }
 
         private bool CheckFormsIfSuitableForUpload()
@@ -682,16 +600,16 @@ namespace EK_MultipleTransporter.Forms
         {
             Task.Run(() => GetIndependentSectionsOfProject(), VariableHelper.Cts.Token);
         }
-
+        /// <summary>
+        /// Burada seçilmiş olan projeye göre bağımsız bölümleri getirme işi, proje adının ilk kısmının Bağımsız bölüm kategori adında
+        /// aratarak bulunacağı halidir.Kategoride proje adı Örn : 1001 ise, bağ.böl kategorisinde bu alan 00001001 olarak kayıtlıdır. Format hepsinde aynı, başa 4 sıfır alıyor.
+        /// </summary>
         private void GetIndependentSectionsOfProject()
         {
             cLstBxWorkSpaceType.Clear();
-            // Burada seçilmiş olan projeye göre bağımsız bölümleri getirme işi, proje adının ilk kısmının Bağımsız bölüm kategori adında
-            // aratarak bulunacağı halidir. 
-            // Kategoride proje adı Örn : 1001 ise, bağ. böl kategorisinde bu alan 00001001 olarak kayıtlıdır. Format hepsinde aynı, başa 4 sıfır alıyor.
             var strVal = cmbProjectsOfDistricts.SelectedItem as DistributorChilds;
             var strVel = strVal?.Name.Split('/')[0];
-
+            
             var projectsOfIndependentSection =
                 DbEntityHelper.GetNodesByCategoryAttribute(118237, strVel);
 
@@ -762,6 +680,25 @@ namespace EK_MultipleTransporter.Forms
                 cmbProjectsOfDistricts.Enabled = false;
             }
 
+        }
+
+        private async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
+        {
+            var categoryModel = new GeneralCategoryModel()
+            {
+                DocumentType = cmbDocumentType.Text,
+                Year = dtpDistributorYear.Text,
+                Term = cmbDistriborTerm.Text,
+                NodeId = GeneralCategoryNodeId
+            };
+
+            var emdNew = _serviceHelper.CategoryMaker(categoryModel);
+            foreach (var item in docsToUpload)
+            {
+                if (VariableHelper.Cts.IsCancellationRequested) return;
+                await Task.Run(() => _serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew), VariableHelper.Cts.Token);
+            }
+            MessageBox.Show(Resources.ProcessIsDone);
         }
     }
 }

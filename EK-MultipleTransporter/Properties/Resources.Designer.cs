@@ -99,6 +99,15 @@ namespace EK_MultipleTransporter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error that we are avare of but will finish it later. Details are :.
+        /// </summary>
+        public static string AvaredErrorTypes {
+            get {
+                return ResourceManager.GetString("AvaredErrorTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lütfen Yükleme yapmadan önce tüm zorunlu alanları için birer seçim yapınız.
         /// </summary>
         public static string ChooseAllRequiredFields {
