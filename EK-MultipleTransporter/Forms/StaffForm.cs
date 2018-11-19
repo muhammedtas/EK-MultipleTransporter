@@ -164,7 +164,7 @@ namespace EK_MultipleTransporter.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private async void btnOk_Click(object sender, EventArgs e)

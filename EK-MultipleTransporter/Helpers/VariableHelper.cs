@@ -74,7 +74,7 @@ namespace EK_MultipleTransporter.Helpers
       
         public static void InitializeVariables()
         {
-            if (string.IsNullOrEmpty(VariableHelper.Token))
+            if (string.IsNullOrEmpty(Token))
             {
                 try
                 {
@@ -83,8 +83,8 @@ namespace EK_MultipleTransporter.Helpers
                         {
                             try
                             {
-                                VariableHelper.Token =
-                                    VariableHelper.Ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                                Token =
+                                    Ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
                                         OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
                                         OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
                                         OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
@@ -99,8 +99,8 @@ namespace EK_MultipleTransporter.Helpers
                         TimeSpan.Zero,
                         TimeSpan.FromMinutes(5));
 
-                    VariableHelper.Ops.Timeout = 3600000;
-                    VariableHelper.Dmo.Timeout = 3600000;
+                    Ops.Timeout = 3600000;
+                    Dmo.Timeout = 3600000;
 
                 }
                 catch (FaultException ex)
@@ -122,8 +122,8 @@ namespace EK_MultipleTransporter.Helpers
             {
                 try
                 {
-                    VariableHelper.Token =
-                        VariableHelper.Ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                    Token =
+                        Ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
                             OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
                             OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
                             OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));

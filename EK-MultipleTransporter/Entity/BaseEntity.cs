@@ -35,7 +35,7 @@ namespace EK_MultipleTransporter.Entity
 
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         public bool Disposed;

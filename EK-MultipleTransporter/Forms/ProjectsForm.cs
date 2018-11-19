@@ -119,7 +119,7 @@ namespace EK_MultipleTransporter.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void txtFolderRoot_Click(object sender, EventArgs e)
@@ -234,7 +234,7 @@ namespace EK_MultipleTransporter.Forms
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Ot categories update  error :  " + ex);
+                Console.WriteLine(Resources.ErrorTypeProccessing + ex);
                 //throw;
                 MessageBox.Show(Resources.ErrorTypeProccessing);
             }

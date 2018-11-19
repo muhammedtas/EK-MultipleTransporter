@@ -62,7 +62,7 @@ namespace EK_MultipleTransporter.Forms
             CurrentScroll = 1;
            
             CheckForIllegalCrossThreadCalls = false;
-            this.FormClosing += DistributorForm_FormClosing;
+            FormClosing += DistributorForm_FormClosing;
 
         }
         private async void DistributorForm_Load(object sender, EventArgs e)
@@ -259,7 +259,7 @@ namespace EK_MultipleTransporter.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
         /// <summary>
         /// Liste filter edilirken yapılacak işlemler. 
@@ -497,7 +497,7 @@ namespace EK_MultipleTransporter.Forms
             btnCancel.Enabled = true;
             lblProjectsOfDistricts.Enabled = true;
             cmbProjectsOfDistricts.Enabled = true;
-            this.Enabled = true;
+            Enabled = true;
         }
 
         private void cbCheckAll_Click(object sender, EventArgs e)
