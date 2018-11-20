@@ -33,12 +33,7 @@ namespace EK_MultipleTransporter.Forms
         private readonly List<ListViewItem> _distributedWorkSpaceList;
         private IEnumerable<ListViewItem> _itemsToAdd;
 
-        public static Logger Logger = LogManager.GetCurrentClassLogger();
-        public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
-        public static long WorkSpacesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["workSpacesNodeId"]);
-        public static long ContentServerDocumentTemplatesNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["contentServerDocumentTemplatesNodeId"]);
-        public static long IndependentSectionNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["independentSectionNodeId"]);
-        public static long ProjectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
+        public static Logger Logger;
         public static int ItemsPerPage;
         public static int CurrentScroll;
         public static int SelectedItemCounter;
@@ -51,6 +46,7 @@ namespace EK_MultipleTransporter.Forms
             InitializeComponent();
             VariableHelper.InitializeVariables();
             VariableHelper.InitializeNewCancellationTokenSource();
+            Logger = LogManager.GetCurrentClassLogger();
             _workPlaceMasterList = new List<ListViewItem>();
             _filteredWorkPlaceMasterList = new List<ListViewItem>();
             _independentSectionsOfProjectList = new List<ListViewItem>();
@@ -121,16 +117,14 @@ namespace EK_MultipleTransporter.Forms
 
         }
 
-        private void cmbDistOTFolder_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-
+        /// <summary>
+        /// Kategori ve work spaces leri ilgili comboboxlara yükler.
+        /// </summary>
         public void LoadFormsDefault()
         {
             // Categories loaded.
-            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
+            WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId);
+            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId));
             if (categoryItems != null)
             {
                 var itemArray = categoryItems.Values[0].ValidValues;
@@ -138,7 +132,9 @@ namespace EK_MultipleTransporter.Forms
             }
 
             // Work Spaces Loaded.
-            var workSpacesTypes = _serviceHelper.GetChildNodesById(WorkSpacesNodeId);
+            WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.WorkSpacesNodeId);
+
+            var workSpacesTypes = _serviceHelper.GetChildNodesById(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.WorkSpacesNodeId));
             if (workSpacesTypes == null) return;
             foreach (var workSpace in workSpacesTypes)
             {
@@ -163,7 +159,8 @@ namespace EK_MultipleTransporter.Forms
             {
                 cmbDistOTFolder.Items.Clear();
 
-                var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(ContentServerDocumentTemplatesNodeId, (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
+                WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ContentServerDocumentTemplatesNodeId);
+                var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ContentServerDocumentTemplatesNodeId), (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
 
                 var childFoldersNodes = _serviceHelper.GetChildNodesById(docTemplateNode.Id);
 
@@ -175,9 +172,9 @@ namespace EK_MultipleTransporter.Forms
                         Name = childNode.Name
                     });
                     if (!_serviceHelper.HasChildNode(childNode.Id)) continue;
-                    var innerChilds = _serviceHelper.GetChildNodesById(childNode.Id);
+                    var innerChildList = _serviceHelper.GetChildNodesById(childNode.Id);
 
-                    foreach (var innerChild in innerChilds)
+                    foreach (var innerChild in innerChildList)
                     {
                         cmbDistOTFolder.Items.Add(new DistributorChilds()
                         {
@@ -185,8 +182,8 @@ namespace EK_MultipleTransporter.Forms
                             Name = childNode.Name + "\\" + innerChild.Name
                         });
                         if (!_serviceHelper.HasChildNode(innerChild.Id)) continue;
-                        var innersOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
-                        foreach (var innerOfInnerChild in innersOfInnerChild)
+                        var innerListOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
+                        foreach (var innerOfInnerChild in innerListOfInnerChild)
                         {
                             cmbDistOTFolder.Items.Add(new ProjectChilds()
                             {
@@ -326,9 +323,9 @@ namespace EK_MultipleTransporter.Forms
             foreach (var item in selectedItemList)
             {
 
-                var listViewItem = ((ListViewItem)item);
-                var itemNodeId = (((listViewItem.Tag) as DistributorChilds)).Id;
-                var itemNodeName = (((listViewItem.Tag) as DistributorChilds)).Name;
+                var listViewItem = (ListViewItem)item;
+                var itemNodeId = (listViewItem.Tag as DistributorChilds).Id;
+                var itemNodeName = (listViewItem.Tag as DistributorChilds).Name;
                 
                 switch (countDeepness)
                 {
@@ -384,9 +381,8 @@ namespace EK_MultipleTransporter.Forms
                 DocumentType = cmbDocumentType.Text,
                 Year = dtpDistributorYear.Text,
                 Term = cmbDistriborTerm.Text,
-                NodeId = GeneralCategoryNodeId
+                NodeId = WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId)
             };
-            //await UploadDocuments(preparedList);
             var result = await _serviceHelper.UploadDocuments(preparedList, categoryModel);
             MessageBox.Show(result ? Resources.ProcessIsDone : Resources.ProcessIsNotDone);
             WaitedFormState();
@@ -582,8 +578,8 @@ namespace EK_MultipleTransporter.Forms
 
         public void FillProjectsOfDistricts()
         {
-            var projectsOfDistricts = _serviceHelper.GetChildNodesById(ProjectsNodeId);
-
+            WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ContentServerDocumentTemplatesNodeId);
+            var projectsOfDistricts = _serviceHelper.GetChildNodesById(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ProjectsNodeId));
             foreach (var projectOfDistrict in projectsOfDistricts)
             {
                 cmbProjectsOfDistricts.Items.Add(new DistributorChilds()
@@ -593,9 +589,7 @@ namespace EK_MultipleTransporter.Forms
                 });
             }
         }
-
         
-
         private void cmbProjectsOfDistricts_SelectedIndexChanged(object sender, EventArgs e)
         {
             Task.Run(() => GetIndependentSectionsOfProject(), VariableHelper.Cts.Token);
@@ -638,6 +632,9 @@ namespace EK_MultipleTransporter.Forms
             CurrentScroll = 1;
             cScrollofLst.Maximum = 100;
         }
+
+
+        #region DeletedMethods
 
         public void ListViewLoaderForDistributedWorkSpace(int startIndex, int length)
         {
@@ -689,7 +686,7 @@ namespace EK_MultipleTransporter.Forms
                 DocumentType = cmbDocumentType.Text,
                 Year = dtpDistributorYear.Text,
                 Term = cmbDistriborTerm.Text,
-                NodeId = GeneralCategoryNodeId
+                NodeId = WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId)
             };
 
             var emdNew = _serviceHelper.CategoryMaker(categoryModel);
@@ -700,5 +697,8 @@ namespace EK_MultipleTransporter.Forms
             }
             MessageBox.Show(Resources.ProcessIsDone);
         }
+
+        #endregion
+
     }
 }

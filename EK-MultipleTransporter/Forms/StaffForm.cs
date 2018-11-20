@@ -3,27 +3,19 @@ using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Services.Protocols;
 using System.Windows.Forms;
 using EK_MultipleTransporter.Models.ChildModel;
 using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
-using EK_MultipleTransporter.Enums;
 using EK_MultipleTransporter.Models.HelperModel;
 
 namespace EK_MultipleTransporter.Forms
 {
     public partial class StaffForm : Form
     {
-        public static Logger Logger = LogManager.GetCurrentClassLogger();
+        public static Logger Logger;
         public static long StaffsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffNodeId"]);
         public static long StaffsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffChildElementsNodeId"]);
         public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
@@ -32,83 +24,11 @@ namespace EK_MultipleTransporter.Forms
         public StaffForm()
         {
             InitializeComponent();
-
-            var dmo = VariableHelper.Dmo;
-            var ops = VariableHelper.Ops;
+            VariableHelper.InitializeVariables();
+            VariableHelper.InitializeNewCancellationTokenSource();
             CheckForIllegalCrossThreadCalls = false;
             _serviceHelper = new OtServicesHelper();
-
-            if (string.IsNullOrEmpty(VariableHelper.Token))
-            {
-                try
-                {
-                    var unused = new System.Threading.Timer(
-                        e =>
-                        {
-                            try
-                            {
-                                VariableHelper.Token =
-                                    ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
-                            }
-                            catch (Exception ex)
-                            {
-                                Logger.Error(ex, "Web Services is not working...");
-                                MessageBox.Show(Resources.WebServicesNotWorking);
-                            }
-                        },
-                        SynchronizationContext.Current,
-                        TimeSpan.Zero,
-                        TimeSpan.FromMinutes(5));
-
-                    ops.Timeout = 3600000;
-                    dmo.Timeout = 3600000;
-
-                }
-                catch (FaultException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeFaultException);
-                    Thread.Sleep(1200000);
-                }
-                catch (SoapException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
-                    Thread.Sleep(1200000);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
-                }
-
-            }
-            else
-            {
-                try
-                {
-                    VariableHelper.Token =
-                        ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
-                }
-                catch (FaultException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeFaultException);
-                    Thread.Sleep(1200000);
-                }
-                catch (SoapException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
-                    Thread.Sleep(1200000);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
-                }
-            }
-
+            Logger = LogManager.GetCurrentClassLogger();
         }
 
         private async void StaffForm_Load(object sender, EventArgs e)
@@ -135,9 +55,9 @@ namespace EK_MultipleTransporter.Forms
                     Name = childNode.Name
                 });
                 if (!_serviceHelper.HasChildNode(childNode.Id)) continue;
-                var innerChilds = _serviceHelper.GetChildNodesById(childNode.Id);
+                var innerChildList = _serviceHelper.GetChildNodesById(childNode.Id);
 
-                foreach (var innerChild in innerChilds)
+                foreach (var innerChild in innerChildList)
                 {
                     cmbStaffChildRoot.Items.Add(new StaffChilds()
                     {
@@ -145,8 +65,8 @@ namespace EK_MultipleTransporter.Forms
                         Name = childNode.Name + "\\" + innerChild.Name
                     });
                     if (!_serviceHelper.HasChildNode(innerChild.Id)) continue;
-                    var innersOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
-                    foreach (var innerOfInnerChild in innersOfInnerChild)
+                    var innerChildListOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
+                    foreach (var innerOfInnerChild in innerChildListOfInnerChild)
                     {
                         cmbStaffChildRoot.Items.Add(new StaffChilds()
                         {
@@ -161,7 +81,6 @@ namespace EK_MultipleTransporter.Forms
 
         }
 
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
@@ -171,7 +90,6 @@ namespace EK_MultipleTransporter.Forms
         {
             await Task.Run(() => DoStaffTask());
         }
-
 
         public async void DoStaffTask()
         {
@@ -183,9 +101,9 @@ namespace EK_MultipleTransporter.Forms
 
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
-                var allChildNodesOfMainStaff = _serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(StaffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds).Name);
-                var targetRootAddres = (cmbStaffChildRoot.SelectedItem as StaffChilds).Name;
-                var countDeepness = targetRootAddres.Split('\\').Count();
+                var allChildNodesOfMainStaff = _serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(StaffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds)?.Name);
+                var targetRootAddress = (cmbStaffChildRoot.SelectedItem as StaffChilds)?.Name;
+                var countDeepness = targetRootAddress?.Split('\\').Count();
 
                 if (countDeepness > 3)
                 {
@@ -199,35 +117,38 @@ namespace EK_MultipleTransporter.Forms
                     {
                         case 1:
                         {
-                            var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainStaff.Id, targetRootAddres);
+                            var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainStaff.Id, targetRootAddress);
                             targetNodesList.Add(oneOfTargetNode);
                             break;
                         }
                         case 2:
                         {
-                            var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
+                            var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
                             var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainStaff.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                            var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
+                            var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
+                            if (firstStepTargetNode != null)
+                            {
+                                var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                            var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                                if (targetChildNode != null)
+                                    targetNodesList.Add(targetChildNode);
+                            }
 
-                            if (targetChildNode != null)
-                                targetNodesList.Add(targetChildNode);
                             break;
                         }
                         case 3:
                         {
-                            var generalFirstStepTargetNodeName = targetRootAddres.Split('\\')[0];
+                            var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
                             var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainStaff.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                            var generalSecondStepTargetNodeName = targetRootAddres.Split('\\')[1];
+                            var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
                             if (firstStepTargetNode == null) continue;
-                            var secondChldnd = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                            var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                            var generalThirdStepTargetNodeName = targetRootAddres.Split('\\')[2];
+                            var generalThirdStepTargetNodeName = targetRootAddress.Split('\\')[2];
 
-                            var targetChildNode = DbEntityHelper.GetNodeByName(secondChldnd.Id, generalThirdStepTargetNodeName);
+                            var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
 
                             if (targetChildNode != null)
                                 targetNodesList.Add(targetChildNode);
@@ -265,7 +186,7 @@ namespace EK_MultipleTransporter.Forms
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Ot categories update  error :  " + ex);
+                Console.WriteLine(Resources.ErrorTypeProccessing + ex);
                 MessageBox.Show(Resources.ErrorTypeProccessing);
                 Logger.Error(ex , Resources.ErrorTypeProccessing);
                 //throw;
@@ -279,7 +200,7 @@ namespace EK_MultipleTransporter.Forms
             if (result == DialogResult.OK)
             {
                 txtStaffFolderRoot.Text = folderDlg.SelectedPath;
-                var root = folderDlg.RootFolder;
+                //var root = folderDlg.RootFolder;
             }
 
             StreamHelper.RootPathOfUsersFolder = folderDlg.SelectedPath;
@@ -301,8 +222,6 @@ namespace EK_MultipleTransporter.Forms
             lblCategoryDocumentType.Enabled = false;
             lblCategoryYear.Enabled = false;
             lblTerm.Enabled = false;
-
-            //this.Enabled = false;
         }
 
         public void WaitedFormState()

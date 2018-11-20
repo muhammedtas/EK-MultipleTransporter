@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
 using EK_MultipleTransporter.Models.HelperModel;
 
@@ -15,16 +14,10 @@ namespace EK_MultipleTransporter.Helpers
     {
 
         public static Logger Logger = LogManager.GetCurrentClassLogger();
-        //private static string _desktopPath;        
-
-        //public OtServicesHelper()
-        //{
-        //    _desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        //}
-
+       
         public EntityNode[] GetChildNodesById (long id)
         {
-            return VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, int.MaxValue, false, false);
+            return VariableHelper.Dmo.GetChildNodes(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, id, 0, int.MaxValue, false, false);
         }
 
         public EntityNode[] GetChildNodesByIdTop1000Nodes(long id)
@@ -32,7 +25,7 @@ namespace EK_MultipleTransporter.Helpers
             EntityNode[] data;
             try
             {
-                data = VariableHelper.Dmo.GetChildNodes("admin", VariableHelper.Token, id, 0, 10, false, false);
+                data = VariableHelper.Dmo.GetChildNodes(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, id, 0, 10, false, false);
             }
             catch (Exception ex)
             {
@@ -89,7 +82,7 @@ namespace EK_MultipleTransporter.Helpers
                         FileSize = fileByteArray.Length
                     };
 
-                    var idj = VariableHelper.Dmo.AddDocumentOrVersion("Admin", VariableHelper.Token, eaj, targetFolder, "", true);
+                    var idj = VariableHelper.Dmo.AddDocumentOrVersion(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, eaj, targetFolder, "", true);
                     return idj > 0;
                 }
             }
@@ -118,7 +111,7 @@ namespace EK_MultipleTransporter.Helpers
                     };
                 }
 
-                var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
+                var ida =  VariableHelper.Dmo.AddDocumentWithMetadata(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, targetFolder, emd, eaj, "");
                 if (ida == 0) StreamHelper.MoveUnUploadedDocumentsToBackUpFolder(docName);
                 
                 return ida > 0;
@@ -150,8 +143,7 @@ namespace EK_MultipleTransporter.Helpers
 
                 }
 
-                await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync(Resources.Admin, VariableHelper.Token, targetFolder, emd, eaj, ""));
-                // var ida =  VariableHelper.Dmo.AddDocumentWithMetadata("Admin", VariableHelper.Token, targetFolder, emd, eaj, "");
+                await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, targetFolder, emd, eaj, ""));
                 eaj = null;
                 return true;
                 
@@ -187,7 +179,6 @@ namespace EK_MultipleTransporter.Helpers
         {
             var eag = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory(Resources.Admin, VariableHelper.Token, categoryModel.NodeId);
 
-            //var documentType = eag.Values.First(x => x.Description == Resources.DocType);
             var documentType = eag.Values.First(x => x.Description == OtCategoriesEnum.ConvertString(OtCategoriesEnum.GeneralCategory.DocType));
             documentType.Values = new object[] { categoryModel.DocumentType };
 

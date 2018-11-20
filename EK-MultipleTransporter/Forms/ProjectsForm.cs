@@ -4,6 +4,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace EK_MultipleTransporter.Forms
 {
     public partial class ProjectsForm : Form
     {
-        public static Logger Logger = LogManager.GetCurrentClassLogger();
+        public static Logger Logger;
         public static long ProjectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
         public static long ProjectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
         public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
@@ -29,82 +30,12 @@ namespace EK_MultipleTransporter.Forms
         public ProjectsForm()
         {
             InitializeComponent();
-
+            VariableHelper.InitializeVariables();
+            VariableHelper.InitializeNewCancellationTokenSource();
             _serviceHelper = new OtServicesHelper();
-            var dmo = VariableHelper.Dmo;
-            var ops = VariableHelper.Ops;
             CheckForIllegalCrossThreadCalls = false;
+            Logger = LogManager.GetCurrentClassLogger();
 
-            if (string.IsNullOrEmpty(VariableHelper.Token))
-            {
-                try
-                {
-                    var unused = new System.Threading.Timer(
-                        e =>
-                        {
-                            try
-                            {
-                                VariableHelper.Token =
-                                    ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                                        OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
-                            }
-                            catch (Exception ex)
-                            {
-                                Logger.Error(ex, "Web Services is not working...");
-                                MessageBox.Show(Resources.WebServicesNotWorking);
-                            }
-                        },
-                        SynchronizationContext.Current,
-                        TimeSpan.Zero,
-                        TimeSpan.FromMinutes(5));
-
-                    ops.Timeout = 3600000;
-                    dmo.Timeout = 3600000;
-
-                }
-                catch (FaultException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeFaultException);
-                    Thread.Sleep(1200000);
-                }
-                catch (SoapException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
-                    Thread.Sleep(1200000);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
-                }
-
-            }
-            else
-            {
-                try
-                {
-                    VariableHelper.Token =
-                        ops.AuthenticateUser(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Token),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
-                            OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.Password));
-                }
-                catch (FaultException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeFaultException);
-                    Thread.Sleep(1200000);
-                }
-                catch (SoapException ex)
-                {
-                    Logger.Error(ex, Resources.ErrorTypeSOAPException);
-                    Thread.Sleep(1200000);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Warn(ex, "Error Details   :" + ex.Message + ex.InnerException?.Message);
-                }
-            }
         }
 
         private async void ProjectsForm_Load(object sender, EventArgs e)
@@ -130,7 +61,7 @@ namespace EK_MultipleTransporter.Forms
             if (result == DialogResult.OK)
             {
                 txtFolderRoot.Text = folderDlg.SelectedPath;
-                var root = folderDlg.RootFolder;
+                //var root = folderDlg.RootFolder;
             }
             StreamHelper.RootPathOfUsersFolder = folderDlg.SelectedPath;
 
@@ -140,6 +71,7 @@ namespace EK_MultipleTransporter.Forms
         {
             try
             {
+              
                 InvokedFormState();
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
@@ -158,47 +90,48 @@ namespace EK_MultipleTransporter.Forms
                 {
                     switch (countDeepness)
                     {
+                        
                         case 1:
-                        {
-                            var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainProject.Id, targetRootAddress);
-                            targetNodesList.Add(oneOfTargetNode);
-                            break;
-                        }
+                            {
+                                var oneOfTargetNode = DbEntityHelper.GetNodeByName(childNodeOfMainProject.Id, targetRootAddress);
+                                targetNodesList.Add(oneOfTargetNode);
+                                break;
+                            }
                         case 2:
-                        {
-                            var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
-                            var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
+                            {
+                                var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
+                                var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                            var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
+                                var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
 
-                            var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                                var targetChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                            if (targetChildNode != null)
-                                targetNodesList.Add(targetChildNode);
+                                if (targetChildNode != null)
+                                    targetNodesList.Add(targetChildNode);
 
-                            // Child kırınımı 2 ise 
-                            break;
-                        }
+                                // Child kırınımı 2 ise 
+                                break;
+                            }
                         case 3:
-                        {
-                            var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
-                            var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
+                            {
+                                var generalFirstStepTargetNodeName = targetRootAddress.Split('\\')[0];
+                                var firstStepTargetNode = DbEntityHelper.GetNodesByNameInExactParent(childNodeOfMainProject.Id, generalFirstStepTargetNodeName).FirstOrDefault();
 
-                            var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
+                                var generalSecondStepTargetNodeName = targetRootAddress.Split('\\')[1];
 
-                            var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
+                                var secondChildNode = DbEntityHelper.GetNodeByName(firstStepTargetNode.Id, generalSecondStepTargetNodeName);
 
-                            var generalThirdStepTargetNodeName = targetRootAddress.Split('\\')[2];
+                                var generalThirdStepTargetNodeName = targetRootAddress.Split('\\')[2];
 
-                            var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
+                                var targetChildNode = DbEntityHelper.GetNodeByName(secondChildNode.Id, generalThirdStepTargetNodeName);
 
-                            // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
+                                // var targetChildNode = firstStepTargetNode.Where(x => x.Name == generalFirstStepTargetNodeName).FirstOrDefault();
 
-                            if (targetChildNode != null)
-                                targetNodesList.Add(targetChildNode);
-                            // Child kırınımı 3 ise
-                            break;
-                        }
+                                if (targetChildNode != null)
+                                    targetNodesList.Add(targetChildNode);
+                                // Child kırınım 3 ise
+                                break;
+                            }
                         default:
                             Console.WriteLine(Resources.NodeDeepnessExceed);
                             break;
@@ -210,15 +143,14 @@ namespace EK_MultipleTransporter.Forms
 
                 if (txtFolderRoot.Text == string.Empty || cmbChildRoot.SelectedIndex == -1)
                 {
-                    MessageBox.Show("Lütfen Yüklenecek klasörü ve Hedef dizini seçiniz.");
+                    MessageBox.Show(Resources.WarnMessageChooseTargets);
                     return;
                 }
                 var docsToUpload = StreamHelper.MakePreparedDocumentListToPush(txtFolderRoot.Text, targetNodesList);
-
+                
                 if (docsToUpload.Count < 1) return;
                 // nodeId, dosya adı, ve hedef nodeId ile yarattığımız dictionary i opentext e yüklenebilir hale getireceğiz.
 
-                //await UploadDocuments(docsToUpload);
                 var categoryModel = new GeneralCategoryModel()
                 {
                     DocumentType = cmbDocumentType.Text,
@@ -226,7 +158,6 @@ namespace EK_MultipleTransporter.Forms
                     Term = cmbTerm.Text,
                     NodeId = GeneralCategoryNodeId
                 };
-                //await UploadDocuments(preparedList);
                 var result = await _serviceHelper.UploadDocuments(docsToUpload, categoryModel);
                 MessageBox.Show(result ? Resources.ProcessIsDone : Resources.ProcessIsNotDone);
                 WaitedFormState();
@@ -239,24 +170,6 @@ namespace EK_MultipleTransporter.Forms
                 MessageBox.Show(Resources.ErrorTypeProccessing);
             }
 
-        }
-
-        public async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
-        {
-            var categoryModel = new GeneralCategoryModel()
-            {
-                DocumentType = cmbDocumentType.Text,
-                Year = dtpYear.Text,
-                Term = cmbTerm.Text,
-                NodeId = GeneralCategoryNodeId
-            };
-
-            var emdNew = _serviceHelper.CategoryMaker(categoryModel); 
-
-            foreach (var item in docsToUpload)
-            {
-                await Task.Run(()=>_serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
-            }
         }
 
         public void LoadFormsDefault ()
@@ -278,9 +191,9 @@ namespace EK_MultipleTransporter.Forms
                     Name = childNode.Name
                 });
                 if (!_serviceHelper.HasChildNode(childNode.Id)) continue;
-                var innerChilds = _serviceHelper.GetChildNodesById(childNode.Id);
+                var innerChildList = _serviceHelper.GetChildNodesById(childNode.Id);
 
-                foreach (var innerChild in innerChilds)
+                foreach (var innerChild in innerChildList)
                 {
                     cmbChildRoot.Items.Add(new ProjectChilds()
                     {
@@ -288,8 +201,8 @@ namespace EK_MultipleTransporter.Forms
                         Name = childNode.Name + "\\" + innerChild.Name
                     });
                     if (!_serviceHelper.HasChildNode(innerChild.Id)) continue;
-                    var innersOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
-                    foreach (var innerOfInnerChild in innersOfInnerChild)
+                    var innerListOfInnerChild = _serviceHelper.GetChildNodesById(innerChild.Id);
+                    foreach (var innerOfInnerChild in innerListOfInnerChild)
                     {
                         cmbChildRoot.Items.Add(new ProjectChilds()
                         {
@@ -337,5 +250,28 @@ namespace EK_MultipleTransporter.Forms
             lblCategoryYear.Enabled = true;
             lblTerm.Enabled = true;
         }
+
+        #region DeletedMethods
+
+        public async Task UploadDocuments(Dictionary<Tuple<long, string>, byte[]> docsToUpload)
+        {
+            var categoryModel = new GeneralCategoryModel()
+            {
+                DocumentType = cmbDocumentType.Text,
+                Year = dtpYear.Text,
+                Term = cmbTerm.Text,
+                NodeId = GeneralCategoryNodeId
+            };
+
+            var emdNew = _serviceHelper.CategoryMaker(categoryModel);
+
+            foreach (var item in docsToUpload)
+            {
+                await Task.Run(() => _serviceHelper.AddDocumentWithMetaData(item.Key.Item1, item.Key.Item2, item.Value, emdNew));
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -421,6 +421,7 @@
     <Compile Include="Entity\IBaseEntity.cs" />
     <Compile Include="Enums\OtCategoriesEnum.cs" />
     <Compile Include="Enums\OtCredentialsEnum.cs" />
+    <Compile Include="Enums\WorkSpacesEnum.cs" />
     <Compile Include="Forms\DistributorForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
+using EK_MultipleTransporter.Enums;
 
 namespace EK_MultipleTransporter.Helpers
 {
@@ -15,10 +16,9 @@ namespace EK_MultipleTransporter.Helpers
         public static EntityNode GetNodeByName(long parentNodeId, string name)
         {
             EntityNode result = null;
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
-            // Index i kullanalım hacı.
+            
             const string query = "Select DataID, OwnerID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
-            using (var connection = new SqlConnection(GetConnectionString()))
+            using(var connection = new SqlConnection(GetConnectionString()))
             {
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@name", "%"+name+"%");
@@ -31,8 +31,9 @@ namespace EK_MultipleTransporter.Helpers
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
-                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
-                        result = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false);
+                        result = VariableHelper.Dmo
+                            .GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User),
+                                VariableHelper.Token, itemNodeId, false, false, false);
                     }
                     reader.Close();
                     connection.Close();
@@ -52,10 +53,7 @@ namespace EK_MultipleTransporter.Helpers
         public static List<EntityNode> GetNodesByNameInExactParent(long parentNodeId, string name)
         {
             var result = new List<EntityNode>();
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
-
             const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
-
 
             using (var connection = new SqlConnection(GetConnectionString()))
             {
@@ -70,8 +68,9 @@ namespace EK_MultipleTransporter.Helpers
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
-                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
-                        result.Add(VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false));
+                        result.Add(VariableHelper.Dmo
+                            .GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), 
+                                VariableHelper.Token, itemNodeId, false, false, false));
                     }
                     reader.Close();
                     connection.Close();
@@ -93,9 +92,6 @@ namespace EK_MultipleTransporter.Helpers
         {
             var result = new List<EntityNode>();
 
-            // OFFSET 10 ROWS
-            // FETCH NEXT 10 ROWS ONLY;
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
             const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId ORDER BY (SELECT NULL) OFFSET @offSetPoint ROWS FETCH NEXT @fetchNextAmount ROWS ONLY";
 
             var connStrBuilder = new SqlConnectionStringBuilder(GetConnectionString()) {ConnectTimeout = 300};
@@ -115,8 +111,7 @@ namespace EK_MultipleTransporter.Helpers
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
-                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
-                        result.Add(VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false));
+                        result.Add(VariableHelper.Dmo.GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, itemNodeId, false, false, false));
                     }
                     reader.Close();
                     connection.Close();
@@ -136,7 +131,6 @@ namespace EK_MultipleTransporter.Helpers
         public static List<EntityNode> GetNodesByName(string name)
         {
             var result = new List<EntityNode>();
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where [Name] LIKE @name";
             const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where [Name] LIKE @name";
 
             using (var connection = new SqlConnection(GetConnectionString()))
@@ -150,11 +144,8 @@ namespace EK_MultipleTransporter.Helpers
                     var reader = command.ExecuteReader();
                     while (reader.Read())
                     {
-
-                        //Console.WriteLine(reader[0]);
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
-                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
-                        var newNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false);
+                        var newNode = VariableHelper.Dmo.GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, itemNodeId, false, false, false);
                         result.Add(newNode);
                     }
                     reader.Close();
@@ -176,9 +167,7 @@ namespace EK_MultipleTransporter.Helpers
         public static EntityNode GetAncestorNodeByName(long parentNodeId, string name)
         {
             EntityNode result = null;
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND UPPER([Name]) LIKE @name";
             const string query = "Select DataID FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND UPPER([Name]) LIKE @name";
-
 
             using (var connection = new SqlConnection(GetConnectionString()))
             {
@@ -193,8 +182,7 @@ namespace EK_MultipleTransporter.Helpers
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["DataID"]);
-                        Console.WriteLine("Item Node Id is that :: " + itemNodeId);
-                        result = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false);
+                        result = VariableHelper.Dmo.GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, itemNodeId, false, false, false);
                     }
                     reader.Close();
                     connection.Close();
@@ -215,18 +203,17 @@ namespace EK_MultipleTransporter.Helpers
         {
             return OtcsDbConnStr;
         }
-
+        /// <summary>
+        /// PROJE İçerisindeki PYP NO Item in adının ilk kısmına denk geliyor. Örn 1001/ ALtındağ bina ... nın pyp nosu 1001 --
+        /// Onu da ValStr içerisindeki 8 itemden birinde göreceksin. Diperleri projeno, proje tanım, pyp, lansman adı, yüklenici vs ...
+        /// </summary>
+        /// <param name="defId"></param>
+        /// <param name="valStr"></param>
+        /// <returns></returns>
         public static List<EntityNode> GetNodesByCategoryAttribute(long defId, string valStr)
         {
-
-            // PROJE İçerisindeki PYP NO Item in adının ilk kısmına denk geliyor. Örn 1001/ ALtındağ bina ... nın pyp nosu 1001 --
-            // Onu da ValStr içerisindeki 8 itemden birinde göreceksin. Diperleri projeno, proje tanım, pyp, lansman adı, yüklenici vs ...
-
             var result = new List<EntityNode>();
 
-            // OFFSET 10 ROWS
-            // FETCH NEXT 10 ROWS ONLY;
-            //string query = "Select * FROM [OTCS].[dbo].[DTreeCore] Where ABS([ParentID]) = @parentNodeId AND [Name] LIKE @name";
             const string query = "Select ID FROM [OTCS].[dbo].[LLAttrData] Where [DefID] = @defId AND [ValStr] LIKE @valStr";
 
             var connStrBuilder = new SqlConnectionStringBuilder(GetConnectionString()) { ConnectTimeout = 300 };
@@ -236,10 +223,8 @@ namespace EK_MultipleTransporter.Helpers
 
                 var command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@defId", defId);
-                //command.Parameters.AddWithValue("@valStr", "%" + valStr);
                 command.Parameters.AddWithValue("@valStr", valStr);
-
-
+                
                 try
                 {
                     connection.Open();
@@ -247,7 +232,7 @@ namespace EK_MultipleTransporter.Helpers
                     while (reader.Read())
                     {
                         var itemNodeId = Convert.ToInt64(reader["ID"]);
-                        result.Add(VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, itemNodeId, false, false, false));
+                        result.Add(VariableHelper.Dmo.GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, itemNodeId, false, false, false));
                     }
                     reader.Close();
                     connection.Close();

@@ -10,10 +10,6 @@ namespace EK_MultipleTransporter.Enums
     public sealed class OtCredentialsEnum
     {
 
-        public static readonly string User = ConfigurationManager.AppSettings["otUserName"];
-        public static readonly string Password = ConfigurationManager.AppSettings["otPassword"];
-        public static readonly string Token = ConfigurationManager.AppSettings["otToken"];
-
         public enum OtAdminCredentials
         {
             User,

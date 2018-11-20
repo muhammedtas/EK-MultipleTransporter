@@ -5,6 +5,9 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
+using System.Windows.Forms;
+using EK_MultipleTransporter.Enums;
+using EK_MultipleTransporter.Properties;
 
 namespace EK_MultipleTransporter.Helpers
 {
@@ -18,12 +21,10 @@ namespace EK_MultipleTransporter.Helpers
         public StreamHelper()
         {
             if (!Directory.Exists(DesktopPath + @"\" + BackUpFolderRoot)) Directory.CreateDirectory(DesktopPath + @"\" + BackUpFolderRoot);
-
         }
 
         public static Dictionary<Tuple<long,string>, byte[]> MakePreparedDocumentListToPush(string rootFolderPath, List<EntityNode> nodeList)
         {
-
             try
             {
                 if (nodeList == null) return null;
@@ -35,9 +36,9 @@ namespace EK_MultipleTransporter.Helpers
                 foreach (var targetNode in nodeList)
                 {
                     if (targetNode == null) continue;
-                    var parentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, targetNode.ParentId, false, false, false);
-                    var parentOfFirstParentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, parentNode.ParentId, false, false, false);
-                    var parentOfSecondParentNode = VariableHelper.Dmo.GetEntityNodeFromId("admin", VariableHelper.Token, parentOfFirstParentNode.ParentId, false, false, false);
+                    var parentNode = VariableHelper.Dmo.GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, targetNode.ParentId, false, false, false);
+                    var parentOfFirstParentNode = VariableHelper.Dmo.GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, parentNode.ParentId, false, false, false);
+                    var parentOfSecondParentNode = VariableHelper.Dmo.GetEntityNodeFromId(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, parentOfFirstParentNode.ParentId, false, false, false);
                     foreach (var file in fileArray)
                     {
                         if (dict.Count == fileArray.Count()) return dict;
@@ -52,26 +53,26 @@ namespace EK_MultipleTransporter.Helpers
                             dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
                         }
                         else if (parentOfFirstParentNode.Id > 0)
-                        {
+                        {   // 2. Kırınım için
                             if (newDocName == null || !parentOfFirstParentNode.Name.Contains(newDocName)) continue;
-                            // 2. Kırınım için
+                            
                             var newFile = File.ReadAllBytes(file);
 
                             dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
 
                         }
+                        
                         else if (parentOfSecondParentNode.Id > 0)
-                        {
+                        {   // 3.Kırınım için
                             if (newDocName != null && !parentOfSecondParentNode.Name.Contains(newDocName)) continue;
                             var newFile = File.ReadAllBytes(file);
 
                             dict.Add(new Tuple<long, string>(targetNode.Id, newDocNameWithTail), newFile);
-                            // 3.Kırınım için
-                           
                         }
                         else
                         {
-                            Console.Write("fuck your nodes. Write all them into your services.");
+                            //Console.Write("fuck your nodes. Write all them into your services.");
+                            MessageBox.Show(Resources.NodeDeepnessExceed);
                         }
 
                     }

@@ -96,7 +96,6 @@ namespace EK_MultipleTransporter.Forms
         {
             AuthOps ao = new AuthOps();
             string adminToken = ao.AuthenticateUser("admin", "token", "admin", "Dty4208ab1!");
-            //string userToken = ao.ImpersonateUser("admin", "token", adminToken);
             DmsOps dops = new DmsOps();
             EntityNode[] nodes = dops.GetChildNodes("admin", adminToken, 58725, 0, 1000, false, false);
             foreach (EntityNode node in nodes)

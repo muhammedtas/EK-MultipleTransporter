@@ -300,7 +300,6 @@ namespace EK_MultipleTransporter.Forms
             cmbDistOTFolder.Name = "cmbDistOTFolder";
             cmbDistOTFolder.Size = new System.Drawing.Size(379, 21);
             cmbDistOTFolder.TabIndex = 27;
-            cmbDistOTFolder.SelectedIndexChanged += new System.EventHandler(this.cmbDistOTFolder_SelectedIndexChanged);
             // 
             // cmbDocumentType
             // 
