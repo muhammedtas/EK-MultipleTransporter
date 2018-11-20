@@ -100,6 +100,7 @@
             this.rbtnPlotList.Name = "rbtnPlotList";
             this.rbtnPlotList.ShowImage = true;
             this.rbtnPlotList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnPlotList_Click);
+            this.rbtnPlotList.Enabled = false;
             // 
             // rbtnDistrictLst
             // 
@@ -109,6 +110,7 @@
             this.rbtnDistrictLst.Name = "rbtnDistrictLst";
             this.rbtnDistrictLst.ShowImage = true;
             this.rbtnDistrictLst.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnDistrictLst_Click);
+            this.rbtnDistrictLst.Enabled = false;
             // 
             // rbtnLitigationList
             // 
@@ -118,6 +120,7 @@
             this.rbtnLitigationList.Name = "rbtnLitigationList";
             this.rbtnLitigationList.ShowImage = true;
             this.rbtnLitigationList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnLitigationList_Click);
+            this.rbtnLitigationList.Enabled = false;
             // 
             // rbtnPersonelList
             // 
@@ -144,6 +147,7 @@
             this.btnPolicyLoader.Label = "Poliçeleri Yükle";
             this.btnPolicyLoader.Name = "btnPolicyLoader";
             this.btnPolicyLoader.ShowImage = true;
+            this.btnPolicyLoader.Enabled = false;
             // 
             // CaseRibbons
             // 
