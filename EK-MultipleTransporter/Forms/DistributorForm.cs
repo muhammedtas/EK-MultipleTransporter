@@ -123,7 +123,6 @@ namespace EK_MultipleTransporter.Forms
         public void LoadFormsDefault()
         {
             // Categories loaded.
-            WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId);
             var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId));
             if (categoryItems != null)
             {
@@ -132,8 +131,6 @@ namespace EK_MultipleTransporter.Forms
             }
 
             // Work Spaces Loaded.
-            WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.WorkSpacesNodeId);
-
             var workSpacesTypes = _serviceHelper.GetChildNodesById(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.WorkSpacesNodeId));
             if (workSpacesTypes == null) return;
             foreach (var workSpace in workSpacesTypes)
@@ -149,7 +146,7 @@ namespace EK_MultipleTransporter.Forms
         }
         /// <summary>
         /// Üstteki çalışma alanı değiştikçe burası asyn bir şekilde document template ten gelmesini istiyoruz.
-        ///  Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
+        /// Ancak bunlar bizim asıl target node larımız olmayacak. Döküman atmak istediğimiz zaman buraya eklediğimiz node ları
         /// Adı ile aratarak target nodumuzu bulacağız.
         /// </summary>
         public void LoadSelectedWorkSpacesChilds()
@@ -159,7 +156,6 @@ namespace EK_MultipleTransporter.Forms
             {
                 cmbDistOTFolder.Items.Clear();
 
-                WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ContentServerDocumentTemplatesNodeId);
                 var docTemplateNode = DbEntityHelper.GetAncestorNodeByName(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ContentServerDocumentTemplatesNodeId), (cmbDistWorkPlaceType.SelectedItem as DistributorChilds).Name);
 
                 var childFoldersNodes = _serviceHelper.GetChildNodesById(docTemplateNode.Id);
@@ -578,7 +574,6 @@ namespace EK_MultipleTransporter.Forms
 
         public void FillProjectsOfDistricts()
         {
-            WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ContentServerDocumentTemplatesNodeId);
             var projectsOfDistricts = _serviceHelper.GetChildNodesById(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ProjectsNodeId));
             foreach (var projectOfDistrict in projectsOfDistricts)
             {

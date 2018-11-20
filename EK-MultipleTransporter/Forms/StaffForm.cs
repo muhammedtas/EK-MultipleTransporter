@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EK_MultipleTransporter.Enums;
 using EK_MultipleTransporter.Models.ChildModel;
 using EK_MultipleTransporter.Web_References.DmsDocumentManagementService;
 using EK_MultipleTransporter.Models.HelperModel;
@@ -16,9 +17,6 @@ namespace EK_MultipleTransporter.Forms
     public partial class StaffForm : Form
     {
         public static Logger Logger;
-        public static long StaffsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffNodeId"]);
-        public static long StaffsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["staffChildElementsNodeId"]);
-        public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
         private readonly OtServicesHelper _serviceHelper;
         public bool IsProcessing;
         public StaffForm()
@@ -38,14 +36,14 @@ namespace EK_MultipleTransporter.Forms
 
         public void LoadStaffFormDefault()
         {
-            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
+            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId));
             if (categoryItems != null)
             {
                 var itemArray = categoryItems.Values[0].ValidValues;
                 cmbStaffDocumentType.Items.AddRange(itemArray);
             }
 
-            var childNodes = _serviceHelper.GetChildNodesById(StaffsChildElementsNodeId);
+            var childNodes = _serviceHelper.GetChildNodesById(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.StaffChildElementsNodeId));
 
             foreach (var childNode in childNodes)
             {
@@ -101,7 +99,7 @@ namespace EK_MultipleTransporter.Forms
 
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
-                var allChildNodesOfMainStaff = _serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(StaffsNodeId, (cmbStaffChildRoot.SelectedItem as StaffChilds)?.Name);
+                var allChildNodesOfMainStaff = _serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.StaffNodeId), (cmbStaffChildRoot.SelectedItem as StaffChilds)?.Name);
                 var targetRootAddress = (cmbStaffChildRoot.SelectedItem as StaffChilds)?.Name;
                 var countDeepness = targetRootAddress?.Split('\\').Count();
 
@@ -175,7 +173,7 @@ namespace EK_MultipleTransporter.Forms
                     DocumentType = cmbStaffDocumentType.Text,
                     Year = dtpStaffYear.Text,
                     Term = cmbStaffTerm.Text,
-                    NodeId = GeneralCategoryNodeId
+                    NodeId = WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId)
                 };
                 //await UploadDocuments(preparedList);
                 var result = await _serviceHelper.UploadDocuments(docsToUpload, categoryModel);

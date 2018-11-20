@@ -21,9 +21,6 @@ namespace EK_MultipleTransporter.Forms
     public partial class ProjectsForm : Form
     {
         public static Logger Logger;
-        public static long ProjectsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsNodeId"]);
-        public static long ProjectsChildElementsNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["projectsChildElementsNodeId"]);
-        public static long GeneralCategoryNodeId = Convert.ToInt64(ConfigurationManager.AppSettings["generalCategoryNodeId"]);
         private readonly OtServicesHelper _serviceHelper;
         public bool IsProcessing;
 
@@ -76,7 +73,7 @@ namespace EK_MultipleTransporter.Forms
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.
                 var targetNodesList = new List<EntityNode>(); // Bu boş liste doldurulup streamer helper methoduna verilecek.
-                var allChildNodesOfMainProject = _serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(ProjectsNodeId, (cmbChildRoot.SelectedItem as ProjectChilds).Name);
+                var allChildNodesOfMainProject = _serviceHelper.GetEntityNodeListIncludingChildrenUsingTypeFilter(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ProjectsNodeId), (cmbChildRoot.SelectedItem as ProjectChilds).Name);
                 var targetRootAddress = (cmbChildRoot.SelectedItem as ProjectChilds).Name;
                 var countDeepness = targetRootAddress.Split('\\').Count();
                 if (countDeepness > 3)
@@ -156,12 +153,11 @@ namespace EK_MultipleTransporter.Forms
                     DocumentType = cmbDocumentType.Text,
                     Year = dtpYear.Text,
                     Term = cmbTerm.Text,
-                    NodeId = GeneralCategoryNodeId
+                    NodeId = WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId)
                 };
                 var result = await _serviceHelper.UploadDocuments(docsToUpload, categoryModel);
                 MessageBox.Show(result ? Resources.ProcessIsDone : Resources.ProcessIsNotDone);
                 WaitedFormState();
-
             }
             catch (Exception ex)
             {
@@ -174,14 +170,14 @@ namespace EK_MultipleTransporter.Forms
 
         public void LoadFormsDefault ()
         {
-            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(GeneralCategoryNodeId);
+            var categoryItems = _serviceHelper.GetEntityAttributeGroupOfCategory(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId));
             if (categoryItems != null)
             {
                 var itemArray = categoryItems.Values[0].ValidValues;
                 cmbDocumentType.Items.AddRange(itemArray);
             }
 
-            var childNodes = _serviceHelper.GetChildNodesById(ProjectsChildElementsNodeId);
+            var childNodes = _serviceHelper.GetChildNodesById(WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.ProjectsChildElementsNodeId));
 
             foreach (var childNode in childNodes)
             {
@@ -260,7 +256,7 @@ namespace EK_MultipleTransporter.Forms
                 DocumentType = cmbDocumentType.Text,
                 Year = dtpYear.Text,
                 Term = cmbTerm.Text,
-                NodeId = GeneralCategoryNodeId
+                NodeId = WorkSpacesEnum.GetValue(WorkSpacesEnum.WorkSpaces.GeneralCategoryNodeId)
             };
 
             var emdNew = _serviceHelper.CategoryMaker(categoryModel);
