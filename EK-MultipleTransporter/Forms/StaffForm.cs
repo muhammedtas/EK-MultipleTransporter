@@ -3,7 +3,6 @@ using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,8 +16,10 @@ namespace EK_MultipleTransporter.Forms
     public partial class StaffForm : Form
     {
         public static Logger Logger;
-        private readonly OtServicesHelper _serviceHelper;
         public bool IsProcessing;
+
+        private readonly OtServicesHelper _serviceHelper;
+
         public StaffForm()
         {
             InitializeComponent();

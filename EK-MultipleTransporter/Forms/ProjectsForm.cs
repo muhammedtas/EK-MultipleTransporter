@@ -3,13 +3,8 @@ using EK_MultipleTransporter.Properties;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
-using System.ServiceModel;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Services.Protocols;
 using System.Windows.Forms;
 using EK_MultipleTransporter.Enums;
 using EK_MultipleTransporter.Models.ChildModel;
@@ -21,8 +16,9 @@ namespace EK_MultipleTransporter.Forms
     public partial class ProjectsForm : Form
     {
         public static Logger Logger;
-        private readonly OtServicesHelper _serviceHelper;
         public bool IsProcessing;
+
+        private readonly OtServicesHelper _serviceHelper;
 
         public ProjectsForm()
         {
@@ -32,7 +28,6 @@ namespace EK_MultipleTransporter.Forms
             _serviceHelper = new OtServicesHelper();
             CheckForIllegalCrossThreadCalls = false;
             Logger = LogManager.GetCurrentClassLogger();
-
         }
 
         private async void ProjectsForm_Load(object sender, EventArgs e)
@@ -68,7 +63,6 @@ namespace EK_MultipleTransporter.Forms
         {
             try
             {
-              
                 InvokedFormState();
                 // Burada da Projeler içerisinde yüklenecek yerlerin nodeId listesini alacağız.
                 // Ama ne yazık ki üst parent ten bir kaç kırınım içerideki child ları bulamıyoruz.

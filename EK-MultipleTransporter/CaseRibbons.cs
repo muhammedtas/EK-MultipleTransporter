@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Threading.Tasks;
 using EK_MultipleTransporter.Forms;
 using Microsoft.Office.Tools.Ribbon;
 
@@ -15,40 +12,40 @@ namespace EK_MultipleTransporter
         }
 
  
-        private void rbtnProjectList_Click(object sender, RibbonControlEventArgs e)
+        private async void rbtnProjectList_Click(object sender, RibbonControlEventArgs e)
         {
-            ProjectsForm frm = new ProjectsForm();
-            frm.ShowDialog();
+            var frm = new ProjectsForm();
+            await Task.Run(() => frm.ShowDialog());
         }
 
-        private void rbtnPlotList_Click(object sender, RibbonControlEventArgs e)
+        private async void rbtnPlotList_Click(object sender, RibbonControlEventArgs e)
         {
-            PlotForm frm = new PlotForm();
-            frm.ShowDialog();
+            var frm = new PlotForm();
+            await Task.Run(() => frm.ShowDialog());
         }
 
-        private void rbtnDistrictLst_Click(object sender, RibbonControlEventArgs e)
+        private async void rbtnDistrictLst_Click(object sender, RibbonControlEventArgs e)
         {
-            IndependentSectionForm frm = new IndependentSectionForm();
-            frm.ShowDialog();
+            var frm = new IndependentSectionForm();
+            await Task.Run(() => frm.ShowDialog());
         }
 
-        private void rbtnLitigationList_Click(object sender, RibbonControlEventArgs e)
+        private async void rbtnLitigationList_Click(object sender, RibbonControlEventArgs e)
         {
-            LitigationForm frm = new LitigationForm();
-            frm.ShowDialog();
+            var frm = new LitigationForm();
+            await Task.Run(() => frm.ShowDialog());
         }
 
-        private void rbtnPersonelList_Click(object sender, RibbonControlEventArgs e)
+        private async void rbtnPersonelList_Click(object sender, RibbonControlEventArgs e)
         {
-            StaffForm frm = new StaffForm();
-            frm.ShowDialog();
+            var frm = new StaffForm();
+            await Task.Run(() => frm.ShowDialog());
         }
 
-        private void btnDistributor_Click(object sender, RibbonControlEventArgs e)
+        private async void btnDistributor_Click(object sender, RibbonControlEventArgs e)
         {
-            DistributorForm frm = new DistributorForm();
-            frm.ShowDialog();
+            var frm = new DistributorForm();
+            await Task.Run(() => frm.ShowDialog());
         }
     }
 }
