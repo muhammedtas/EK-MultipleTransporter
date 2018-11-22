@@ -233,23 +233,6 @@ namespace EK_MultipleTransporter.Forms
         [STAThread]
         private void txtDistDocumentRoot_Click(object sender, EventArgs e)
         {
-
-            //Task a = tryit();
-            //await Task.Run(() => a);
-            ofdDocument.Title = Resources.ChooseDocument;
-            ofdDocument.Filter = Resources.AllowedTypes;
-            ofdDocument.Multiselect = false;
-            ofdDocument.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            ofdDocument.ShowHelp = true;
-
-            if (ofdDocument.ShowDialog() != DialogResult.OK) return;
-
-            txtDistDocumentRoot.Text = ofdDocument.FileName;
-            StreamHelper.RootPathOfUsersFolder = ofdDocument.FileName;
-        }
-
-        private async Task tryit()
-        {
             ofdDocument.Title = Resources.ChooseDocument;
             ofdDocument.Filter = Resources.AllowedTypes;
             ofdDocument.Multiselect = false;
@@ -552,7 +535,7 @@ namespace EK_MultipleTransporter.Forms
             }
         }
 
-        private async void cLstBxWorkSpaceType_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void cLstBxWorkSpaceType_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (!string.IsNullOrEmpty(txtFilter.Text) && !string.Equals(txtFilter.Text, Resources.filterText)) lblCounter.Text = Resources.SelectedItemNumber + cLstBxWorkSpaceType.CheckedItems.Count;
 

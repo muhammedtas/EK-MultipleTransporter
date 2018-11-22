@@ -20,80 +20,17 @@ namespace EK_MultipleTransporter.Helpers
             return VariableHelper.Dmo.GetChildNodes(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, id, 0, int.MaxValue, false, false);
         }
 
-        public EntityNode[] GetChildNodesByIdTop1000Nodes(long id)
-        {
-            EntityNode[] data;
-            try
-            {
-                data = VariableHelper.Dmo.GetChildNodes(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, id, 0, 10, false, false);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                Logger.Error(ex, Resources.WebServicesNotWorking);
-                throw;
-            }
-            return data;
-        }
-
-        public KeyValuePair[] GetFolderListIncludingChildren (long id)
-        {
-            return VariableHelper.Dmo.GetFolderListIncludingChildren(Resources.Admin, VariableHelper.Token, id);
-        }
+        
         public EntityAttributeGroup GetEntityAttributeGroupOfCategory(long id)
         {
 
             var entityAttributeGroup = VariableHelper.Dmo.GetEntityAttributeGroupOfCategory(Resources.Admin, VariableHelper.Token, id);
             return entityAttributeGroup;
         }
-
-        public EntityNode GetNodeByName (long parentNodeId, string nodeName)
-        {
-            var node = VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, parentNodeId, nodeName, false, false, false);
-            return node;
-        }
-
-        public EntityNode GetEntityNodeFromId (long id)
-        {
-            return VariableHelper.Dmo.GetEntityNodeFromId(Resources.Admin, VariableHelper.Token, id, false, false, false);
-        }
-
-        public bool HasChildNode (long id)
+        public bool HasChildNode(long id)
         {
             return VariableHelper.Dmo.GetChildNodes(Resources.Admin, VariableHelper.Token, id, 0, int.MaxValue, false, false) != null;
         }
-
-        public long FindChildNodeIdByName (long parentNodeId, string childNodeName)
-        {
-            return VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, parentNodeId, childNodeName, false, false, false).Id;
-        }
-        public bool AddDocumentOrVersion(string docName, byte[] fileByteArray, long targetFolder)
-        {
-            try
-            {
-                if (fileByteArray != null && targetFolder > 0)
-                {
-                    var eaj = new EntityAttachment
-                    {
-                        Contents = fileByteArray,
-                        CreatedDate = DateTime.Now,
-                        FileName = docName,
-                        ModifiedDate = DateTime.Now,
-                        FileSize = fileByteArray.Length
-                    };
-
-                    var idj = VariableHelper.Dmo.AddDocumentOrVersion(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, eaj, targetFolder, "", true);
-                    return idj > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.Warn(ex, "File named " + docName + "   could not be found.");
-            }
-            return false;
-
-        }
-
         public bool AddDocumentWithMetaData(long targetFolder,  string docName, byte[] fileByteArray,EntityMetadata emd)
         {
             EntityAttachment eaj = null;
@@ -120,52 +57,6 @@ namespace EK_MultipleTransporter.Helpers
             {
                 Logger.Trace(ex, "File named" + docName + "is not exist in this address");
                 StreamHelper.MoveUnUploadedDocumentsToBackUpFolder(docName);
-                return false;
-            }
-        }
-
-        public async Task<bool> AddDocumentWithMetaDataAsync(long targetFolder, string docName, byte[] fileByteArray, EntityMetadata emd)
-        {
-            EntityAttachment eaj = null;
-
-            try
-            {
-                if (fileByteArray != null && targetFolder > 0)
-                {
-                    eaj = new EntityAttachment
-                    {
-                        Contents = fileByteArray,
-                        CreatedDate = DateTime.Now,
-                        FileName = docName,
-                        ModifiedDate = DateTime.Now,
-                        FileSize = fileByteArray.Length
-                    };
-
-                }
-
-                await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, targetFolder, emd, eaj, ""));
-                eaj = null;
-                return true;
-                
-            }
-            catch (Exception ex)
-            {
-                Logger.Trace(ex, "File named" + docName + "is not exist in this address");
-                return false;
-            }
-
-        }
-
-        public bool IsFileExist(long folderId, string folderName)
-        {
-            try
-            {
-                var isFileExist = VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, folderId, folderName, true, true, true);
-                return isFileExist != null;
-            }
-            catch (Exception ex)
-            {
-                Logger.Trace(ex, "An Error has occured when trying to find if File exist in Opentext. Details Are    :" + ex.Message + "Inner exception  :" + ex.InnerException?.Message);
                 return false;
             }
         }
@@ -213,5 +104,112 @@ namespace EK_MultipleTransporter.Helpers
                 return false;
             }   
         }
+
+        #region DeletedMethods
+        
+        public EntityNode GetNodeByName(long parentNodeId, string nodeName)
+        {
+            var node = VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, parentNodeId, nodeName, false, false, false);
+            return node;
+        }
+        public EntityNode GetEntityNodeFromId(long id)
+        {
+            return VariableHelper.Dmo.GetEntityNodeFromId(Resources.Admin, VariableHelper.Token, id, false, false, false);
+        }
+        public EntityNode[] GetChildNodesByIdTop1000Nodes(long id)
+        {
+            EntityNode[] data;
+            try
+            {
+                data = VariableHelper.Dmo.GetChildNodes(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, id, 0, 10, false, false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                Logger.Error(ex, Resources.WebServicesNotWorking);
+                throw;
+            }
+            return data;
+        }
+        public KeyValuePair[] GetFolderListIncludingChildren(long id)
+        {
+            return VariableHelper.Dmo.GetFolderListIncludingChildren(Resources.Admin, VariableHelper.Token, id);
+        }
+        public long FindChildNodeIdByName(long parentNodeId, string childNodeName)
+        {
+            return VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, parentNodeId, childNodeName, false, false, false).Id;
+        }
+        public bool AddDocumentOrVersion(string docName, byte[] fileByteArray, long targetFolder)
+        {
+            try
+            {
+                if (fileByteArray != null && targetFolder > 0)
+                {
+                    var eaj = new EntityAttachment
+                    {
+                        Contents = fileByteArray,
+                        CreatedDate = DateTime.Now,
+                        FileName = docName,
+                        ModifiedDate = DateTime.Now,
+                        FileSize = fileByteArray.Length
+                    };
+
+                    var idj = VariableHelper.Dmo.AddDocumentOrVersion(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, eaj, targetFolder, "", true);
+                    return idj > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex, "File named " + docName + "   could not be found.");
+            }
+            return false;
+
+        }
+        public async Task<bool> AddDocumentWithMetaDataAsync(long targetFolder, string docName, byte[] fileByteArray, EntityMetadata emd)
+        {
+            EntityAttachment eaj = null;
+
+            try
+            {
+                if (fileByteArray != null && targetFolder > 0)
+                {
+                    eaj = new EntityAttachment
+                    {
+                        Contents = fileByteArray,
+                        CreatedDate = DateTime.Now,
+                        FileName = docName,
+                        ModifiedDate = DateTime.Now,
+                        FileSize = fileByteArray.Length
+                    };
+
+                }
+
+                await Task.Run(() => VariableHelper.Dmo.AddDocumentWithMetadataAsync(OtCredentialsEnum.ConvertString(OtCredentialsEnum.OtAdminCredentials.User), VariableHelper.Token, targetFolder, emd, eaj, ""));
+                eaj = null;
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Trace(ex, "File named" + docName + "is not exist in this address");
+                return false;
+            }
+
+        }
+        public bool IsFileExist(long folderId, string folderName)
+        {
+            try
+            {
+                var isFileExist = VariableHelper.Dmo.GetEntityNodeByName(Resources.Admin, VariableHelper.Token, folderId, folderName, true, true, true);
+                return isFileExist != null;
+            }
+            catch (Exception ex)
+            {
+                Logger.Trace(ex, "An Error has occured when trying to find if File exist in Opentext. Details Are    :" + ex.Message + "Inner exception  :" + ex.InnerException?.Message);
+                return false;
+            }
+        }
+
+        #endregion
     }
 }
