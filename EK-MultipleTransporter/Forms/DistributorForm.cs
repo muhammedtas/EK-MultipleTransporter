@@ -225,18 +225,41 @@ namespace EK_MultipleTransporter.Forms
             
         }
 
+        /// <summary>
+        /// Buradaki StatThread implementasyonu diğer dialog türleri methodlarının üzerine anotasyon olarak eklenecek.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [STAThread]
         private void txtDistDocumentRoot_Click(object sender, EventArgs e)
         {
+
+            //Task a = tryit();
+            //await Task.Run(() => a);
             ofdDocument.Title = Resources.ChooseDocument;
             ofdDocument.Filter = Resources.AllowedTypes;
             ofdDocument.Multiselect = false;
             ofdDocument.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            ofdDocument.ShowHelp = true;
 
             if (ofdDocument.ShowDialog() != DialogResult.OK) return;
 
             txtDistDocumentRoot.Text = ofdDocument.FileName;
             StreamHelper.RootPathOfUsersFolder = ofdDocument.FileName;
+        }
 
+        private async Task tryit()
+        {
+            ofdDocument.Title = Resources.ChooseDocument;
+            ofdDocument.Filter = Resources.AllowedTypes;
+            ofdDocument.Multiselect = false;
+            ofdDocument.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            ofdDocument.ShowHelp = true;
+
+            if (ofdDocument.ShowDialog() != DialogResult.OK) return;
+
+            txtDistDocumentRoot.Text = ofdDocument.FileName;
+            StreamHelper.RootPathOfUsersFolder = ofdDocument.FileName;
         }
 
         private async void btnOk_Click(object sender, EventArgs e)

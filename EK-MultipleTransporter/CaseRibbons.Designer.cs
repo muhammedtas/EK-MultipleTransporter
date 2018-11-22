@@ -91,6 +91,7 @@
             this.rbtnProjectList.Name = "rbtnProjectList";
             this.rbtnProjectList.ShowImage = true;
             this.rbtnProjectList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnProjectList_Click);
+            this.rbtnProjectList.Enabled = false;
             // 
             // rbtnPlotList
             // 
@@ -130,6 +131,7 @@
             this.rbtnPersonelList.Name = "rbtnPersonelList";
             this.rbtnPersonelList.ShowImage = true;
             this.rbtnPersonelList.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.rbtnPersonelList_Click);
+            this.rbtnPersonelList.Enabled = false;
             // 
             // btnDistributor
             // 
